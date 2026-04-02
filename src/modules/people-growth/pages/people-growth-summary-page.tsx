@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Download, PlayCircle } from 'lucide-react'
 
@@ -17,6 +18,112 @@ export function PeopleGrowthSummaryPage() {
   const { analyticsTabs, commonGrowthAreas, employees, gapTrend, confidenceTrend, peopleGrowthStats, restrictedCards, teamSummaryRows, topStrengths } = getPeopleGrowthData(audience, filters)
   const audienceTags = ['HR', 'Eng Manager', 'Head of Eng']
   const trendLabels = ['H2', 'Q1', 'Q2', 'Q3', 'Q4']
+  const [activeTab, setActiveTab] = useState(analyticsTabs[0] ?? 'Category Trends')
+  const selectedTab = analyticsTabs.includes(activeTab) ? activeTab : (analyticsTabs[0] ?? 'Category Trends')
+
+  const analyticsContentByTab = {
+    'Category Trends': (
+      <div className="grid gap-6 md:grid-cols-2">
+        <TrendChart
+          labels={trendLabels}
+          note="Track how category scores change over review cycles and identify improving or declining areas."
+          title="Category Score Trends"
+          tone="default"
+          values={gapTrend}
+          variant="area"
+        />
+
+        <TrendChart
+          labels={trendLabels}
+          note="Read overall improvement momentum and spot where category movement starts to flatten."
+          title="Review Momentum"
+          tone="success"
+          values={gapTrend.map((value, index) => Math.min(100, value + 8 + index * 3))}
+          variant="line"
+        />
+      </div>
+    ),
+    'Score Distribution': (
+      <div className="grid gap-6 md:grid-cols-2">
+        <DistributionChart
+          benchmarkLabel="Review spread by cycle"
+          labels={trendLabels}
+          note="Distribution of final scores across the organization."
+          title="Review Score Distribution"
+          tone="success"
+          values={gapTrend.map((value, index) => value + index * 4)}
+        />
+
+        <DistributionChart
+          benchmarkLabel="Readiness concentration"
+          labels={trendLabels}
+          note="Shows how many employees are clustering in stronger readiness bands over time."
+          title="Growth Readiness Distribution"
+          tone="default"
+          values={gapTrend.map((value, index) => Math.min(100, value + 12 + index * 5))}
+        />
+      </div>
+    ),
+    'Gap Analysis': (
+      <div className="grid gap-6 md:grid-cols-2">
+        <TrendChart
+          labels={trendLabels}
+          note="Compare self-assessment with peer and manager scores to highlight perception gaps."
+          title="Self vs Peer vs Manager Gap"
+          tone="alert"
+          values={confidenceTrend}
+          variant="line"
+        />
+
+        <TrendChart
+          labels={trendLabels}
+          note="Low-confidence patterns often point to evidence gaps, not just scoring disagreement."
+          title="Confidence Gap Trend"
+          tone="alert"
+          values={confidenceTrend.map((value, index) => Math.max(6, value - index * 2 + 4))}
+          variant="area"
+        />
+      </div>
+    ),
+    'Strengths & Areas': (
+      <div className="grid gap-6 md:grid-cols-2">
+        <TrendChart
+          labels={trendLabels}
+          note="Top strengths and most common growth areas identified across reviews."
+          title="Strengths & Areas"
+          tone="default"
+          values={confidenceTrend.map((value, index) => Math.max(20, value - index * 2))}
+          variant="line"
+        />
+
+        <Card className="border-dashed border-foreground/20">
+          <CardHeader>
+            <CardTitle className="text-sm">Strengths vs Growth Areas</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-2">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Top Strengths</p>
+              {topStrengths.map((item) => (
+                <div className="flex justify-between rounded bg-muted/50 p-2 text-sm" key={item.label}>
+                  <span>{item.label}</span>
+                  <span className="text-muted-foreground">{item.value}</span>
+                </div>
+              ))}
+            </div>
+            <div className="space-y-2">
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Common Growth Areas</p>
+              {commonGrowthAreas.map((item) => (
+                <div className="flex justify-between rounded bg-muted/50 p-2 text-sm" key={item.label}>
+                  <span>{item.label}</span>
+                  <span className="text-muted-foreground">{item.value}</span>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    ),
+  } as const
 
   return (
     <div className="space-y-6">
@@ -71,54 +178,22 @@ export function PeopleGrowthSummaryPage() {
           <p className="mt-1 text-xs italic text-muted-foreground">Visual analysis of review scores and growth trends.</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-1 border-b border-border/70">
-          {analyticsTabs.map((tab, index) => (
-            <div
-              className={index === 0 ? 'border-b-2 border-foreground px-4 py-2 text-sm font-medium text-foreground' : 'border-b-2 border-transparent px-4 py-2 text-sm text-muted-foreground'}
+        <div aria-label="Growth analytics tabs" className="flex flex-wrap items-center gap-1 border-b border-border/70" role="tablist">
+          {analyticsTabs.map((tab) => (
+            <button
+              aria-selected={selectedTab === tab}
+              className={selectedTab === tab ? 'border-b-2 border-foreground px-4 py-2 text-sm font-medium text-foreground' : 'border-b-2 border-transparent px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground'}
               key={tab}
+              role="tab"
+              type="button"
+              onClick={() => setActiveTab(tab)}
             >
               {tab}
-            </div>
+            </button>
           ))}
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          <TrendChart
-            labels={trendLabels}
-            note="Track how category scores change over review cycles and identify improving or declining areas."
-            title="Category Score Trends"
-            tone="default"
-            values={gapTrend}
-            variant="area"
-          />
-
-          <TrendChart
-            labels={trendLabels}
-            note="Compare self-assessment with peer and manager scores to highlight perception gaps."
-            title="Self vs Peer vs Manager Gap"
-            tone="alert"
-            values={confidenceTrend}
-            variant="line"
-          />
-
-          <DistributionChart
-            benchmarkLabel="Review spread by cycle"
-            labels={trendLabels}
-            note="Distribution of final scores across the organization."
-            title="Review Score Distribution"
-            tone="success"
-            values={gapTrend.map((value, index) => value + index * 4)}
-          />
-
-          <TrendChart
-            labels={trendLabels}
-            note="Top strengths and most common growth areas identified across reviews."
-            title="Strengths & Areas"
-            tone="default"
-            values={confidenceTrend.map((value, index) => Math.max(20, value - index * 2))}
-            variant="line"
-          />
-        </div>
+        {analyticsContentByTab[selectedTab as keyof typeof analyticsContentByTab]}
       </section>
 
       <section className="grid gap-6 md:grid-cols-2">

@@ -6,6 +6,7 @@ import { prefetchRouteModule } from '@/app/route-prefetch'
 import { usePlatformStore } from '@/app/store/use-platform-store'
 import { audienceContexts, audienceOptions, canAccessPath, getVisibleNavigation } from '@/shared/config/audience'
 import { cn } from '@/shared/lib/utils'
+import { Badge } from '@/shared/ui/badge'
 
 export function AppShell() {
   const audience = usePlatformStore((state) => state.audience)
@@ -45,25 +46,25 @@ export function AppShell() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="sticky top-0 z-20 border-b border-border/80 bg-background/90 backdrop-blur-xl">
-        <div className="mx-auto flex w-full max-w-[1440px] flex-wrap items-center gap-5 px-5 py-4 lg:px-8">
-          <div className="flex items-center gap-3">
+        <div className="mx-auto flex w-full max-w-[1440px] items-center gap-4 px-5 py-4 lg:px-8">
+          <div className="flex shrink-0 items-center gap-3">
             <div className="flex h-9 w-9 items-center justify-center rounded-lg border border-border/70 bg-card text-xs font-bold tracking-[0.18em] text-foreground/70">
               EPP
             </div>
-            <div>
-              <p className="text-sm font-semibold text-foreground">Engineering Performance Platform</p>
-              <p className="text-xs text-muted-foreground">Leadership visibility, delivery insight, and people growth</p>
+            <div className="min-w-0">
+              <p className="text-sm font-semibold leading-none text-foreground">Engineering Platform</p>
+              <p className="hidden pt-1 text-xs text-muted-foreground xl:block">Leadership, delivery, and people signals</p>
             </div>
           </div>
 
-          <nav className="flex flex-1 flex-wrap items-center gap-2 lg:ml-6">
+          <nav className="flex min-w-0 flex-1 items-center gap-2 overflow-x-auto whitespace-nowrap [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:ml-2">
             {navigation.map((item) => {
               const Icon = item.icon
               return (
                 <NavLink
                   className={({ isActive }) =>
                     cn(
-                      'inline-flex items-center gap-2 rounded-lg px-4 py-2 text-sm transition-colors',
+                      'inline-flex shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors',
                       isActive
                         ? 'bg-primary text-primary-foreground'
                         : 'text-muted-foreground hover:bg-muted hover:text-foreground',
@@ -75,23 +76,21 @@ export function AppShell() {
                   to={item.to}
                 >
                   <Icon className="h-4 w-4" />
-                  {item.label}
+                  {item.shortLabel ?? item.label}
                 </NavLink>
               )
             })}
           </nav>
 
-          <div className="ml-auto flex items-center gap-3">
-            <div className="hidden rounded-lg border border-border/70 bg-card px-3 py-2 text-xs text-muted-foreground md:block">
-              <div className="flex items-center gap-2">
-                <LockKeyhole className="h-3.5 w-3.5" />
-                Permission-aware mocked access
-              </div>
-            </div>
+          <div className="ml-auto flex shrink-0 items-center gap-2">
+            <Badge className="hidden items-center gap-1.5 rounded-full px-2.5 py-1 lg:inline-flex" variant="outline">
+              <LockKeyhole className="h-3.5 w-3.5" />
+              Mock Access
+            </Badge>
             <div className="relative">
               <select
                 aria-label="Audience context"
-                className="h-10 appearance-none rounded-lg border border-border/70 bg-card pl-3 pr-9 text-sm text-foreground outline-none transition focus:border-primary"
+                className="h-10 max-w-[172px] appearance-none rounded-lg border border-border/70 bg-card pl-3 pr-9 text-sm text-foreground outline-none transition focus:border-primary"
                 value={audience}
                 onChange={(event) => setAudience(event.target.value as typeof audience)}
               >

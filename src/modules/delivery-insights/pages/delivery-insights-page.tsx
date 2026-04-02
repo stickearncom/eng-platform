@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { ChevronRight } from 'lucide-react'
 
 import { usePlatformStore } from '@/app/store/use-platform-store'
@@ -12,9 +13,110 @@ export function DeliveryInsightsPage() {
   const audience = usePlatformStore((state) => state.audience)
   const context = audienceContexts[audience]
   const filters = usePlatformStore((state) => state.filters)
-  const { analyticsTabs, capacityPlanning, crossTeamDependencies, deliveryMetricCards, firstWaveMetrics, healthBreakdownRows, sharedResourceAllocation, teamDrilldown } = getDeliveryInsightsData(filters)
+  const { analyticsTabs, capacityPlanning, crossTeamDependencies, deliveryMetricCards, deliveryPanels, firstWaveMetrics, healthBreakdownRows, sharedResourceAllocation, teamDrilldown } = getDeliveryInsightsData(filters)
   const audienceTags = ['Eng Manager', 'Scrum Master', 'Head of Eng']
   const trendLabels = ['S-4', 'S-3', 'S-2', 'S-1', 'Now']
+  const [activeTab, setActiveTab] = useState(analyticsTabs[0] ?? 'Scope Analysis')
+  const selectedTab = analyticsTabs.includes(activeTab) ? activeTab : (analyticsTabs[0] ?? 'Scope Analysis')
+
+  const analyticsContentByTab = {
+    'Scope Analysis': (
+      <div className="grid gap-6 md:grid-cols-2">
+        <TrendChart
+          labels={trendLabels}
+          note={firstWaveMetrics[0]?.note ?? 'Scope movement over the sprint.'}
+          title={firstWaveMetrics[0]?.title ?? 'Scope Change Tracking'}
+          tone="default"
+          values={firstWaveMetrics[0]?.values ?? [28, 24, 21, 20, 19]}
+          variant="area"
+        />
+        <DistributionChart
+          benchmarkLabel="Carry-over pressure"
+          labels={trendLabels}
+          note={firstWaveMetrics[2]?.note ?? 'Root causes behind spillover and unfinished work.'}
+          title={firstWaveMetrics[2]?.title ?? 'Carry-over Root Cause Analysis'}
+          tone="alert"
+          values={firstWaveMetrics[2]?.values ?? [40, 36, 31, 26, 24]}
+        />
+      </div>
+    ),
+    'Planning Trends': (
+      <div className="grid gap-6 md:grid-cols-2">
+        <TrendChart
+          labels={trendLabels}
+          note={firstWaveMetrics[1]?.note ?? 'Historical comparison of estimated versus actual sprint completion.'}
+          title={firstWaveMetrics[1]?.title ?? 'Planning Accuracy Trend'}
+          tone="success"
+          values={firstWaveMetrics[1]?.values ?? [57, 63, 69, 77, 84]}
+          variant="line"
+        />
+        <CapacityChart
+          buffer={capacityPlanning.buffer}
+          committed={capacityPlanning.committed}
+          committedPercent={capacityPlanning.committedPercent}
+          labels={trendLabels}
+          note="Use this view to judge whether next sprint commitments are aligned with actual team capacity."
+          title="Capacity vs Commitment"
+          totalCapacity={capacityPlanning.totalCapacity}
+          values={firstWaveMetrics[1]?.values ?? [55, 60, 66, 72, 78]}
+        />
+      </div>
+    ),
+    Blockers: (
+      <div className="grid gap-6 md:grid-cols-2">
+        <DistributionChart
+          benchmarkLabel="Blocker type distribution"
+          labels={trendLabels}
+          note={firstWaveMetrics[3]?.note ?? 'Distribution of blocker types across the sprint.'}
+          title={firstWaveMetrics[3]?.title ?? 'Blocker Classification'}
+          tone="alert"
+          values={firstWaveMetrics[3]?.values ?? [22, 18, 19, 17, 14]}
+        />
+        <Card className="border-dashed border-foreground/20">
+          <CardHeader>
+            <CardTitle className="text-sm">Blocker Context Panels</CardTitle>
+          </CardHeader>
+          <CardContent className="grid gap-4">
+            {deliveryPanels.map((panel) => (
+              <div className="rounded-xl border border-border/70 bg-background/80 p-4" key={panel.title}>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">{panel.title}</p>
+                <div className="mt-3 space-y-2">
+                  {panel.entries.map((entry) => (
+                    <div className="flex justify-between gap-4 text-sm" key={entry.label}>
+                      <span className="text-foreground">{entry.label}</span>
+                      <span className="text-muted-foreground">{entry.value}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
+      </div>
+    ),
+    'Sprint Health': (
+      <div className="grid gap-6 md:grid-cols-2">
+        <DistributionChart
+          benchmarkLabel="Health factor weighting"
+          labels={healthBreakdownRows.map((row) => row.factor.split(' ')[0])}
+          note="Composite view of which factors pull sprint health up or down."
+          title="Sprint Health Composition"
+          tone="success"
+          values={healthBreakdownRows.map((row) => Number.parseInt(row.score, 10))}
+        />
+        <CapacityChart
+          buffer={capacityPlanning.buffer}
+          committed={capacityPlanning.committed}
+          committedPercent={capacityPlanning.committedPercent}
+          labels={trendLabels}
+          note="Health is strongest when scope stability and capacity discipline improve together."
+          title="Capacity Planning"
+          totalCapacity={capacityPlanning.totalCapacity}
+          values={firstWaveMetrics[0]?.values ?? [55, 60, 66, 72, 78]}
+        />
+      </div>
+    ),
+  } as const
 
   return (
     <div className="space-y-6">
@@ -80,42 +182,22 @@ export function DeliveryInsightsPage() {
           <p className="mt-1 text-xs italic text-muted-foreground">Visual analysis of sprint execution and delivery patterns.</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-1 border-b border-border/70">
-          {analyticsTabs.map((tab, index) => (
-            <div
-              className={index === 0 ? 'border-b-2 border-foreground px-4 py-2 text-sm font-medium text-foreground' : 'border-b-2 border-transparent px-4 py-2 text-sm text-muted-foreground'}
+        <div aria-label="Delivery analytics tabs" className="flex flex-wrap items-center gap-1 border-b border-border/70" role="tablist">
+          {analyticsTabs.map((tab) => (
+            <button
+              aria-selected={selectedTab === tab}
+              className={selectedTab === tab ? 'border-b-2 border-foreground px-4 py-2 text-sm font-medium text-foreground' : 'border-b-2 border-transparent px-4 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground'}
               key={tab}
+              role="tab"
+              type="button"
+              onClick={() => setActiveTab(tab)}
             >
               {tab}
-            </div>
+            </button>
           ))}
         </div>
 
-        <div className="grid gap-6 md:grid-cols-2">
-            {firstWaveMetrics.map((metric, index) => (
-              index % 3 === 2 ? (
-                <DistributionChart
-                  benchmarkLabel="Execution distribution"
-                  key={metric.title}
-                  labels={trendLabels}
-                  note={metric.note}
-                  title={metric.title}
-                  tone="alert"
-                  values={metric.values}
-                />
-              ) : (
-                <TrendChart
-                  key={metric.title}
-                  labels={trendLabels}
-                  note={metric.note}
-                  title={metric.title}
-                  tone={index % 3 === 1 ? 'success' : 'default'}
-                  values={metric.values}
-                  variant={index % 3 === 0 ? 'area' : 'line'}
-                />
-              )
-            ))}
-        </div>
+        {analyticsContentByTab[selectedTab as keyof typeof analyticsContentByTab]}
       </section>
 
       <section className="grid gap-6 xl:grid-cols-[2fr_1fr]">

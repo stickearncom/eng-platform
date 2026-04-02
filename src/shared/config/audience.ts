@@ -15,6 +15,7 @@ export interface AudienceContext {
 export interface NavigationItem {
   to: string
   label: string
+  shortLabel?: string
   icon: LucideIcon
 }
 
@@ -26,10 +27,10 @@ export const audienceOptions: { label: string; value: Audience }[] = [
 ]
 
 export const navigationItems: NavigationItem[] = [
-  { to: '/summary', label: 'Engineering Summary', icon: LayoutDashboard },
-  { to: '/delivery-insights', label: 'Delivery Insights', icon: BarChart3 },
-  { to: '/people-growth', label: 'People Growth', icon: Users2 },
-  { to: '/metric-dictionary', label: 'Metric Dictionary', icon: FileStack },
+  { to: '/summary', label: 'Engineering Summary', shortLabel: 'Summary', icon: LayoutDashboard },
+  { to: '/delivery-insights', label: 'Delivery Insights', shortLabel: 'Delivery', icon: BarChart3 },
+  { to: '/people-growth', label: 'People Growth', shortLabel: 'People', icon: Users2 },
+  { to: '/metric-dictionary', label: 'Metric Dictionary', shortLabel: 'Dictionary', icon: FileStack },
 ]
 
 export const audienceContexts: Record<Audience, AudienceContext> = {
