@@ -4,12 +4,15 @@ import { ChevronRight } from 'lucide-react'
 import { usePlatformStore } from '@/app/store/use-platform-store'
 import { CapacityChart, DistributionChart, TrendChart } from '@/shared/components/chart-cards'
 import { FilterToolbar } from '@/shared/components/filter-toolbar'
+import { MetricDefinitionDrawer } from '@/shared/components/metric-definition-drawer'
 import { Badge } from '@/shared/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
 import { audienceContexts } from '@/shared/config/audience'
+import { findMetricDictionaryEntry, type MetricDictionaryEntry } from '@/shared/mocks/metric-dictionary'
 import { getDeliveryInsightsData } from '@/shared/mocks/delivery-insights'
 
 export function DeliveryInsightsPage() {
+  const [selectedMetric, setSelectedMetric] = useState<MetricDictionaryEntry | null>(null)
   const audience = usePlatformStore((state) => state.audience)
   const context = audienceContexts[audience]
   const filters = usePlatformStore((state) => state.filters)
@@ -25,6 +28,7 @@ export function DeliveryInsightsPage() {
         <TrendChart
           labels={trendLabels}
           note={firstWaveMetrics[0]?.note ?? 'Scope movement over the sprint.'}
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry(firstWaveMetrics[0]?.title ?? 'Scope Change', 'Delivery Insights') ?? null)}
           title={firstWaveMetrics[0]?.title ?? 'Scope Change Tracking'}
           tone="default"
           values={firstWaveMetrics[0]?.values ?? [28, 24, 21, 20, 19]}
@@ -34,6 +38,7 @@ export function DeliveryInsightsPage() {
           benchmarkLabel="Carry-over pressure"
           labels={trendLabels}
           note={firstWaveMetrics[2]?.note ?? 'Root causes behind spillover and unfinished work.'}
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry(firstWaveMetrics[2]?.title ?? 'Carry-over Rate', 'Delivery Insights') ?? null)}
           title={firstWaveMetrics[2]?.title ?? 'Carry-over Root Cause Analysis'}
           tone="alert"
           values={firstWaveMetrics[2]?.values ?? [40, 36, 31, 26, 24]}
@@ -45,6 +50,7 @@ export function DeliveryInsightsPage() {
         <TrendChart
           labels={trendLabels}
           note={firstWaveMetrics[1]?.note ?? 'Historical comparison of estimated versus actual sprint completion.'}
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry(firstWaveMetrics[1]?.title ?? 'Planning Accuracy', 'Delivery Insights') ?? null)}
           title={firstWaveMetrics[1]?.title ?? 'Planning Accuracy Trend'}
           tone="success"
           values={firstWaveMetrics[1]?.values ?? [57, 63, 69, 77, 84]}
@@ -56,6 +62,7 @@ export function DeliveryInsightsPage() {
           committedPercent={capacityPlanning.committedPercent}
           labels={trendLabels}
           note="Use this view to judge whether next sprint commitments are aligned with actual team capacity."
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Sprint Health Score', 'Delivery Insights') ?? null)}
           title="Capacity vs Commitment"
           totalCapacity={capacityPlanning.totalCapacity}
           values={firstWaveMetrics[1]?.values ?? [55, 60, 66, 72, 78]}
@@ -68,6 +75,7 @@ export function DeliveryInsightsPage() {
           benchmarkLabel="Blocker type distribution"
           labels={trendLabels}
           note={firstWaveMetrics[3]?.note ?? 'Distribution of blocker types across the sprint.'}
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Sprint Health Score', 'Delivery Insights') ?? null)}
           title={firstWaveMetrics[3]?.title ?? 'Blocker Classification'}
           tone="alert"
           values={firstWaveMetrics[3]?.values ?? [22, 18, 19, 17, 14]}
@@ -100,6 +108,7 @@ export function DeliveryInsightsPage() {
           benchmarkLabel="Health factor weighting"
           labels={healthBreakdownRows.map((row) => row.factor.split(' ')[0])}
           note="Composite view of which factors pull sprint health up or down."
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Sprint Health Score', 'Delivery Insights') ?? null)}
           title="Sprint Health Composition"
           tone="success"
           values={healthBreakdownRows.map((row) => Number.parseInt(row.score, 10))}
@@ -110,6 +119,7 @@ export function DeliveryInsightsPage() {
           committedPercent={capacityPlanning.committedPercent}
           labels={trendLabels}
           note="Health is strongest when scope stability and capacity discipline improve together."
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Sprint Health Score', 'Delivery Insights') ?? null)}
           title="Capacity Planning"
           totalCapacity={capacityPlanning.totalCapacity}
           values={firstWaveMetrics[0]?.values ?? [55, 60, 66, 72, 78]}
@@ -120,6 +130,7 @@ export function DeliveryInsightsPage() {
 
   return (
     <div className="space-y-6">
+      <MetricDefinitionDrawer entry={selectedMetric} open={selectedMetric !== null} onClose={() => setSelectedMetric(null)} />
       <section className="space-y-3">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -170,6 +181,16 @@ export function DeliveryInsightsPage() {
             </CardHeader>
             <CardContent>
               <p className="text-xs italic leading-5 text-muted-foreground">{metric.note}</p>
+              {findMetricDictionaryEntry(metric.title, 'Delivery Insights') ? (
+                <button aria-label={`Open definition for ${metric.title}`} className="mt-4 inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" title={`Definition: ${metric.title}`} type="button" onClick={() => setSelectedMetric(findMetricDictionaryEntry(metric.title, 'Delivery Insights') ?? null)}>
+                  <span className="sr-only">Open definition</span>
+                  <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+                    <path d="M12 10v6" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+                    <circle cx="12" cy="7.25" fill="currentColor" r="1.1" />
+                  </svg>
+                </button>
+              ) : null}
             </CardContent>
           </Card>
         ))}

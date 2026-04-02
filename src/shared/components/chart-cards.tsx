@@ -1,5 +1,7 @@
+import { Button } from '@/shared/ui/button'
 import { MiniTrend } from '@/shared/components/mini-trend'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
+import { Info } from 'lucide-react'
 
 interface BaseChartCardProps {
   title: string
@@ -8,6 +10,7 @@ interface BaseChartCardProps {
   labels?: readonly string[]
   tone?: 'default' | 'success' | 'alert'
   className?: string
+  onOpenDefinition?: () => void
 }
 
 interface TrendChartProps extends BaseChartCardProps {
@@ -27,6 +30,7 @@ interface CapacityChartProps {
   committedPercent: number
   values: readonly number[]
   labels?: readonly string[]
+  onOpenDefinition?: () => void
 }
 
 export function TrendChart({
@@ -37,11 +41,19 @@ export function TrendChart({
   tone = 'default',
   variant = 'area',
   className,
+  onOpenDefinition,
 }: TrendChartProps) {
   return (
     <Card className={className ?? 'border-dashed border-foreground/20'}>
       <CardHeader className="pb-4">
-        <CardTitle className="text-sm">{title}</CardTitle>
+        <div className="flex items-start justify-between gap-3">
+          <CardTitle className="text-sm">{title}</CardTitle>
+          {onOpenDefinition ? (
+            <Button aria-label={`Open definition for ${title}`} className="h-8 w-8 rounded-full p-0" size="sm" title={`Definition: ${title}`} type="button" variant="ghost" onClick={onOpenDefinition}>
+              <Info className="h-4 w-4" />
+            </Button>
+          ) : null}
+        </div>
       </CardHeader>
       <CardContent className="space-y-3">
         <MiniTrend labels={labels} tone={tone} values={values} variant={variant} />
@@ -59,12 +71,22 @@ export function DistributionChart({
   tone = 'success',
   benchmarkLabel = 'Distribution overview',
   className,
+  onOpenDefinition,
 }: DistributionChartProps) {
   return (
     <Card className={className ?? 'border-dashed border-foreground/20'}>
       <CardHeader className="pb-4">
-        <CardTitle className="text-sm">{title}</CardTitle>
-        <CardDescription>{benchmarkLabel}</CardDescription>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <CardTitle className="text-sm">{title}</CardTitle>
+            <CardDescription>{benchmarkLabel}</CardDescription>
+          </div>
+          {onOpenDefinition ? (
+            <Button aria-label={`Open definition for ${title}`} className="h-8 w-8 rounded-full p-0" size="sm" title={`Definition: ${title}`} type="button" variant="ghost" onClick={onOpenDefinition}>
+              <Info className="h-4 w-4" />
+            </Button>
+          ) : null}
+        </div>
       </CardHeader>
       <CardContent className="space-y-3">
         <MiniTrend labels={labels} tone={tone} values={values} variant="bars" />
@@ -83,11 +105,19 @@ export function CapacityChart({
   committedPercent,
   values,
   labels,
+  onOpenDefinition,
 }: CapacityChartProps) {
   return (
     <Card className="border-dashed border-foreground/20">
       <CardHeader>
-        <CardTitle className="text-sm">{title}</CardTitle>
+        <div className="flex items-start justify-between gap-3">
+          <CardTitle className="text-sm">{title}</CardTitle>
+          {onOpenDefinition ? (
+            <Button aria-label={`Open definition for ${title}`} className="h-8 w-8 rounded-full p-0" size="sm" title={`Definition: ${title}`} type="button" variant="ghost" onClick={onOpenDefinition}>
+              <Info className="h-4 w-4" />
+            </Button>
+          ) : null}
+        </div>
       </CardHeader>
       <CardContent className="space-y-4 p-4 pt-0">
         <MiniTrend labels={labels} tone="default" values={values} variant="area" />

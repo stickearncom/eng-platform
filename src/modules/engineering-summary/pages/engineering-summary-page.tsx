@@ -1,27 +1,32 @@
+import { useState } from 'react'
 import { ArrowRight } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 import { usePlatformStore } from '@/app/store/use-platform-store'
 import { TrendChart } from '@/shared/components/chart-cards'
 import { FilterToolbar } from '@/shared/components/filter-toolbar'
+import { MetricDefinitionDrawer } from '@/shared/components/metric-definition-drawer'
 import { StatCard } from '@/shared/components/stat-card'
 import { audienceContexts } from '@/shared/config/audience'
+import { findMetricDictionaryEntry, type MetricDictionaryEntry } from '@/shared/mocks/metric-dictionary'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
 import { getEngineeringSummaryData } from '@/shared/mocks/engineering-summary'
 
 export function EngineeringSummaryPage() {
+  const [selectedMetric, setSelectedMetric] = useState<MetricDictionaryEntry | null>(null)
   const audience = usePlatformStore((state) => state.audience)
   const context = audienceContexts[audience]
   const filters = usePlatformStore((state) => state.filters)
-  const { audienceTags, summaryCards, trendPanels, riskHighlights, leadershipInsights, quickActions, teamHealthRows } = getEngineeringSummaryData(audience, filters)
+  const { audienceTags, recommendedActions, summaryCards, summaryNarrative, trendPanels, riskHighlights, leadershipInsights, quickActions, teamHealthRows } = getEngineeringSummaryData(audience, filters)
   const trendLabels = ['W1', 'W2', 'W3', 'W4', 'W5']
   const panelVariants: Array<'area' | 'line' | 'bars'> = ['area', 'area', 'line', 'bars']
   const panelTones: Array<'default' | 'success' | 'alert'> = ['default', 'success', 'default', 'alert']
 
   return (
     <div className="space-y-6">
+      <MetricDefinitionDrawer entry={selectedMetric} open={selectedMetric !== null} onClose={() => setSelectedMetric(null)} />
       <section className="space-y-3">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -45,7 +50,12 @@ export function EngineeringSummaryPage() {
 
       <Card className="border-foreground/20 bg-muted/50">
         <CardContent className="p-4">
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+          <div className="grid gap-4 xl:grid-cols-[1.4fr_0.9fr_0.9fr]">
+            <div>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Executive summary</p>
+              <p className="mt-2 text-base font-semibold leading-7 text-foreground">{summaryNarrative.headline}</p>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{summaryNarrative.summary}</p>
+            </div>
             <div>
               <p className="text-sm font-medium text-foreground">Leadership context</p>
               <p className="mt-1 text-sm leading-6 text-muted-foreground">{context.description}</p>
@@ -53,6 +63,7 @@ export function EngineeringSummaryPage() {
             <div className="rounded-xl border border-border/70 bg-background/80 px-4 py-3 text-sm">
               <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Focus</p>
               <p className="mt-1 font-medium text-foreground">{context.focus}</p>
+              <p className="mt-3 text-sm leading-6 text-muted-foreground">{summaryNarrative.implication}</p>
             </div>
           </div>
         </CardContent>
@@ -60,13 +71,17 @@ export function EngineeringSummaryPage() {
 
       <section className="space-y-4">
         <div>
-          <h2 className="text-lg font-semibold text-foreground">Key Metrics Overview</h2>
-          <p className="mt-1 text-xs italic text-muted-foreground">Summary cards showing overall engineering health indicators.</p>
+          <h2 className="text-lg font-semibold text-foreground">Goal Status Overview</h2>
+          <p className="mt-1 text-xs italic text-muted-foreground">Explicit engineering goals with current value, target, and stakeholder-ready status framing.</p>
         </div>
 
         <div className="grid gap-4 xl:grid-cols-5">
           {summaryCards.map((card) => (
-            <StatCard key={card.title} {...card} />
+            <StatCard
+              key={card.title}
+              {...card}
+              onOpenDefinition={findMetricDictionaryEntry(card.title, 'Engineering Summary') ? () => setSelectedMetric(findMetricDictionaryEntry(card.title, 'Engineering Summary') ?? null) : undefined}
+            />
           ))}
         </div>
       </section>
@@ -85,6 +100,7 @@ export function EngineeringSummaryPage() {
                 key={panel.title}
                 labels={trendLabels}
                 note={panel.note}
+                onOpenDefinition={findMetricDictionaryEntry(panel.title, 'Engineering Summary') ? () => setSelectedMetric(findMetricDictionaryEntry(panel.title, 'Engineering Summary') ?? null) : undefined}
                 title={panel.title}
                 tone={panelTones[index] ?? 'default'}
                 values={panel.values}
@@ -96,8 +112,8 @@ export function EngineeringSummaryPage() {
 
         <div className="space-y-4">
           <div>
-            <h2 className="text-lg font-semibold text-foreground">Risk & Alerts</h2>
-            <p className="mt-1 text-xs italic text-muted-foreground">Items requiring leadership attention.</p>
+            <h2 className="text-lg font-semibold text-foreground">Risk, Insights & Decisions</h2>
+            <p className="mt-1 text-xs italic text-muted-foreground">The most important narrative signals for stakeholder review and action.</p>
           </div>
 
           <Card>
@@ -121,6 +137,23 @@ export function EngineeringSummaryPage() {
             <CardContent className="space-y-2 text-sm text-muted-foreground">
               {leadershipInsights.map((insight) => (
                 <p key={insight}>• {insight}</p>
+              ))}
+            </CardContent>
+          </Card>
+
+          <Card className="border-dashed border-foreground/10">
+            <CardHeader>
+              <CardTitle className="text-sm">Recommended Actions</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {recommendedActions.map((action) => (
+                <div className="rounded-lg border border-border/70 bg-background px-3 py-3" key={action.title}>
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="text-sm font-medium text-foreground">{action.title}</p>
+                    <Badge variant="outline">{action.owner}</Badge>
+                  </div>
+                  <p className="mt-2 text-sm leading-6 text-muted-foreground">{action.note}</p>
+                </div>
               ))}
             </CardContent>
           </Card>

@@ -8,6 +8,20 @@ export interface SummaryCardData {
   value: string
   delta: string
   note: string
+  target: string
+  status: 'On Track' | 'Watch' | 'At Risk'
+}
+
+interface SummaryNarrative {
+  headline: string
+  summary: string
+  implication: string
+}
+
+interface RecommendedAction {
+  title: string
+  owner: string
+  note: string
 }
 
 interface TrendSeries {
@@ -38,32 +52,32 @@ interface TeamHealthRow {
 
 const summaryByTeam: Record<string, SummaryCardData[]> = {
   all: [
-    { title: 'Delivery Confidence', value: '81%', delta: '+6 pts', note: 'Planning accuracy improved after scope-change review became mandatory.' },
-    { title: 'Quality & Reliability', value: '9 escaped bugs', delta: '-18%', note: 'Production defects are down, but one platform incident remains open.' },
-    { title: 'Engineering Flow', value: '14h PR turnaround', delta: '-3h', note: 'Review latency is healthiest in Growth Squad and weakest in Core Platform.' },
-    { title: 'People Growth', value: '3.22 / 4', delta: '+0.08', note: 'Ownership & Initiative is the strongest category this cycle.' },
-    { title: 'Org Risk', value: '2 hotspots', delta: 'Needs attention', note: 'Cross-team allocation and QA support load are the main pressure points.' },
+    { title: 'Delivery Confidence', value: '81%', delta: '+6 pts', note: 'Planning accuracy improved after scope-change review became mandatory.', target: '>= 80%', status: 'On Track' },
+    { title: 'Quality & Reliability', value: '9 escaped bugs', delta: '-18%', note: 'Production defects are down, but one platform incident remains open.', target: '<= 8 bugs', status: 'Watch' },
+    { title: 'Engineering Flow', value: '14h PR turnaround', delta: '-3h', note: 'Review latency is healthiest in Growth Squad and weakest in Core Platform.', target: '<= 16h', status: 'On Track' },
+    { title: 'People Growth', value: '3.22 / 4', delta: '+0.08', note: 'Ownership & Initiative is the strongest category this cycle.', target: '>= 3.2 / 4', status: 'On Track' },
+    { title: 'Org Risk', value: '2 hotspots', delta: 'Needs attention', note: 'Cross-team allocation and QA support load are the main pressure points.', target: '<= 1 hotspot', status: 'At Risk' },
   ],
   growth: [
-    { title: 'Delivery Confidence', value: '86%', delta: '+4 pts', note: 'Growth Squad execution stabilized after stricter intake on mid-sprint work.' },
-    { title: 'Quality & Reliability', value: '3 escaped bugs', delta: '-25%', note: 'Release quality is healthy, with only minor post-release fixes.' },
-    { title: 'Engineering Flow', value: '11h PR turnaround', delta: '-2h', note: 'Review loops are fast because ownership and reviewer rotation are clearer.' },
-    { title: 'People Growth', value: '3.31 / 4', delta: '+0.11', note: 'Ownership and communication are both trending upward.' },
-    { title: 'Org Risk', value: '1 hotspot', delta: 'Contained', note: 'Risk mainly comes from shared QA support close to release cut-off.' },
+    { title: 'Delivery Confidence', value: '86%', delta: '+4 pts', note: 'Growth Squad execution stabilized after stricter intake on mid-sprint work.', target: '>= 82%', status: 'On Track' },
+    { title: 'Quality & Reliability', value: '3 escaped bugs', delta: '-25%', note: 'Release quality is healthy, with only minor post-release fixes.', target: '<= 4 bugs', status: 'On Track' },
+    { title: 'Engineering Flow', value: '11h PR turnaround', delta: '-2h', note: 'Review loops are fast because ownership and reviewer rotation are clearer.', target: '<= 12h', status: 'On Track' },
+    { title: 'People Growth', value: '3.31 / 4', delta: '+0.11', note: 'Ownership and communication are both trending upward.', target: '>= 3.2 / 4', status: 'On Track' },
+    { title: 'Org Risk', value: '1 hotspot', delta: 'Contained', note: 'Risk mainly comes from shared QA support close to release cut-off.', target: '<= 1 hotspot', status: 'Watch' },
   ],
   platform: [
-    { title: 'Delivery Confidence', value: '72%', delta: '-2 pts', note: 'Dependency-heavy work is still reducing forecast reliability.' },
-    { title: 'Quality & Reliability', value: '1 open incident', delta: 'Critical follow-up', note: 'Defect count is stable, but unresolved platform work weighs more here.' },
-    { title: 'Engineering Flow', value: '18h PR turnaround', delta: '+1h', note: 'Architecture reviews are healthy, but too many shared requests slow completion.' },
-    { title: 'People Growth', value: '3.14 / 4', delta: '+0.04', note: 'Calibration confidence is weaker for cross-board contributors.' },
-    { title: 'Org Risk', value: '3 hotspots', delta: 'Escalate', note: 'Carry-over, dependency delay, and stretched senior bandwidth overlap.' },
+    { title: 'Delivery Confidence', value: '72%', delta: '-2 pts', note: 'Dependency-heavy work is still reducing forecast reliability.', target: '>= 80%', status: 'At Risk' },
+    { title: 'Quality & Reliability', value: '1 open incident', delta: 'Critical follow-up', note: 'Defect count is stable, but unresolved platform work weighs more here.', target: '0 open incidents', status: 'At Risk' },
+    { title: 'Engineering Flow', value: '18h PR turnaround', delta: '+1h', note: 'Architecture reviews are healthy, but too many shared requests slow completion.', target: '<= 16h', status: 'Watch' },
+    { title: 'People Growth', value: '3.14 / 4', delta: '+0.04', note: 'Calibration confidence is weaker for cross-board contributors.', target: '>= 3.2 / 4', status: 'Watch' },
+    { title: 'Org Risk', value: '3 hotspots', delta: 'Escalate', note: 'Carry-over, dependency delay, and stretched senior bandwidth overlap.', target: '<= 1 hotspot', status: 'At Risk' },
   ],
   cx: [
-    { title: 'Delivery Confidence', value: '79%', delta: '+3 pts', note: 'Delivery confidence improved after release-readiness checks became more explicit.' },
-    { title: 'Quality & Reliability', value: '5 escaped bugs', delta: '-12%', note: 'Bug volume is down, though retest load is still uneven.' },
-    { title: 'Engineering Flow', value: '13h PR turnaround', delta: '-1h', note: 'Work moves well when QA focus is protected before release windows.' },
-    { title: 'People Growth', value: '3.27 / 4', delta: '+0.09', note: 'Collaboration is strong, with growth focus now shifting to automation depth.' },
-    { title: 'Org Risk', value: '2 hotspots', delta: 'Watch', note: 'Risk concentrates around QA bandwidth and last-minute release support.' },
+    { title: 'Delivery Confidence', value: '79%', delta: '+3 pts', note: 'Delivery confidence improved after release-readiness checks became more explicit.', target: '>= 80%', status: 'Watch' },
+    { title: 'Quality & Reliability', value: '5 escaped bugs', delta: '-12%', note: 'Bug volume is down, though retest load is still uneven.', target: '<= 4 bugs', status: 'Watch' },
+    { title: 'Engineering Flow', value: '13h PR turnaround', delta: '-1h', note: 'Work moves well when QA focus is protected before release windows.', target: '<= 14h', status: 'On Track' },
+    { title: 'People Growth', value: '3.27 / 4', delta: '+0.09', note: 'Collaboration is strong, with growth focus now shifting to automation depth.', target: '>= 3.2 / 4', status: 'On Track' },
+    { title: 'Org Risk', value: '2 hotspots', delta: 'Watch', note: 'Risk concentrates around QA bandwidth and last-minute release support.', target: '<= 1 hotspot', status: 'Watch' },
   ],
 }
 
@@ -265,6 +279,174 @@ const audienceTagsByAudience: Record<Audience, string[]> = {
   hr: ['HRBP', 'Talent Partner'],
 }
 
+const summaryNarrativeByAudience: Record<Audience, Record<string, SummaryNarrative>> = {
+  executive: {
+    all: {
+      headline: 'Delivery confidence is improving, but organizational risk remains concentrated in Core Platform.',
+      summary: 'Engineering is trending better on forecast reliability, review flow, and people signals, while cross-team load and unresolved dependency pressure still weaken portfolio predictability.',
+      implication: 'Leadership attention is mainly needed on capacity concentration, dependency governance, and resolving the remaining reliability hotspot.',
+    },
+    growth: {
+      headline: 'Growth Squad is on track across delivery, quality, and people goals.',
+      summary: 'Execution remains predictable and people signals are strong, with the main watch item staying around shared QA load near release windows.',
+      implication: 'This team can take broader ownership if shared QA dependence is kept controlled.',
+    },
+    platform: {
+      headline: 'Core Platform is the main source of portfolio delivery and org-risk pressure.',
+      summary: 'Carry-over, dependency churn, and cross-board support are collectively weakening delivery confidence more than raw throughput metrics suggest.',
+      implication: 'This is the clearest candidate for leadership intervention on scope protection and staffing allocation.',
+    },
+    cx: {
+      headline: 'Customer Experience is stabilizing, but release confidence is still sensitive to QA bottlenecks.',
+      summary: 'Quality and flow are improving, though late quality loops still create planning noise close to sprint close.',
+      implication: 'Stakeholder confidence remains positive if QA bandwidth is protected at release time.',
+    },
+  },
+  'engineering-manager': {
+    all: {
+      headline: 'Overall engineering health is positive, but team-level execution quality is uneven.',
+      summary: 'Growth and Customer Experience are trending well, while Core Platform still shows the highest operational drag across dependencies, flow, and calibration confidence.',
+      implication: 'Manager focus should stay on dependency intake, reviewer coverage, and protecting capacity where support load distorts outcomes.',
+    },
+    growth: {
+      headline: 'Growth Squad is operating from a strong base this cycle.',
+      summary: 'Planning, quality, and people signals all point upward, with only a narrow risk around release-week QA compression.',
+      implication: 'This is a good team for stretching ownership if support interruptions stay low.',
+    },
+    platform: {
+      headline: 'Platform needs tighter operating discipline to recover predictability.',
+      summary: 'Flow and people evidence both degrade when dependency work and shared support enter too late in the cycle.',
+      implication: 'The immediate management lever is better intake challenge and clearer protected capacity.',
+    },
+    cx: {
+      headline: 'Customer Experience is improving with healthier release-readiness patterns.',
+      summary: 'Team health is generally stable, with growth and collaboration signals remaining positive despite QA-sensitive release cycles.',
+      implication: 'Keep reinforcing release hygiene and protect automation work from support churn.',
+    },
+  },
+  'scrum-master': {
+    all: {
+      headline: 'Sprint health is broadly improving, but scope and blocker patterns are still uneven by team.',
+      summary: 'Planning accuracy is moving in the right direction, though added-after-start work and dependency timing still distort platform and shared-support outcomes.',
+      implication: 'The main delivery goal is to tighten sprint boundaries and remove blocker drag earlier.',
+    },
+    growth: {
+      headline: 'Growth Squad has the cleanest sprint discipline in the portfolio.',
+      summary: 'Added-after-start work is lower than the org average and blocker pressure remains manageable.',
+      implication: 'The best next step is preserving that planning discipline as scope expands.',
+    },
+    platform: {
+      headline: 'Platform sprint health remains the most unstable in the org.',
+      summary: 'Late dependency work and shared support requests keep undermining initial sprint assumptions.',
+      implication: 'Delivery management should focus on intake timing and blocker escalation speed.',
+    },
+    cx: {
+      headline: 'Customer Experience is improving, with most risk tied to release timing.',
+      summary: 'Planning is healthier, but retest churn and QA load still generate late sprint noise.',
+      implication: 'Release coordination remains the key delivery-management lever.',
+    },
+  },
+  hr: {
+    all: {
+      headline: 'People Growth is healthy overall, but evidence quality is not evenly distributed.',
+      summary: 'The organization is trending upward on growth scores, while backend and cross-team contributors still show thinner peer coverage and lower confidence narratives.',
+      implication: 'HR attention should stay on calibration quality, reviewer coverage, and role-scope clarity in higher-load teams.',
+    },
+    growth: {
+      headline: 'Growth Squad has the strongest review confidence and the healthiest narrative coverage.',
+      summary: 'Scores and qualitative signals both indicate stable growth momentum in this team.',
+      implication: 'The people goal here is sustaining momentum as ownership expectations increase.',
+    },
+    platform: {
+      headline: 'Core Platform remains the main people-risk area this cycle.',
+      summary: 'Low-confidence evidence and cross-team load are making review interpretation harder than it should be.',
+      implication: 'Calibration quality should improve through better reviewer coverage and clearer role boundaries.',
+    },
+    cx: {
+      headline: 'Customer Experience people signals are improving and becoming more consistent.',
+      summary: 'Collaboration and readiness narratives are healthier than prior cycle, though support load still competes with deliberate skill growth.',
+      implication: 'Maintain explicit role expectations so people data stays interpretable over time.',
+    },
+  },
+}
+
+const recommendedActionsByAudience: Record<Audience, Record<string, RecommendedAction[]>> = {
+  executive: {
+    all: [
+      { title: 'Protect Platform capacity', owner: 'Head of Engineering', note: 'Reduce cross-board dilution for senior platform contributors this cycle.' },
+      { title: 'Tighten dependency governance', owner: 'EM + Product', note: 'Escalate late dependency intake that keeps distorting sprint confidence.' },
+      { title: 'Stabilize QA support load', owner: 'Engineering Leadership', note: 'Rebalance shared QA coverage before release pressure rises again.' },
+    ],
+    growth: [
+      { title: 'Preserve QA coverage', owner: 'Delivery Lead', note: 'Keep shared QA bottlenecks from eroding an otherwise strong team.' },
+      { title: 'Stretch ownership safely', owner: 'Engineering Manager', note: 'Expand scope for high-confidence contributors while keeping review quality intact.' },
+    ],
+    platform: [
+      { title: 'Escalate dependency intake', owner: 'Head of Engineering', note: 'Challenge late dependencies before they enter committed sprint scope.' },
+      { title: 'Reallocate senior bandwidth', owner: 'Engineering Leadership', note: 'Protect senior backend focus from support fragmentation.' },
+    ],
+    cx: [
+      { title: 'Protect release QA windows', owner: 'Delivery Lead', note: 'Keep release confidence from regressing under retest load.' },
+      { title: 'Sustain release-readiness checks', owner: 'Engineering Manager', note: 'Maintain the planning improvements that recently raised confidence.' },
+    ],
+  },
+  'engineering-manager': {
+    all: [
+      { title: 'Tighten reviewer coverage', owner: 'Engineering Manager', note: 'Low-confidence evidence still clusters in cross-team contributors.' },
+      { title: 'Guard deep work time', owner: 'Team Leads', note: 'Support load is still weakening flow and coaching continuity in some teams.' },
+      { title: 'Review escalation candidates', owner: 'Head of Engineering', note: 'Platform risk should be explicitly reviewed in the next planning cycle.' },
+    ],
+    growth: [
+      { title: 'Expand ownership carefully', owner: 'Engineering Manager', note: 'Use current momentum to grow scope for stronger contributors.' },
+      { title: 'Reduce release compression', owner: 'Scrum Master', note: 'QA pressure is the main friction point left in this team.' },
+    ],
+    platform: [
+      { title: 'Protect platform focus', owner: 'Engineering Manager', note: 'Shared support is degrading both delivery and review signal quality.' },
+      { title: 'Improve peer evidence quality', owner: 'Team Leads', note: 'Assign steadier reviewer coverage for cross-board contributors.' },
+    ],
+    cx: [
+      { title: 'Protect automation time', owner: 'Engineering Manager', note: 'Support interruptions still compete with deliberate improvement work.' },
+      { title: 'Keep release hygiene explicit', owner: 'Delivery Lead', note: 'Current gains depend on maintaining readiness discipline.' },
+    ],
+  },
+  'scrum-master': {
+    all: [
+      { title: 'Reduce added-after-start work', owner: 'Scrum Master', note: 'Late intake remains a recurring source of plan distortion.' },
+      { title: 'Escalate blockers sooner', owner: 'Delivery Lead', note: 'Blocker age is still too uneven across teams.' },
+    ],
+    growth: [
+      { title: 'Preserve sprint boundaries', owner: 'Scrum Master', note: 'This team is strongest when intake stays disciplined.' },
+      { title: 'Smooth QA handoff', owner: 'QA Lead', note: 'Release-week pressure remains the main operational risk.' },
+    ],
+    platform: [
+      { title: 'Challenge late dependencies', owner: 'Scrum Master', note: 'Platform scope is still most vulnerable to external timing shocks.' },
+      { title: 'Review blocker escalation path', owner: 'Delivery Lead', note: 'Blocker removal speed is lagging the rest of the org.' },
+    ],
+    cx: [
+      { title: 'Reduce retest churn', owner: 'QA Lead', note: 'Late quality loops still create avoidable sprint noise.' },
+      { title: 'Protect release sequencing', owner: 'Scrum Master', note: 'Coordination remains the key operational lever here.' },
+    ],
+  },
+  hr: {
+    all: [
+      { title: 'Improve reviewer coverage', owner: 'HRBP + Eng Manager', note: 'Backend and cross-team contributors still show thinner evidence quality.' },
+      { title: 'Watch calibration quality', owner: 'HRBP', note: 'High-load teams need extra attention so people data remains interpretable.' },
+    ],
+    growth: [
+      { title: 'Sustain strong narrative quality', owner: 'HRBP', note: 'This team is currently the best baseline for healthy review practice.' },
+      { title: 'Monitor growth expectations', owner: 'Engineering Manager', note: 'Higher ownership should stay aligned with role clarity.' },
+    ],
+    platform: [
+      { title: 'Strengthen evidence confidence', owner: 'HRBP + Eng Manager', note: 'Platform remains the weakest area for review interpretability.' },
+      { title: 'Clarify role scope', owner: 'Engineering Leadership', note: 'Cross-team ownership is broader than current review structure reflects.' },
+    ],
+    cx: [
+      { title: 'Protect development continuity', owner: 'HRBP + Manager', note: 'Support load can still weaken long-term growth signals.' },
+      { title: 'Maintain explicit QA expectations', owner: 'Manager', note: 'Role clarity is helping keep data quality healthier here.' },
+    ],
+  },
+}
+
 const cycleOverrides: Record<string, { peopleValue: string; peopleDelta: string }> = {
   '2026-q2': { peopleValue: '3.22 / 4', peopleDelta: '+0.08' },
   '2026-q1': { peopleValue: '3.15 / 4', peopleDelta: '+0.04' },
@@ -312,12 +494,14 @@ export function getEngineeringSummaryData(audience: Audience, filters: Filters) 
 
   return {
     audienceTags: audienceTagsByAudience[audience],
+    summaryNarrative: summaryNarrativeByAudience[audience][teamKey],
     summaryCards,
     trendSeries,
     trendPanels,
     riskHighlights,
     leadershipInsights: leadershipInsightsByTeam[teamKey],
     quickActions: quickActionsByTeam[teamKey],
+    recommendedActions: recommendedActionsByAudience[audience][teamKey],
     teamHealthRows: teamHealthRowsByTeam[teamKey],
   }
 }

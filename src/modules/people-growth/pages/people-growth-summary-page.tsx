@@ -5,13 +5,16 @@ import { Download, PlayCircle } from 'lucide-react'
 import { usePlatformStore } from '@/app/store/use-platform-store'
 import { DistributionChart, TrendChart } from '@/shared/components/chart-cards'
 import { FilterToolbar } from '@/shared/components/filter-toolbar'
+import { MetricDefinitionDrawer } from '@/shared/components/metric-definition-drawer'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
 import { audienceContexts } from '@/shared/config/audience'
+import { findMetricDictionaryEntry, type MetricDictionaryEntry } from '@/shared/mocks/metric-dictionary'
 import { getPeopleGrowthData } from '@/shared/mocks/people-growth'
 
 export function PeopleGrowthSummaryPage() {
+  const [selectedMetric, setSelectedMetric] = useState<MetricDictionaryEntry | null>(null)
   const audience = usePlatformStore((state) => state.audience)
   const context = audienceContexts[audience]
   const filters = usePlatformStore((state) => state.filters)
@@ -27,6 +30,7 @@ export function PeopleGrowthSummaryPage() {
         <TrendChart
           labels={trendLabels}
           note="Track how category scores change over review cycles and identify improving or declining areas."
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Category Score Trends', 'People Growth') ?? null)}
           title="Category Score Trends"
           tone="default"
           values={gapTrend}
@@ -36,6 +40,7 @@ export function PeopleGrowthSummaryPage() {
         <TrendChart
           labels={trendLabels}
           note="Read overall improvement momentum and spot where category movement starts to flatten."
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Review Momentum', 'People Growth') ?? null)}
           title="Review Momentum"
           tone="success"
           values={gapTrend.map((value, index) => Math.min(100, value + 8 + index * 3))}
@@ -49,6 +54,7 @@ export function PeopleGrowthSummaryPage() {
           benchmarkLabel="Review spread by cycle"
           labels={trendLabels}
           note="Distribution of final scores across the organization."
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Review Score Distribution', 'People Growth') ?? null)}
           title="Review Score Distribution"
           tone="success"
           values={gapTrend.map((value, index) => value + index * 4)}
@@ -58,6 +64,7 @@ export function PeopleGrowthSummaryPage() {
           benchmarkLabel="Readiness concentration"
           labels={trendLabels}
           note="Shows how many employees are clustering in stronger readiness bands over time."
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Growth Readiness Distribution', 'People Growth') ?? null)}
           title="Growth Readiness Distribution"
           tone="default"
           values={gapTrend.map((value, index) => Math.min(100, value + 12 + index * 5))}
@@ -69,6 +76,7 @@ export function PeopleGrowthSummaryPage() {
         <TrendChart
           labels={trendLabels}
           note="Compare self-assessment with peer and manager scores to highlight perception gaps."
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Self vs Peer vs Manager Gap', 'People Growth') ?? null)}
           title="Self vs Peer vs Manager Gap"
           tone="alert"
           values={confidenceTrend}
@@ -78,6 +86,7 @@ export function PeopleGrowthSummaryPage() {
         <TrendChart
           labels={trendLabels}
           note="Low-confidence patterns often point to evidence gaps, not just scoring disagreement."
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Confidence Gap Trend', 'People Growth') ?? null)}
           title="Confidence Gap Trend"
           tone="alert"
           values={confidenceTrend.map((value, index) => Math.max(6, value - index * 2 + 4))}
@@ -90,6 +99,7 @@ export function PeopleGrowthSummaryPage() {
         <TrendChart
           labels={trendLabels}
           note="Top strengths and most common growth areas identified across reviews."
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Strengths & Areas', 'People Growth') ?? null)}
           title="Strengths & Areas"
           tone="default"
           values={confidenceTrend.map((value, index) => Math.max(20, value - index * 2))}
@@ -127,6 +137,7 @@ export function PeopleGrowthSummaryPage() {
 
   return (
     <div className="space-y-6">
+      <MetricDefinitionDrawer entry={selectedMetric} open={selectedMetric !== null} onClose={() => setSelectedMetric(null)} />
       <section className="space-y-3">
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div>
@@ -166,6 +177,16 @@ export function PeopleGrowthSummaryPage() {
             </CardHeader>
             <CardContent>
               <p className="text-xs italic leading-5 text-muted-foreground">{metric.note}</p>
+              {findMetricDictionaryEntry(metric.title, 'People Growth') ? (
+                <button aria-label={`Open definition for ${metric.title}`} className="mt-4 inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" title={`Definition: ${metric.title}`} type="button" onClick={() => setSelectedMetric(findMetricDictionaryEntry(metric.title, 'People Growth') ?? null)}>
+                  <span className="sr-only">Open definition</span>
+                  <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
+                    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
+                    <path d="M12 10v6" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
+                    <circle cx="12" cy="7.25" fill="currentColor" r="1.1" />
+                  </svg>
+                </button>
+              ) : null}
             </CardContent>
           </Card>
         ))}
