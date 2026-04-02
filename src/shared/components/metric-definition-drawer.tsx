@@ -114,7 +114,7 @@ export function MetricDefinitionDrawer({ entry, open, onClose }: MetricDefinitio
           </Card>
 
           <Button asChild className="w-full justify-center" variant="outline">
-            <Link to="/metric-dictionary">
+            <Link to={`/metric-dictionary?module=${encodeURIComponent(entry.module)}&metric=${encodeURIComponent(entry.name)}`} onClick={onClose}>
               <BookOpen className="mr-2 h-4 w-4" />
               Open Full Dictionary
             </Link>

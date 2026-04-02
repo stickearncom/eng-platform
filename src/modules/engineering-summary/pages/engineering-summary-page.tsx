@@ -6,6 +6,7 @@ import { usePlatformStore } from '@/app/store/use-platform-store'
 import { TrendChart } from '@/shared/components/chart-cards'
 import { FilterToolbar } from '@/shared/components/filter-toolbar'
 import { MetricDefinitionDrawer } from '@/shared/components/metric-definition-drawer'
+import { PagePurposeStrip } from '@/shared/components/page-purpose-strip'
 import { StatCard } from '@/shared/components/stat-card'
 import { audienceContexts } from '@/shared/config/audience'
 import { findMetricDictionaryEntry, type MetricDictionaryEntry } from '@/shared/mocks/metric-dictionary'
@@ -32,7 +33,7 @@ export function EngineeringSummaryPage() {
           <div>
             <h1 className="text-2xl font-bold text-foreground md:text-3xl">Engineering Summary</h1>
             <p className="mt-2 max-w-4xl text-sm italic leading-6 text-muted-foreground">
-              High-level overview of engineering health for leadership decision-making. Not operational detail.
+              Provides leadership and cross-functional stakeholders with a high-level view of engineering health. Emphasizes trends, risks, and actionable insights rather than raw operational detail.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -45,6 +46,28 @@ export function EngineeringSummaryPage() {
           </div>
         </div>
       </section>
+
+      <PagePurposeStrip
+        audience={audience}
+        boundary={{
+          executive: 'Leadership entry point for decision-making and drill-down. Use this page to spot trends, risks, and escalation needs without dropping into raw operational detail.',
+          'engineering-manager': 'Leadership-style summary for managers. Use it to scan health quickly before drilling into Delivery or People for action.',
+          'scrum-master': 'Summary-only view for cross-team awareness. Operational diagnosis should continue in Delivery Insights.',
+          hr: 'Aggregate summary for review governance and organization health. Confidential employee-level interpretation stays inside People Growth.',
+        }}
+        primaryAudience={{
+          executive: 'C-level, founders, and Head of Engineering.',
+          'engineering-manager': 'Engineering Managers and Head of Engineering.',
+          'scrum-master': 'Scrum Masters and delivery leads who need portfolio context.',
+          hr: 'HR and approved leadership viewers of aggregate people signals.',
+        }}
+        purpose={{
+          executive: 'Provides a high-level view of engineering health across delivery, quality, flow, collaboration, and approved people signals.',
+          'engineering-manager': 'Provides a high-level view of engineering health so managers can connect summary trends to delivery and coaching actions.',
+          'scrum-master': 'Provides a cross-team snapshot of engineering health to frame delivery risks before deeper sprint analysis.',
+          hr: 'Provides an aggregate view of engineering health with approved people signals to support organization-level review governance.',
+        }}
+      />
 
       <FilterToolbar keys={['dateRange', 'team', 'role', 'level', 'reviewCycle']} />
 

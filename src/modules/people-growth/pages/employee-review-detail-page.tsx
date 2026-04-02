@@ -1,8 +1,10 @@
-import { useParams } from 'react-router-dom'
+import { ChevronLeft } from 'lucide-react'
+import { Link, useParams } from 'react-router-dom'
 
 import { usePlatformStore } from '@/app/store/use-platform-store'
 import { AudienceNotice } from '@/shared/components/audience-notice'
 import { MiniTrend } from '@/shared/components/mini-trend'
+import { PagePurposeStrip } from '@/shared/components/page-purpose-strip'
 import { Badge } from '@/shared/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
 import { audienceContexts } from '@/shared/config/audience'
@@ -24,11 +26,15 @@ export function EmployeeReviewDetailPage() {
     return (
       <div className="space-y-6">
         <section className="space-y-3">
+          <Link className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground" to="/people-growth">
+            <ChevronLeft className="h-4 w-4" />
+            Back to People Growth
+          </Link>
           <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
             <div>
               <h1 className="text-2xl font-bold text-foreground md:text-3xl">Employee Review Detail</h1>
               <p className="mt-2 max-w-4xl text-sm italic leading-6 text-muted-foreground">
-                Individual review detail stays protected unless the active audience is allowed to work with coaching or calibration workflows.
+                Detailed employee review remains protected unless the active audience is allowed to work with coaching, confidentiality, or calibration workflows.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-2">
@@ -38,7 +44,49 @@ export function EmployeeReviewDetailPage() {
           </div>
         </section>
 
-        <AudienceNotice moduleLabel="People Growth detail" />
+        <PagePurposeStrip
+          audience={audience}
+          boundary={{
+            executive: 'Executives do not open this drill-down because employee-level coaching and calibration detail is confidential.',
+            'engineering-manager': 'Restricted drill-down for coaching continuity, evidence review, and calibration follow-up.',
+            'scrum-master': 'Scrum Masters should not open this page because confidential review detail is outside delivery workflow.',
+            hr: 'Restricted drill-down for review governance, policy-safe employee follow-up, and confidentiality-aware documentation.',
+          }}
+          primaryAudience={{
+            executive: 'Not available to this audience.',
+            'engineering-manager': 'Engineering Managers.',
+            'scrum-master': 'Not available to this audience.',
+            hr: 'HR.',
+          }}
+          purpose={{
+            executive: 'Employee-level review detail is not part of executive workflow.',
+            'engineering-manager': 'Provides a detailed employee review view with category breakdown, evidence, peer input, and development planning.',
+            'scrum-master': 'Employee-level review detail is not part of Scrum Master workflow.',
+            hr: 'Provides a detailed employee review view with category breakdown, evidence, peer feedback, and development planning for review governance.',
+          }}
+        />
+
+        <AudienceNotice
+          description={{
+            executive: 'Executive audience keeps people visibility at approved summary level and does not open confidential employee review detail.',
+            'engineering-manager': 'Manager audience can move between people summary and employee drill-down when coaching or calibration follow-up is required.',
+            'scrum-master': 'Scrum Master audience is blocked because employee review detail is outside delivery operations and contains confidential context.',
+            hr: 'HR audience can open employee detail when review governance, completion follow-up, or policy-safe documentation requires it.',
+          }}
+          focus={{
+            executive: 'Aggregate-only people visibility',
+            'engineering-manager': 'Coaching continuity and calibration follow-up',
+            'scrum-master': 'Confidentiality boundary',
+            hr: 'Review governance and confidentiality safety',
+          }}
+          moduleLabel="People Growth detail"
+          note={{
+            executive: 'Employee-level coaching detail stays blocked for executives because people visibility should remain aggregate and decision-oriented.',
+            'engineering-manager': 'Managers can open this route because employee review detail is needed for evidence review, calibration discussion, and action planning.',
+            'scrum-master': 'This route stays blocked because Scrum Master workflows should focus on delivery patterns, not confidential employee review detail.',
+            hr: 'HR can open this route because review governance sometimes requires employee-level evidence, completion follow-up, and confidentiality-safe oversight.',
+          }}
+        />
 
         <Card className="border-foreground/20 bg-muted/50">
           <CardHeader>
@@ -82,11 +130,16 @@ export function EmployeeReviewDetailPage() {
   return (
     <div className="space-y-6">
       <section className="space-y-3">
+        <Link className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground" to="/people-growth">
+          <ChevronLeft className="h-4 w-4" />
+          Back to People Growth
+        </Link>
         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.24em] text-muted-foreground">Employee Review Detail</p>
             <h1 className="text-2xl font-bold text-foreground md:text-3xl">{employee.name}</h1>
             <p className="mt-2 max-w-4xl text-sm italic leading-6 text-muted-foreground">
-              Individual review detail for {employee.role}, combining weighted score evidence, coaching narrative, and confidentiality-aware follow-up.
+              Detailed employee review for managers and HR, combining category breakdown, evidence, peer feedback, and development planning with confidentiality-aware follow-up.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -99,13 +152,42 @@ export function EmployeeReviewDetailPage() {
         </div>
       </section>
 
+      <PagePurposeStrip
+        audience={audience}
+        boundary={{
+          executive: 'Not part of executive workflow.',
+          'engineering-manager': 'Detailed employee view for coaching and calibration follow-through. Manager-only notes and comparative context stay permission-controlled.',
+          'scrum-master': 'Not part of Scrum Master workflow.',
+          hr: 'Detailed employee view for review governance and follow-up. Manager-only notes remain hidden while formal review context stays visible.',
+        }}
+        primaryAudience={{
+          executive: 'Not available to this audience.',
+          'engineering-manager': 'Engineering Managers.',
+          'scrum-master': 'Not available to this audience.',
+          hr: 'HR.',
+        }}
+        purpose={{
+          executive: 'Employee-level review detail is not available in this audience mode.',
+          'engineering-manager': 'Provides a detailed employee review view with category breakdown, evidence, peer feedback, and development planning inside the People Growth workflow.',
+          'scrum-master': 'Employee-level review detail is not available in this audience mode.',
+          hr: 'Provides a detailed employee review view with category breakdown, evidence, peer feedback, and development planning for calibration and review governance.',
+        }}
+      />
+
       <AudienceNotice
+        description={{
+          'engineering-manager': 'Manager audience can use employee detail to connect score signals with evidence, coaching narrative, and next actions.',
+          hr: 'HR audience can use employee detail for calibration governance, review consistency checks, and documented development follow-up.',
+        }}
+        focus={{
+          'engineering-manager': 'Coaching continuity and evidence review',
+          hr: 'Calibration governance and review consistency',
+        }}
         moduleLabel="Individual review detail"
-        note={
-          context.canSeeManagerNotes
-            ? 'Manager-only notes ditampilkan pada audience ini karena dibutuhkan untuk coaching continuity.'
-            : 'Manager-only notes disembunyikan pada audience ini agar batas confidentiality tetap terjaga.'
-        }
+        note={{
+          'engineering-manager': 'Manager-only notes ditampilkan pada audience ini karena dibutuhkan untuk coaching continuity dan direct follow-through.',
+          hr: 'Manager-only notes disembunyikan pada audience ini agar batas confidentiality tetap terjaga, sementara formal review context tetap tersedia.',
+        }}
       />
 
       <section className="grid gap-4 xl:grid-cols-4">
@@ -342,7 +424,7 @@ export function EmployeeReviewDetailPage() {
       </section>
 
       <section className="border-t border-border/70 pt-4 text-xs italic leading-6 text-muted-foreground">
-        Individual review detail should support coaching continuity and calibration decisions, while keeping manager-only narrative separated from summary-level reporting.
+        Employee detail should support coaching continuity and calibration decisions, while keeping manager-only notes, calibration flags, and comparative context separated from summary-level reporting.
       </section>
     </div>
   )

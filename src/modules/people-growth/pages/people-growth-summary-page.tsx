@@ -6,6 +6,7 @@ import { usePlatformStore } from '@/app/store/use-platform-store'
 import { DistributionChart, TrendChart } from '@/shared/components/chart-cards'
 import { FilterToolbar } from '@/shared/components/filter-toolbar'
 import { MetricDefinitionDrawer } from '@/shared/components/metric-definition-drawer'
+import { PagePurposeStrip } from '@/shared/components/page-purpose-strip'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
@@ -143,7 +144,7 @@ export function PeopleGrowthSummaryPage() {
           <div>
             <h1 className="text-2xl font-bold text-foreground md:text-3xl">People Growth Summary</h1>
             <p className="mt-2 max-w-4xl text-sm italic leading-6 text-muted-foreground">
-              Performance review summary for coaching and calibration. Separate from delivery metrics for data sensitivity.
+              Provides HR and engineering managers with a view of growth progression and review-cycle health. Supports calibration decisions, coaching plans, and confidentiality-aware follow-up.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -156,6 +157,28 @@ export function PeopleGrowthSummaryPage() {
           </div>
         </div>
       </section>
+
+      <PagePurposeStrip
+        audience={audience}
+        boundary={{
+          executive: 'Leadership access should stay at approved summary level only. Comparative, calibration, and manager-only detail must remain hidden.',
+          'engineering-manager': 'Use this page for coaching continuity, calibration input, and development follow-up. Do not merge delivery activity into review scoring.',
+          'scrum-master': 'This page is not part of Scrum Master workflow because confidential review data should stay outside delivery operations.',
+          hr: 'Primary governance workspace for calibration cadence, review completion, and confidentiality-aware people decisions.',
+        }}
+        primaryAudience={{
+          executive: 'Approved leadership viewers of aggregate people signals.',
+          'engineering-manager': 'Engineering Managers and Head of Engineering.',
+          'scrum-master': 'Not a primary audience for this module.',
+          hr: 'HR and selected people-review stakeholders.',
+        }}
+        purpose={{
+          executive: 'Provides an approved summary of people growth signals so leadership can understand trend direction without opening confidential employee detail.',
+          'engineering-manager': 'Provides growth tracking and review-cycle health to support calibration decisions, coaching plans, and follow-up actions.',
+          'scrum-master': 'Provides restricted people-growth context only when governance allows summary-level visibility.',
+          hr: 'Provides HR with growth tracking and review-cycle health to support calibration, policy governance, and development planning.',
+        }}
+      />
 
       <FilterToolbar keys={['reviewCycle', 'team', 'role', 'level']} />
 

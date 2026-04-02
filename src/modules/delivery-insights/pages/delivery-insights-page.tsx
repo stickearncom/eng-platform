@@ -5,6 +5,7 @@ import { usePlatformStore } from '@/app/store/use-platform-store'
 import { CapacityChart, DistributionChart, TrendChart } from '@/shared/components/chart-cards'
 import { FilterToolbar } from '@/shared/components/filter-toolbar'
 import { MetricDefinitionDrawer } from '@/shared/components/metric-definition-drawer'
+import { PagePurposeStrip } from '@/shared/components/page-purpose-strip'
 import { Badge } from '@/shared/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
 import { audienceContexts } from '@/shared/config/audience'
@@ -136,7 +137,7 @@ export function DeliveryInsightsPage() {
           <div>
             <h1 className="text-2xl font-bold text-foreground md:text-3xl">Delivery Insights</h1>
             <p className="mt-2 max-w-4xl text-sm italic leading-6 text-muted-foreground">
-              Sprint and delivery analysis for engineering managers. Focus on team-level visibility, not individual scoring.
+              Helps engineering managers and scrum masters analyze sprint execution and team delivery patterns. Focuses on team-level metrics rather than individual performance scoring.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -150,6 +151,28 @@ export function DeliveryInsightsPage() {
         </div>
       </section>
 
+      <PagePurposeStrip
+        audience={audience}
+        boundary={{
+          executive: 'Executive visibility should stay at team or aggregate level. Individual engineer records are for investigation only, not performance scoring.',
+          'engineering-manager': 'Use this page for team execution diagnosis, blocker removal, and sprint follow-up. Do not use it as an employee evaluation surface.',
+          'scrum-master': 'Primary operational workspace for sprint health, planning discipline, blockers, and cross-team delivery risk.',
+          hr: 'HR should read this page only as limited delivery context. Performance interpretation belongs in People Growth, not delivery metrics.',
+        }}
+        primaryAudience={{
+          executive: 'Leadership viewers of aggregate delivery health.',
+          'engineering-manager': 'Engineering Managers and Head of Engineering.',
+          'scrum-master': 'Scrum Masters and delivery leads.',
+          hr: 'Limited HR viewers who need delivery context, not sprint operations ownership.',
+        }}
+        purpose={{
+          executive: 'Provides a controlled delivery view for understanding execution health, planning quality, and team-level delivery patterns.',
+          'engineering-manager': 'Helps managers analyze sprint execution, delivery flow, planning quality, and emerging execution risks.',
+          'scrum-master': 'Helps scrum masters analyze sprint execution, planning behavior, blockers, and team delivery patterns.',
+          hr: 'Provides limited delivery context so HR can understand execution patterns without mixing delivery data into employee scoring.',
+        }}
+      />
+
       <FilterToolbar keys={['board', 'sprint', 'team', 'engineer', 'ticketType', 'issueType', 'addedAt']} />
 
       <Card className="border-foreground/20 bg-muted/50">
@@ -157,7 +180,7 @@ export function DeliveryInsightsPage() {
           <div className="flex items-start gap-2 text-sm">
             <span className="font-medium text-foreground">Note:</span>
             <span className="text-muted-foreground">
-              Engineer-level data is shown only for investigation purposes, not for performance scoring. Use People Growth for evaluation. {context.supportingNote}
+              Engineer-level data is shown only for investigation, blocker removal, and operational follow-up, not for performance scoring. Use People Growth for evaluation. {context.supportingNote}
             </span>
           </div>
         </CardContent>

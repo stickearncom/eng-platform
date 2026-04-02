@@ -1,15 +1,41 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useSearchParams } from 'react-router-dom'
 
+import { usePlatformStore } from '@/app/store/use-platform-store'
 import { AudienceNotice } from '@/shared/components/audience-notice'
+import { PagePurposeStrip } from '@/shared/components/page-purpose-strip'
 import { Button } from '@/shared/ui/button'
 import { Badge } from '@/shared/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
-import { getMetricDictionaryModules, metricDictionaryEntries, metricDictionarySpotlights } from '@/shared/mocks/metric-dictionary'
+import { findMetricDictionaryEntry, getMetricDictionaryModules, metricDictionaryEntries, metricDictionarySpotlights } from '@/shared/mocks/metric-dictionary'
 
 export function MetricDictionaryPage() {
+  const audience = usePlatformStore((state) => state.audience)
   const modules = getMetricDictionaryModules()
-  const [activeModule, setActiveModule] = useState<(typeof modules)[number]>(modules[0])
+  const [searchParams] = useSearchParams()
+  const moduleParam = searchParams.get('module')
+  const metricParam = searchParams.get('metric')
+  const focusedEntry = metricParam ? findMetricDictionaryEntry(metricParam, moduleParam && modules.includes(moduleParam as (typeof modules)[number]) ? (moduleParam as (typeof modules)[number]) : undefined) ?? findMetricDictionaryEntry(metricParam) : null
+  const targetModule = focusedEntry?.module ?? (moduleParam && modules.includes(moduleParam as (typeof modules)[number]) ? (moduleParam as (typeof modules)[number]) : modules[0])
+  const [activeModule, setActiveModule] = useState<(typeof modules)[number]>(targetModule)
   const visibleEntries = metricDictionaryEntries.filter((metric) => metric.module === activeModule)
+
+  useEffect(() => {
+    setActiveModule(targetModule)
+  }, [targetModule])
+
+  useEffect(() => {
+    if (!focusedEntry || focusedEntry.module !== activeModule) {
+      return
+    }
+
+    const cardId = `metric-card-${focusedEntry.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
+    const frame = window.requestAnimationFrame(() => {
+      document.getElementById(cardId)?.scrollIntoView({ block: 'start', behavior: 'smooth' })
+    })
+
+    return () => window.cancelAnimationFrame(frame)
+  }, [activeModule, focusedEntry])
 
   return (
     <div className="space-y-6">
@@ -28,7 +54,49 @@ export function MetricDictionaryPage() {
         </div>
       </section>
 
-      <AudienceNotice moduleLabel="Shared Core" note="Metric Dictionary tetap terbuka lintas audience karena ini adalah lapisan kepercayaan bersama untuk definisi metric dan guardrail." />
+      <PagePurposeStrip
+        audience={audience}
+        boundary={{
+          executive: 'Shared trust layer for verifying metric meaning before leadership decisions. This page defines metrics; it does not replace summary judgment.',
+          'engineering-manager': 'Reference layer for checking definitions, sources, and guardrails before using metrics in delivery or people workflows.',
+          'scrum-master': 'Reference layer for validating delivery definitions and guardrails before using operational metrics in sprint review.',
+          hr: 'Reference layer for validating people and platform metrics before using them in calibration or policy discussions.',
+        }}
+        primaryAudience={{
+          executive: 'All audiences, with emphasis on leadership readers who need trusted definitions.',
+          'engineering-manager': 'All audiences, with emphasis on managers working across delivery and people workflows.',
+          'scrum-master': 'All audiences, with emphasis on delivery-focused users.',
+          hr: 'All audiences, with emphasis on HR and review-governance users.',
+        }}
+        purpose={{
+          executive: 'Provides a shared reference layer for how engineering metrics are defined, governed, sourced, and interpreted across the platform.',
+          'engineering-manager': 'Provides a shared reference layer for how engineering metrics are defined, governed, sourced, and interpreted across delivery and people workflows.',
+          'scrum-master': 'Provides a shared reference layer for how delivery metrics are defined, governed, sourced, and interpreted across the platform.',
+          hr: 'Provides a shared reference layer for how engineering and people metrics are defined, governed, sourced, and interpreted across the platform.',
+        }}
+      />
+
+      <AudienceNotice
+        description={{
+          executive: 'Shared governance view for verifying metric meaning, source, and usage limits before leadership decisions are made.',
+          'engineering-manager': 'Shared governance view for checking metric meaning, source, and guardrails before using metrics in delivery or people workflows.',
+          'scrum-master': 'Shared governance view for validating delivery definitions and interpretation limits before sprint review and planning follow-up.',
+          hr: 'Shared governance view for verifying people and platform metrics before calibration, policy, or development discussions.',
+        }}
+        focus={{
+          executive: 'Decision safety and definition trust',
+          'engineering-manager': 'Operational trust and coaching guardrails',
+          'scrum-master': 'Delivery metric interpretation safety',
+          hr: 'Calibration trust and policy safety',
+        }}
+        moduleLabel="Shared Core"
+        note={{
+          executive: 'Metric Dictionary tetap terbuka karena leadership butuh satu sumber definisi yang bisa dipercaya sebelum mengambil keputusan dari summary atau trend.',
+          'engineering-manager': 'Metric Dictionary tetap terbuka karena manager perlu memverifikasi definisi, source, dan caveat sebelum memakai metric untuk delivery atau people follow-up.',
+          'scrum-master': 'Metric Dictionary tetap terbuka karena delivery workflow tetap butuh guardrail yang jelas agar sprint metric tidak berubah jadi individual KPI.',
+          hr: 'Metric Dictionary tetap terbuka karena HR perlu memastikan definisi, source of truth, dan caveat konsisten sebelum dipakai dalam calibration atau review governance.',
+        }}
+      />
 
       <Card className="border-foreground/20 bg-muted/50">
         <CardContent className="p-4">
@@ -100,14 +168,17 @@ export function MetricDictionaryPage() {
 
         <div className="grid gap-6 xl:grid-cols-2">
           {visibleEntries.map((metric) => (
-            <Card className="border-dashed border-foreground/20" key={metric.name}>
+            <Card className={metric.name === focusedEntry?.name ? 'border-primary/50 bg-primary/5 shadow-[0_0_0_1px_rgba(15,23,42,0.06)]' : 'border-dashed border-foreground/20'} id={`metric-card-${metric.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`} key={metric.name}>
               <CardHeader>
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <CardTitle className="text-base">{metric.name}</CardTitle>
                     <CardDescription>{metric.module}</CardDescription>
                   </div>
-                  <Badge variant="outline">{metric.refreshCadence}</Badge>
+                  <div className="flex items-center gap-2">
+                    {metric.name === focusedEntry?.name ? <Badge variant="accent">Focused Metric</Badge> : null}
+                    <Badge variant="outline">{metric.refreshCadence}</Badge>
+                  </div>
                 </div>
               </CardHeader>
               <CardContent className="space-y-4">

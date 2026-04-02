@@ -1,14 +1,31 @@
+import type { Audience } from '@/shared/config/audience'
 import { usePlatformStore } from '@/app/store/use-platform-store'
 import { audienceContexts } from '@/shared/config/audience'
 import { Badge } from '@/shared/ui/badge'
 import { Card, CardContent } from '@/shared/ui/card'
 
+type AudienceAwareCopy = string | Partial<Record<Audience, string>>
+
 interface AudienceNoticeProps {
   moduleLabel: string
-  note?: string
+  note?: AudienceAwareCopy
+  description?: AudienceAwareCopy
+  focus?: AudienceAwareCopy
 }
 
-export function AudienceNotice({ moduleLabel, note }: AudienceNoticeProps) {
+function resolveCopy(copy: AudienceAwareCopy | undefined, audience: Audience, fallback: string) {
+  if (!copy) {
+    return fallback
+  }
+
+  if (typeof copy === 'string') {
+    return copy
+  }
+
+  return copy[audience] ?? Object.values(copy)[0] ?? fallback
+}
+
+export function AudienceNotice({ moduleLabel, note, description, focus }: AudienceNoticeProps) {
   const audience = usePlatformStore((state) => state.audience)
   const context = audienceContexts[audience]
 
@@ -21,11 +38,11 @@ export function AudienceNotice({ moduleLabel, note }: AudienceNoticeProps) {
             <h2 className="text-base font-semibold text-foreground">{context.label} view</h2>
             <Badge variant="outline">{moduleLabel}</Badge>
           </div>
-          <p className="max-w-3xl text-sm leading-6 text-muted-foreground">{context.description}</p>
+          <p className="max-w-3xl text-sm leading-6 text-muted-foreground">{resolveCopy(description, audience, context.description)}</p>
         </div>
         <div className="space-y-2 md:max-w-sm">
-          <Badge variant="accent" className="w-fit">{context.focus}</Badge>
-          <p className="text-sm leading-6 text-muted-foreground">{note ?? context.supportingNote}</p>
+          <Badge variant="accent" className="w-fit">{resolveCopy(focus, audience, context.focus)}</Badge>
+          <p className="text-sm leading-6 text-muted-foreground">{resolveCopy(note, audience, context.supportingNote)}</p>
         </div>
       </CardContent>
     </Card>

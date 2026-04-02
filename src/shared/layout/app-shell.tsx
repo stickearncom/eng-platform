@@ -23,6 +23,10 @@ export function AppShell() {
   }, [audience, location.pathname, navigate])
 
   useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+  }, [location.pathname])
+
+  useEffect(() => {
     const candidates = navigation.filter((item) => item.to !== location.pathname).slice(0, 2)
 
     const requestIdleCallbackRef = window.requestIdleCallback
