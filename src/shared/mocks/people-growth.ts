@@ -1,5 +1,4 @@
 import type { FilterKey } from '@/app/store/use-platform-store'
-import type { Audience } from '@/shared/config/audience'
 
 type Filters = Record<FilterKey, string>
 
@@ -193,7 +192,7 @@ function getCategoryRows(filters: Filters) {
   return baseCategoryRows
 }
 
-export function getPeopleGrowthData(audience: Audience, filters: Filters) {
+export function getPeopleGrowthData(filters: Filters) {
   const cycle = cycleStats[filters.reviewCycle as keyof typeof cycleStats] ?? cycleStats['2026-q2']
   const filteredEmployees = filterEmployees(filters)
   const safeEmployees = filteredEmployees.length > 0 ? filteredEmployees : employees
@@ -208,22 +207,12 @@ export function getPeopleGrowthData(audience: Audience, filters: Filters) {
     { title: 'Growth Ready', value: String(growthReadyCount), delta: 'Up', note: 'Employees with strong readiness signals for broader scope.' },
   ]
 
-  const people = audience === 'executive'
-    ? safeEmployees.map((employee) => ({
-        ...employee,
-        name: employee.team,
-        role: 'Team trend summary',
-        level: 'Aggregate view',
-        focus: `${employee.team} needs targeted follow-up on ${employee.focus.toLowerCase()}.`,
-      }))
-    : safeEmployees
-
   return {
     analyticsTabs: ['Category Trends', 'Score Distribution', 'Gap Analysis', 'Strengths & Areas'],
     peopleGrowthStats: stats,
     categoryRows: getCategoryRows(filters),
     peopleHighlights: highlights,
-    employees: people,
+    employees: safeEmployees,
     gapTrend: cycle.gapTrend,
     confidenceTrend: cycle.confidenceTrend,
     topStrengths,

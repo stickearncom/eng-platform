@@ -1,5 +1,4 @@
 import type { FilterKey } from '@/app/store/use-platform-store'
-import type { Audience } from '@/shared/config/audience'
 
 type Filters = Record<FilterKey, string>
 
@@ -131,35 +130,11 @@ const trendPanelsByTeam: Record<string, TrendPanel[]> = {
   ],
 }
 
-const riskByAudience: Record<Audience, Record<string, string[]>> = {
-  executive: {
-    all: [
-      'Core Platform has the highest carry-over rate for two consecutive sprints.',
-      'Two senior engineers contribute across multiple boards with no explicit allocation snapshot.',
-      'QA support is spread across three squads, weakening release predictability.',
-    ],
-    growth: ['Growth Squad is healthy overall, but still depends on shared QA coverage near release cut-off.', 'Forecast remains strong because mid-sprint scope change is lower than org average.', 'Leadership intervention is not needed unless support work rises again next sprint.'],
-    platform: ['Platform carry-over remains the main source of leadership forecast risk.', 'Cross-board dependency work is obscuring true capacity for senior backend contributors.', 'One unresolved reliability concern still affects confidence more than raw ticket volume suggests.'],
-    cx: ['Customer Experience is improving, but release stability is still sensitive to QA bottlenecks.', 'Retest loops create avoidable late-sprint pressure.', 'Cross-functional delivery confidence is healthy if shared support load stays contained.'],
-  },
-  'engineering-manager': {
-    all: ['Core Platform blockers are increasingly dependency-driven, not capacity-driven.', 'Low-confidence review cases cluster in cross-team engineers with thin peer coverage.', 'Growth Squad review turnaround is healthy, but QA coverage still creates end-of-sprint pressure.'],
-    growth: ['Alya and the Growth Squad bench show strong ownership momentum this cycle.', 'Main operational risk is QA support concentration during release week.', 'People signals are healthy enough to support larger ownership bets next cycle.'],
-    platform: ['Cross-board support is distorting both delivery flow and people evidence quality.', 'Planning accuracy improves when dependency intake is challenged early in sprint planning.', 'Backend peer coverage is still thinner than needed for confident calibration.'],
-    cx: ['QA focus protection remains the biggest lever for delivery and growth quality.', 'Release-readiness communication improved, but retest churn still hurts predictability.', 'Automation depth is trending up but still vulnerable to support interruptions.'],
-  },
-  'scrum-master': {
-    all: ['Carry-over in Core Platform is still dominated by unresolved upstream dependencies.', 'Added-after-start work remains high in shared-support tickets.', 'Two squads rely on the same QA support window before release cut-off.'],
-    growth: ['Growth Squad has the cleanest sprint boundaries, with fewer added-after-start tickets.', 'The main flow risk is late QA compression before release.', 'Planning accuracy remains above org average for three consecutive sprints.'],
-    platform: ['Platform sprint health remains unstable because dependency work enters late.', 'Shared support requests keep distorting initial sprint scope.', 'Blocker removal speed remains slower than the rest of the organization.'],
-    cx: ['Customer Experience is improving but still sensitive to retest loops.', 'Release coordination is better than last quarter, but blocker aging remains uneven.', 'Added-after-start bug work still lands too late in the sprint.'],
-  },
-  hr: {
-    all: ['Calibration-required cases are concentrated in engineers working across multiple squads.', 'Peer reviewer coverage remains thin for backend contributors in Core Platform.', 'Learning & Growth scores lag in teams with heavy incident or support load.'],
-    growth: ['Growth Squad shows the healthiest review confidence and narrative coverage.', 'The main people risk is ensuring growth momentum continues as ownership expands.', 'No urgent calibration exception is visible for this team right now.'],
-    platform: ['Platform contributors have the highest concentration of low-confidence evidence.', 'Cross-team load is affecting both calibration quality and development continuity.', 'HR follow-up should focus on reviewer coverage and role-scope clarity.'],
-    cx: ['Customer Experience contributors show healthier narrative consistency than prior cycle.', 'Growth risk remains tied to support load cutting into development-focused work.', 'QA role expectations should stay explicit to prevent review interpretation drift.'],
-  },
+const riskHighlightsByTeam: Record<string, string[]> = {
+  all: ['Core Platform blockers are increasingly dependency-driven, not capacity-driven.', 'Low-confidence review cases cluster in cross-team engineers with thin peer coverage.', 'Growth Squad review turnaround is healthy, but QA coverage still creates end-of-sprint pressure.'],
+  growth: ['Alya and the Growth Squad bench show strong ownership momentum this cycle.', 'Main operational risk is QA support concentration during release week.', 'People signals are healthy enough to support larger ownership bets next cycle.'],
+  platform: ['Cross-board support is distorting both delivery flow and people evidence quality.', 'Planning accuracy improves when dependency intake is challenged early in sprint planning.', 'Backend peer coverage is still thinner than needed for confident calibration.'],
+  cx: ['QA focus protection remains the biggest lever for delivery and growth quality.', 'Release-readiness communication improved, but retest churn still hurts predictability.', 'Automation depth is trending up but still vulnerable to support interruptions.'],
 }
 
 const leadershipInsightsByTeam: Record<string, string[]> = {
@@ -272,179 +247,49 @@ const teamHealthRowsByTeam: Record<string, TeamHealthRow[]> = {
   cx: [{ team: 'Customer Experience', deliveryScore: '79%', qualityScore: '91%', peopleScore: '3.27 / 4' }],
 }
 
-const audienceTagsByAudience: Record<Audience, string[]> = {
-  executive: ['Founder / C-Level', 'Head of Engineering'],
-  'engineering-manager': ['Head of Engineering', 'Engineering Manager'],
-  'scrum-master': ['Scrum Master', 'Delivery Lead'],
-  hr: ['HRBP', 'Talent Partner'],
-}
+const stakeholderTags = ['Head of Engineering', 'Engineering Manager', 'HRBP']
 
-const summaryNarrativeByAudience: Record<Audience, Record<string, SummaryNarrative>> = {
-  executive: {
-    all: {
-      headline: 'Delivery confidence is improving, but organizational risk remains concentrated in Core Platform.',
-      summary: 'Engineering is trending better on forecast reliability, review flow, and people signals, while cross-team load and unresolved dependency pressure still weaken portfolio predictability.',
-      implication: 'Leadership attention is mainly needed on capacity concentration, dependency governance, and resolving the remaining reliability hotspot.',
-    },
-    growth: {
-      headline: 'Growth Squad is on track across delivery, quality, and people goals.',
-      summary: 'Execution remains predictable and people signals are strong, with the main watch item staying around shared QA load near release windows.',
-      implication: 'This team can take broader ownership if shared QA dependence is kept controlled.',
-    },
-    platform: {
-      headline: 'Core Platform is the main source of portfolio delivery and org-risk pressure.',
-      summary: 'Carry-over, dependency churn, and cross-board support are collectively weakening delivery confidence more than raw throughput metrics suggest.',
-      implication: 'This is the clearest candidate for leadership intervention on scope protection and staffing allocation.',
-    },
-    cx: {
-      headline: 'Customer Experience is stabilizing, but release confidence is still sensitive to QA bottlenecks.',
-      summary: 'Quality and flow are improving, though late quality loops still create planning noise close to sprint close.',
-      implication: 'Stakeholder confidence remains positive if QA bandwidth is protected at release time.',
-    },
+const summaryNarrativesByTeam: Record<string, SummaryNarrative> = {
+  all: {
+    headline: 'Overall engineering health is positive, but team-level execution quality is uneven.',
+    summary: 'Growth and Customer Experience are trending well, while Core Platform still shows the highest operational drag across dependencies, flow, and calibration confidence.',
+    implication: 'Management focus should stay on dependency intake, reviewer coverage, and protecting capacity where support load distorts outcomes.',
   },
-  'engineering-manager': {
-    all: {
-      headline: 'Overall engineering health is positive, but team-level execution quality is uneven.',
-      summary: 'Growth and Customer Experience are trending well, while Core Platform still shows the highest operational drag across dependencies, flow, and calibration confidence.',
-      implication: 'Manager focus should stay on dependency intake, reviewer coverage, and protecting capacity where support load distorts outcomes.',
-    },
-    growth: {
-      headline: 'Growth Squad is operating from a strong base this cycle.',
-      summary: 'Planning, quality, and people signals all point upward, with only a narrow risk around release-week QA compression.',
-      implication: 'This is a good team for stretching ownership if support interruptions stay low.',
-    },
-    platform: {
-      headline: 'Platform needs tighter operating discipline to recover predictability.',
-      summary: 'Flow and people evidence both degrade when dependency work and shared support enter too late in the cycle.',
-      implication: 'The immediate management lever is better intake challenge and clearer protected capacity.',
-    },
-    cx: {
-      headline: 'Customer Experience is improving with healthier release-readiness patterns.',
-      summary: 'Team health is generally stable, with growth and collaboration signals remaining positive despite QA-sensitive release cycles.',
-      implication: 'Keep reinforcing release hygiene and protect automation work from support churn.',
-    },
+  growth: {
+    headline: 'Growth Squad is operating from a strong base this cycle.',
+    summary: 'Planning, quality, and people signals all point upward, with only a narrow risk around release-week QA compression.',
+    implication: 'This is a good team for stretching ownership if support interruptions stay low.',
   },
-  'scrum-master': {
-    all: {
-      headline: 'Sprint health is broadly improving, but scope and blocker patterns are still uneven by team.',
-      summary: 'Planning accuracy is moving in the right direction, though added-after-start work and dependency timing still distort platform and shared-support outcomes.',
-      implication: 'The main delivery goal is to tighten sprint boundaries and remove blocker drag earlier.',
-    },
-    growth: {
-      headline: 'Growth Squad has the cleanest sprint discipline in the portfolio.',
-      summary: 'Added-after-start work is lower than the org average and blocker pressure remains manageable.',
-      implication: 'The best next step is preserving that planning discipline as scope expands.',
-    },
-    platform: {
-      headline: 'Platform sprint health remains the most unstable in the org.',
-      summary: 'Late dependency work and shared support requests keep undermining initial sprint assumptions.',
-      implication: 'Delivery management should focus on intake timing and blocker escalation speed.',
-    },
-    cx: {
-      headline: 'Customer Experience is improving, with most risk tied to release timing.',
-      summary: 'Planning is healthier, but retest churn and QA load still generate late sprint noise.',
-      implication: 'Release coordination remains the key delivery-management lever.',
-    },
+  platform: {
+    headline: 'Platform needs tighter operating discipline to recover predictability.',
+    summary: 'Flow and people evidence both degrade when dependency work and shared support enter too late in the cycle.',
+    implication: 'The immediate management lever is better intake challenge and clearer protected capacity.',
   },
-  hr: {
-    all: {
-      headline: 'People Growth is healthy overall, but evidence quality is not evenly distributed.',
-      summary: 'The organization is trending upward on growth scores, while backend and cross-team contributors still show thinner peer coverage and lower confidence narratives.',
-      implication: 'HR attention should stay on calibration quality, reviewer coverage, and role-scope clarity in higher-load teams.',
-    },
-    growth: {
-      headline: 'Growth Squad has the strongest review confidence and the healthiest narrative coverage.',
-      summary: 'Scores and qualitative signals both indicate stable growth momentum in this team.',
-      implication: 'The people goal here is sustaining momentum as ownership expectations increase.',
-    },
-    platform: {
-      headline: 'Core Platform remains the main people-risk area this cycle.',
-      summary: 'Low-confidence evidence and cross-team load are making review interpretation harder than it should be.',
-      implication: 'Calibration quality should improve through better reviewer coverage and clearer role boundaries.',
-    },
-    cx: {
-      headline: 'Customer Experience people signals are improving and becoming more consistent.',
-      summary: 'Collaboration and readiness narratives are healthier than prior cycle, though support load still competes with deliberate skill growth.',
-      implication: 'Maintain explicit role expectations so people data stays interpretable over time.',
-    },
+  cx: {
+    headline: 'Customer Experience is improving with healthier release-readiness patterns.',
+    summary: 'Team health is generally stable, with growth and collaboration signals remaining positive despite QA-sensitive release cycles.',
+    implication: 'Keep reinforcing release hygiene and protect automation work from support churn.',
   },
 }
 
-const recommendedActionsByAudience: Record<Audience, Record<string, RecommendedAction[]>> = {
-  executive: {
-    all: [
-      { title: 'Protect Platform capacity', owner: 'Head of Engineering', note: 'Reduce cross-board dilution for senior platform contributors this cycle.' },
-      { title: 'Tighten dependency governance', owner: 'EM + Product', note: 'Escalate late dependency intake that keeps distorting sprint confidence.' },
-      { title: 'Stabilize QA support load', owner: 'Engineering Leadership', note: 'Rebalance shared QA coverage before release pressure rises again.' },
-    ],
-    growth: [
-      { title: 'Preserve QA coverage', owner: 'Delivery Lead', note: 'Keep shared QA bottlenecks from eroding an otherwise strong team.' },
-      { title: 'Stretch ownership safely', owner: 'Engineering Manager', note: 'Expand scope for high-confidence contributors while keeping review quality intact.' },
-    ],
-    platform: [
-      { title: 'Escalate dependency intake', owner: 'Head of Engineering', note: 'Challenge late dependencies before they enter committed sprint scope.' },
-      { title: 'Reallocate senior bandwidth', owner: 'Engineering Leadership', note: 'Protect senior backend focus from support fragmentation.' },
-    ],
-    cx: [
-      { title: 'Protect release QA windows', owner: 'Delivery Lead', note: 'Keep release confidence from regressing under retest load.' },
-      { title: 'Sustain release-readiness checks', owner: 'Engineering Manager', note: 'Maintain the planning improvements that recently raised confidence.' },
-    ],
-  },
-  'engineering-manager': {
-    all: [
-      { title: 'Tighten reviewer coverage', owner: 'Engineering Manager', note: 'Low-confidence evidence still clusters in cross-team contributors.' },
-      { title: 'Guard deep work time', owner: 'Team Leads', note: 'Support load is still weakening flow and coaching continuity in some teams.' },
-      { title: 'Review escalation candidates', owner: 'Head of Engineering', note: 'Platform risk should be explicitly reviewed in the next planning cycle.' },
-    ],
-    growth: [
-      { title: 'Expand ownership carefully', owner: 'Engineering Manager', note: 'Use current momentum to grow scope for stronger contributors.' },
-      { title: 'Reduce release compression', owner: 'Scrum Master', note: 'QA pressure is the main friction point left in this team.' },
-    ],
-    platform: [
-      { title: 'Protect platform focus', owner: 'Engineering Manager', note: 'Shared support is degrading both delivery and review signal quality.' },
-      { title: 'Improve peer evidence quality', owner: 'Team Leads', note: 'Assign steadier reviewer coverage for cross-board contributors.' },
-    ],
-    cx: [
-      { title: 'Protect automation time', owner: 'Engineering Manager', note: 'Support interruptions still compete with deliberate improvement work.' },
-      { title: 'Keep release hygiene explicit', owner: 'Delivery Lead', note: 'Current gains depend on maintaining readiness discipline.' },
-    ],
-  },
-  'scrum-master': {
-    all: [
-      { title: 'Reduce added-after-start work', owner: 'Scrum Master', note: 'Late intake remains a recurring source of plan distortion.' },
-      { title: 'Escalate blockers sooner', owner: 'Delivery Lead', note: 'Blocker age is still too uneven across teams.' },
-    ],
-    growth: [
-      { title: 'Preserve sprint boundaries', owner: 'Scrum Master', note: 'This team is strongest when intake stays disciplined.' },
-      { title: 'Smooth QA handoff', owner: 'QA Lead', note: 'Release-week pressure remains the main operational risk.' },
-    ],
-    platform: [
-      { title: 'Challenge late dependencies', owner: 'Scrum Master', note: 'Platform scope is still most vulnerable to external timing shocks.' },
-      { title: 'Review blocker escalation path', owner: 'Delivery Lead', note: 'Blocker removal speed is lagging the rest of the org.' },
-    ],
-    cx: [
-      { title: 'Reduce retest churn', owner: 'QA Lead', note: 'Late quality loops still create avoidable sprint noise.' },
-      { title: 'Protect release sequencing', owner: 'Scrum Master', note: 'Coordination remains the key operational lever here.' },
-    ],
-  },
-  hr: {
-    all: [
-      { title: 'Improve reviewer coverage', owner: 'HRBP + Eng Manager', note: 'Backend and cross-team contributors still show thinner evidence quality.' },
-      { title: 'Watch calibration quality', owner: 'HRBP', note: 'High-load teams need extra attention so people data remains interpretable.' },
-    ],
-    growth: [
-      { title: 'Sustain strong narrative quality', owner: 'HRBP', note: 'This team is currently the best baseline for healthy review practice.' },
-      { title: 'Monitor growth expectations', owner: 'Engineering Manager', note: 'Higher ownership should stay aligned with role clarity.' },
-    ],
-    platform: [
-      { title: 'Strengthen evidence confidence', owner: 'HRBP + Eng Manager', note: 'Platform remains the weakest area for review interpretability.' },
-      { title: 'Clarify role scope', owner: 'Engineering Leadership', note: 'Cross-team ownership is broader than current review structure reflects.' },
-    ],
-    cx: [
-      { title: 'Protect development continuity', owner: 'HRBP + Manager', note: 'Support load can still weaken long-term growth signals.' },
-      { title: 'Maintain explicit QA expectations', owner: 'Manager', note: 'Role clarity is helping keep data quality healthier here.' },
-    ],
-  },
+const recommendedActionsByTeam: Record<string, RecommendedAction[]> = {
+  all: [
+    { title: 'Tighten reviewer coverage', owner: 'Engineering Manager', note: 'Low-confidence evidence still clusters in cross-team contributors.' },
+    { title: 'Guard deep work time', owner: 'Team Leads', note: 'Support load is still weakening flow and coaching continuity in some teams.' },
+    { title: 'Review escalation candidates', owner: 'Head of Engineering', note: 'Platform risk should be explicitly reviewed in the next planning cycle.' },
+  ],
+  growth: [
+    { title: 'Expand ownership carefully', owner: 'Engineering Manager', note: 'Use current momentum to grow scope for stronger contributors.' },
+    { title: 'Reduce release compression', owner: 'Scrum Master', note: 'QA pressure is the main friction point left in this team.' },
+  ],
+  platform: [
+    { title: 'Protect platform focus', owner: 'Engineering Manager', note: 'Shared support is degrading both delivery and review signal quality.' },
+    { title: 'Improve peer evidence quality', owner: 'Team Leads', note: 'Assign steadier reviewer coverage for cross-board contributors.' },
+  ],
+  cx: [
+    { title: 'Protect automation time', owner: 'Engineering Manager', note: 'Support interruptions still compete with deliberate improvement work.' },
+    { title: 'Keep release hygiene explicit', owner: 'Delivery Lead', note: 'Current gains depend on maintaining readiness discipline.' },
+  ],
 }
 
 const cycleOverrides: Record<string, { peopleValue: string; peopleDelta: string }> = {
@@ -463,7 +308,7 @@ function clamp(value: number) {
   return Math.max(24, Math.min(96, value))
 }
 
-export function getEngineeringSummaryData(audience: Audience, filters: Filters) {
+export function getEngineeringSummaryData(filters: Filters) {
   const teamKey = filters.team in summaryByTeam ? filters.team : 'all'
   const cycle = cycleOverrides[filters.reviewCycle] ?? cycleOverrides['2026-q2']
   const offset = rangeOffsets[filters.dateRange] ?? 0
@@ -490,18 +335,18 @@ export function getEngineeringSummaryData(audience: Audience, filters: Filters) 
     values: panel.values.map((value) => clamp(value + offset)),
   }))
 
-  const riskHighlights = riskByAudience[audience][teamKey]
+  const riskHighlights = riskHighlightsByTeam[teamKey]
 
   return {
-    audienceTags: audienceTagsByAudience[audience],
-    summaryNarrative: summaryNarrativeByAudience[audience][teamKey],
+    stakeholderTags,
+    summaryNarrative: summaryNarrativesByTeam[teamKey],
     summaryCards,
     trendSeries,
     trendPanels,
     riskHighlights,
     leadershipInsights: leadershipInsightsByTeam[teamKey],
     quickActions: quickActionsByTeam[teamKey],
-    recommendedActions: recommendedActionsByAudience[audience][teamKey],
+    recommendedActions: recommendedActionsByTeam[teamKey],
     teamHealthRows: teamHealthRowsByTeam[teamKey],
   }
 }

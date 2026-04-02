@@ -16,9 +16,8 @@ import { getEngineeringSummaryData } from '@/shared/mocks/engineering-summary'
 
 export function EngineeringSummaryPage() {
   const [selectedMetric, setSelectedMetric] = useState<MetricDictionaryEntry | null>(null)
-  const audience = usePlatformStore((state) => state.audience)
   const filters = usePlatformStore((state) => state.filters)
-  const { audienceTags, recommendedActions, summaryCards, summaryNarrative, trendPanels, riskHighlights, leadershipInsights, quickActions, teamHealthRows } = getEngineeringSummaryData(audience, filters)
+  const { stakeholderTags, recommendedActions, summaryCards, summaryNarrative, trendPanels, riskHighlights, leadershipInsights, quickActions, teamHealthRows } = getEngineeringSummaryData(filters)
   const trendLabels = ['W1', 'W2', 'W3', 'W4', 'W5']
   const panelVariants: Array<'area' | 'line' | 'bars'> = ['area', 'area', 'line', 'bars']
   const panelTones: Array<'default' | 'success' | 'alert'> = ['default', 'success', 'default', 'alert']
@@ -35,8 +34,8 @@ export function EngineeringSummaryPage() {
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-muted-foreground">Audience:</span>
-            {audienceTags.map((tag) => (
+            <span className="text-xs text-muted-foreground">Primary stakeholders:</span>
+            {stakeholderTags.map((tag) => (
               <Badge className="rounded-md px-2.5 py-1" key={tag} variant="outline">
                 {tag}
               </Badge>

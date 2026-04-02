@@ -1,19 +1,15 @@
 import { ChevronLeft } from 'lucide-react'
 import { Link, useParams } from 'react-router-dom'
 
-import { usePlatformStore } from '@/app/store/use-platform-store'
-import { AudienceNotice } from '@/shared/components/audience-notice'
+import { AccessNote } from '@/shared/components/access-note'
 import { MiniTrend } from '@/shared/components/mini-trend'
 import { PagePurposeStrip } from '@/shared/components/page-purpose-strip'
 import { Badge } from '@/shared/ui/badge'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
-import { audienceContexts } from '@/shared/config/audience'
 import { getEmployeeDetail, getPeopleRoster } from '@/shared/mocks/people-growth'
 
 export function EmployeeReviewDetailPage() {
   const { employeeId } = useParams()
-  const audience = usePlatformStore((state) => state.audience)
-  const context = audienceContexts[audience]
   const employees = getPeopleRoster()
   const employee = employees.find((item) => item.id === employeeId) ?? employees[0]
   const employeeDetail = getEmployeeDetail(employee.id)
@@ -21,75 +17,6 @@ export function EmployeeReviewDetailPage() {
   const previousCycleValues = employeeDetail.previousCycles.map((cycle) => Math.round(Number(cycle.score) * 25))
   const categoryScores = employeeDetail.categoryRows.map((row) => Number(row.weighted))
   const strongestCategory = employeeDetail.categoryRows.reduce((highest, row) => (Number(row.weighted) > Number(highest.weighted) ? row : highest), employeeDetail.categoryRows[0])
-
-  if (!context.canOpenPeopleDetail) {
-    return (
-      <div className="space-y-6">
-        <section className="space-y-3">
-          <Link className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground" to="/people-growth">
-            <ChevronLeft className="h-4 w-4" />
-            Back to People Growth
-          </Link>
-          <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-foreground md:text-3xl">Employee Review Detail</h1>
-              <p className="mt-2 max-w-4xl text-sm italic leading-6 text-muted-foreground">
-                Detailed employee review remains protected unless the active audience is allowed to work with coaching, confidentiality, or calibration workflows.
-              </p>
-            </div>
-            <div className="flex flex-wrap items-center gap-2">
-              <Badge className="rounded-md px-2.5 py-1" variant="outline">Restricted view</Badge>
-              <Badge className="rounded-md px-2.5 py-1" variant="outline">{context.label}</Badge>
-            </div>
-          </div>
-        </section>
-
-        <PagePurposeStrip
-          boundary="This drill-down page is reserved for roles that need employee-level review follow-up, coaching continuity, or formal review governance."
-          primaryAudience="Engineering Managers and HR."
-          purpose="Provides a detailed employee review view with category breakdown, evidence, peer input, and development planning while keeping confidentiality boundaries explicit."
-        />
-
-        <AudienceNotice moduleLabel="People Growth detail" note="Audience preview only changes permission-sensitive visibility. It does not change the product narrative or the main navigation structure." />
-
-        <Card className="border-foreground/20 bg-muted/50">
-          <CardHeader>
-            <CardTitle>Why this is blocked</CardTitle>
-            <CardDescription>
-              The mock app uses Audience Context to preview permission-aware behavior before real authentication and authorization are wired in.
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-3 text-sm leading-6 text-muted-foreground">
-            <p>Scrum Master should not see confidential performance detail.</p>
-            <p>Executive should see summarized people signals, not employee-level coaching notes.</p>
-            <p>Engineering Manager and HR can open this route because their workflows depend on calibration or review follow-up.</p>
-          </CardContent>
-        </Card>
-
-        <section className="grid gap-4 md:grid-cols-2">
-          <Card className="border-dashed border-foreground/20">
-            <CardHeader>
-              <CardTitle className="text-sm">Who should use this page</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm leading-6 text-muted-foreground">
-              <p>Engineering Manager: coaching continuity, evidence review, and action planning.</p>
-              <p>HR: calibration governance, completion follow-up, and confidentiality-safe employee review access.</p>
-            </CardContent>
-          </Card>
-
-          <Card className="border-dashed border-foreground/20">
-            <CardHeader>
-              <CardTitle className="text-sm">What remains visible elsewhere</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm leading-6 text-muted-foreground">
-              <p>Executives keep access to aggregated people signals only.</p>
-              <p>Scrum Masters stay on delivery and planning views without confidential narrative detail.</p>
-            </CardContent>
-          </Card>
-        </section>
-      </div>
-    )
-  }
 
   return (
     <div className="space-y-6">
@@ -107,7 +34,7 @@ export function EmployeeReviewDetailPage() {
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <Badge className="rounded-md px-2.5 py-1" variant="outline">{context.label}</Badge>
+            <Badge className="rounded-md px-2.5 py-1" variant="outline">Manager / HR Workflow</Badge>
             <Badge className="rounded-md px-2.5 py-1" variant={employee.confidence === 'Low confidence' ? 'alert' : 'success'}>
               {employee.confidence}
             </Badge>
@@ -122,11 +49,11 @@ export function EmployeeReviewDetailPage() {
         purpose="Provides a detailed employee review view with category breakdown, evidence, peer feedback, and development planning inside the People Growth workflow."
       />
 
-      <AudienceNotice
-        description="Audience preview is used here to show how confidential review data behaves under different permission models while keeping the page purpose unchanged."
-        focus="Permission-sensitive review detail"
+      <AccessNote
+        description="This page represents the detailed manager and HR workflow for employee review follow-up, coaching continuity, and calibration preparation."
+        focus="Confidential detail and follow-up"
         moduleLabel="Individual review detail"
-        note={context.canSeeManagerNotes ? 'Manager-only notes ditampilkan pada preview ini karena dibutuhkan untuk coaching continuity dan direct follow-through.' : 'Manager-only notes disembunyikan pada preview ini agar batas confidentiality tetap terjaga, sementara formal review context tetap tersedia.'}
+        note="In production, access to manager-only notes and comparative context remains permission-controlled even when this workflow is available."
       />
 
       <section className="grid gap-4 xl:grid-cols-4">
@@ -196,9 +123,7 @@ export function EmployeeReviewDetailPage() {
             <div className="rounded-xl border border-border/70 bg-background/80 p-4">
               <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Confidentiality mode</p>
               <p className="mt-2 text-sm leading-6 text-foreground">
-                {context.canSeeManagerNotes
-                  ? 'Manager coaching notes are visible in this audience because direct follow-through is part of the workflow.'
-                  : 'Restricted manager narrative stays hidden, while formal action items remain visible.'}
+                This detailed workflow can include coaching narrative and protected follow-up context. Production access remains limited to approved reviewers.
               </p>
             </div>
             <div className="rounded-xl border border-border/70 bg-background/80 p-4">
@@ -334,17 +259,11 @@ export function EmployeeReviewDetailPage() {
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-3">
-            {context.canSeeManagerNotes ? (
-              employeeDetail.managerOnly.map((note) => (
-                <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-4 text-sm leading-6 text-foreground" key={note}>
-                  {note}
-                </div>
-              ))
-            ) : (
-              <div className="rounded-2xl border border-border/70 bg-background/75 p-4 text-sm leading-6 text-muted-foreground">
-                Manager-only narrative is hidden for this audience. HR can still review the category breakdown and formal development actions.
+            {employeeDetail.managerOnly.map((note) => (
+              <div className="rounded-2xl border border-destructive/20 bg-destructive/5 p-4 text-sm leading-6 text-foreground" key={note}>
+                {note}
               </div>
-            )}
+            ))}
             <div className="rounded-lg border border-border/70 bg-background/75 p-4">
               <p className="text-xs font-semibold uppercase tracking-[0.24em] text-muted-foreground">
                 Previous cycle trend

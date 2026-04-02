@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import { AudienceNotice } from '@/shared/components/audience-notice'
+import { AccessNote } from '@/shared/components/access-note'
 import { PagePurposeStrip } from '@/shared/components/page-purpose-strip'
 import { Button } from '@/shared/ui/button'
 import { Badge } from '@/shared/ui/badge'
@@ -58,11 +58,11 @@ export function MetricDictionaryPage() {
         purpose="Provides a shared reference layer for how engineering metrics are defined, governed, sourced, and interpreted across the platform."
       />
 
-      <AudienceNotice
-        description="Audience preview does not change this page into a different product surface. It only helps simulate how sensitive workflows behave elsewhere in the platform."
+      <AccessNote
+        description="This page stays the same across the platform because it acts as the shared trust layer for metric meaning, source, and interpretation rules."
         focus="Shared metric trust and governance"
         moduleLabel="Shared Core"
-        note="Metric Dictionary tetap terbuka lintas audience karena ini adalah sumber definisi bersama untuk metric, source of truth, dan interpretation guardrail."
+        note="Metric Dictionary tetap menjadi sumber definisi bersama untuk metric, source of truth, dan interpretation guardrail di seluruh platform."
       />
 
       <Card className="border-foreground/20 bg-muted/50">

@@ -1,17 +1,11 @@
-import { ChevronDown, LockKeyhole } from 'lucide-react'
 import { useEffect } from 'react'
 import { NavLink, Outlet, useLocation } from 'react-router-dom'
 
 import { prefetchRouteModule } from '@/app/route-prefetch'
-import { usePlatformStore } from '@/app/store/use-platform-store'
-import { audienceContexts, audienceOptions, navigationItems } from '@/shared/config/audience'
+import { navigationItems } from '@/shared/config/navigation'
 import { cn } from '@/shared/lib/utils'
-import { Badge } from '@/shared/ui/badge'
 
 export function AppShell() {
-  const audience = usePlatformStore((state) => state.audience)
-  const setAudience = usePlatformStore((state) => state.setAudience)
-  const context = audienceContexts[audience]
   const navigation = navigationItems
   const location = useLocation()
 
@@ -79,30 +73,6 @@ export function AppShell() {
             })}
           </nav>
 
-          <div className="ml-auto flex shrink-0 items-center gap-2">
-            <Badge className="hidden items-center gap-1.5 rounded-full px-2.5 py-1 lg:inline-flex" variant="outline">
-              <LockKeyhole className="h-3.5 w-3.5" />
-              Audience Preview
-            </Badge>
-            <div className="relative">
-              <select
-                aria-label="Audience preview mode"
-                className="h-10 max-w-[172px] appearance-none rounded-lg border border-border/70 bg-card pl-3 pr-9 text-sm text-foreground outline-none transition focus:border-primary"
-                value={audience}
-                onChange={(event) => setAudience(event.target.value as typeof audience)}
-              >
-                {audienceOptions.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            </div>
-            <div className="flex h-9 w-9 items-center justify-center rounded-full border border-dashed border-border bg-card text-xs font-semibold text-muted-foreground">
-              {context.label.slice(0, 1)}
-            </div>
-          </div>
         </div>
       </header>
 

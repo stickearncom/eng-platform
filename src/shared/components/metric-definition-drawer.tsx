@@ -19,28 +19,15 @@ export function MetricDefinitionDrawer({ entry, open, onClose }: MetricDefinitio
       return
     }
 
-    const previousOverflow = document.body.style.overflow
-    const previousPaddingRight = document.body.style.paddingRight
-    const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth
-    const computedBodyPaddingRight = Number.parseFloat(window.getComputedStyle(document.body).paddingRight) || 0
-
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         onClose()
       }
     }
 
-    document.body.style.overflow = 'hidden'
-
-    if (scrollbarWidth > 0) {
-      document.body.style.paddingRight = `${computedBodyPaddingRight + scrollbarWidth}px`
-    }
-
     window.addEventListener('keydown', handleEscape)
 
     return () => {
-      document.body.style.overflow = previousOverflow
-      document.body.style.paddingRight = previousPaddingRight
       window.removeEventListener('keydown', handleEscape)
     }
   }, [onClose, open])

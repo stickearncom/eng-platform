@@ -16,7 +16,7 @@ export function DeliveryInsightsPage() {
   const [selectedMetric, setSelectedMetric] = useState<MetricDictionaryEntry | null>(null)
   const filters = usePlatformStore((state) => state.filters)
   const { analyticsTabs, capacityPlanning, crossTeamDependencies, deliveryMetricCards, deliveryPanels, firstWaveMetrics, healthBreakdownRows, sharedResourceAllocation, teamDrilldown } = getDeliveryInsightsData(filters)
-  const audienceTags = ['Eng Manager', 'Scrum Master', 'Head of Eng']
+  const stakeholderTags = ['Eng Manager', 'Scrum Master', 'Head of Eng']
   const trendLabels = ['S-4', 'S-3', 'S-2', 'S-1', 'Now']
   const [activeTab, setActiveTab] = useState(analyticsTabs[0] ?? 'Scope Analysis')
   const selectedTab = analyticsTabs.includes(activeTab) ? activeTab : (analyticsTabs[0] ?? 'Scope Analysis')
@@ -139,8 +139,8 @@ export function DeliveryInsightsPage() {
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-muted-foreground">Audience:</span>
-            {audienceTags.map((tag) => (
+            <span className="text-xs text-muted-foreground">Primary stakeholders:</span>
+            {stakeholderTags.map((tag) => (
               <Badge className="rounded-md px-2.5 py-1" key={tag} variant="outline">
                 {tag}
               </Badge>

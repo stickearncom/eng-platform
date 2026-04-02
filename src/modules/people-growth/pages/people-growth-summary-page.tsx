@@ -16,12 +16,9 @@ import { getPeopleGrowthData } from '@/shared/mocks/people-growth'
 
 export function PeopleGrowthSummaryPage() {
   const [selectedMetric, setSelectedMetric] = useState<MetricDictionaryEntry | null>(null)
-  const audience = usePlatformStore((state) => state.audience)
-  const canSeePeopleDetail = audience === 'engineering-manager' || audience === 'hr'
-  const canSeeManagerNotes = audience === 'engineering-manager'
   const filters = usePlatformStore((state) => state.filters)
-  const { analyticsTabs, commonGrowthAreas, employees, gapTrend, confidenceTrend, peopleGrowthStats, restrictedCards, teamSummaryRows, topStrengths } = getPeopleGrowthData(audience, filters)
-  const audienceTags = ['HR', 'Eng Manager', 'Head of Eng']
+  const { analyticsTabs, commonGrowthAreas, employees, gapTrend, confidenceTrend, peopleGrowthStats, restrictedCards, teamSummaryRows, topStrengths } = getPeopleGrowthData(filters)
+  const stakeholderTags = ['HR', 'Eng Manager', 'Head of Eng']
   const trendLabels = ['H2', 'Q1', 'Q2', 'Q3', 'Q4']
   const [activeTab, setActiveTab] = useState(analyticsTabs[0] ?? 'Category Trends')
   const selectedTab = analyticsTabs.includes(activeTab) ? activeTab : (analyticsTabs[0] ?? 'Category Trends')
@@ -149,8 +146,8 @@ export function PeopleGrowthSummaryPage() {
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs text-muted-foreground">Audience:</span>
-            {audienceTags.map((tag) => (
+            <span className="text-xs text-muted-foreground">Primary stakeholders:</span>
+            {stakeholderTags.map((tag) => (
               <Badge className="rounded-md px-2.5 py-1" key={tag} variant="outline">
                 {tag}
               </Badge>
@@ -259,7 +256,7 @@ export function PeopleGrowthSummaryPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            This section contains sensitive performance data. Access remains restricted based on role permissions. {canSeeManagerNotes ? 'Current preview can view deeper restricted narratives.' : 'Current preview sees only placeholders and visibility rules.'}
+            This section contains sensitive performance data. The prototype keeps the most sensitive outputs as placeholders, while production access remains permission-controlled.
           </p>
           <div className="grid gap-4 md:grid-cols-3">
             {restrictedCards.map((card) => (
@@ -360,11 +357,7 @@ export function PeopleGrowthSummaryPage() {
                       <Badge variant={employee.status === 'Complete' ? 'success' : 'outline'}>{employee.status}</Badge>
                     </td>
                     <td className="py-3">
-                      {canSeePeopleDetail ? (
-                        <Link className="underline" to={`/people-growth/employees/${employee.id}`}>View Detail</Link>
-                      ) : (
-                        <span className="text-muted-foreground">Restricted</span>
-                      )}
+                      <Link className="underline" to={`/people-growth/employees/${employee.id}`}>View Detail</Link>
                     </td>
                   </tr>
                 ))}

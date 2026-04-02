@@ -1,7 +1,5 @@
 import { create } from 'zustand'
 
-import { type Audience } from '@/shared/config/audience'
-
 export type FilterKey =
   | 'dateRange'
   | 'team'
@@ -21,9 +19,7 @@ export interface FilterOption {
 }
 
 interface PlatformState {
-  audience: Audience
   filters: Record<FilterKey, string>
-  setAudience: (audience: Audience) => void
   setFilter: (key: FilterKey, value: string) => void
 }
 
@@ -107,9 +103,7 @@ const initialFilters: Record<FilterKey, string> = {
 }
 
 export const usePlatformStore = create<PlatformState>((set) => ({
-  audience: 'engineering-manager',
   filters: initialFilters,
-  setAudience: (audience) => set({ audience }),
   setFilter: (key, value) =>
     set((state) => ({
       filters: {
