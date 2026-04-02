@@ -8,7 +8,6 @@ import { FilterToolbar } from '@/shared/components/filter-toolbar'
 import { MetricDefinitionDrawer } from '@/shared/components/metric-definition-drawer'
 import { PagePurposeStrip } from '@/shared/components/page-purpose-strip'
 import { StatCard } from '@/shared/components/stat-card'
-import { audienceContexts } from '@/shared/config/audience'
 import { findMetricDictionaryEntry, type MetricDictionaryEntry } from '@/shared/mocks/metric-dictionary'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
@@ -18,7 +17,6 @@ import { getEngineeringSummaryData } from '@/shared/mocks/engineering-summary'
 export function EngineeringSummaryPage() {
   const [selectedMetric, setSelectedMetric] = useState<MetricDictionaryEntry | null>(null)
   const audience = usePlatformStore((state) => state.audience)
-  const context = audienceContexts[audience]
   const filters = usePlatformStore((state) => state.filters)
   const { audienceTags, recommendedActions, summaryCards, summaryNarrative, trendPanels, riskHighlights, leadershipInsights, quickActions, teamHealthRows } = getEngineeringSummaryData(audience, filters)
   const trendLabels = ['W1', 'W2', 'W3', 'W4', 'W5']
@@ -48,25 +46,9 @@ export function EngineeringSummaryPage() {
       </section>
 
       <PagePurposeStrip
-        audience={audience}
-        boundary={{
-          executive: 'Leadership entry point for decision-making and drill-down. Use this page to spot trends, risks, and escalation needs without dropping into raw operational detail.',
-          'engineering-manager': 'Leadership-style summary for managers. Use it to scan health quickly before drilling into Delivery or People for action.',
-          'scrum-master': 'Summary-only view for cross-team awareness. Operational diagnosis should continue in Delivery Insights.',
-          hr: 'Aggregate summary for review governance and organization health. Confidential employee-level interpretation stays inside People Growth.',
-        }}
-        primaryAudience={{
-          executive: 'C-level, founders, and Head of Engineering.',
-          'engineering-manager': 'Engineering Managers and Head of Engineering.',
-          'scrum-master': 'Scrum Masters and delivery leads who need portfolio context.',
-          hr: 'HR and approved leadership viewers of aggregate people signals.',
-        }}
-        purpose={{
-          executive: 'Provides a high-level view of engineering health across delivery, quality, flow, collaboration, and approved people signals.',
-          'engineering-manager': 'Provides a high-level view of engineering health so managers can connect summary trends to delivery and coaching actions.',
-          'scrum-master': 'Provides a cross-team snapshot of engineering health to frame delivery risks before deeper sprint analysis.',
-          hr: 'Provides an aggregate view of engineering health with approved people signals to support organization-level review governance.',
-        }}
+        boundary="Use this page as the narrative entry point for engineering health. It highlights trends, risks, and actions without replacing operational module detail."
+        primaryAudience="Leadership, Engineering Managers, HR, and cross-functional stakeholders who need a high-level engineering narrative before drilling deeper."
+        purpose="Provides a high-level view of engineering health across delivery, quality, flow, collaboration, and approved people signals."
       />
 
       <FilterToolbar keys={['dateRange', 'team', 'role', 'level', 'reviewCycle']} />
@@ -81,11 +63,11 @@ export function EngineeringSummaryPage() {
             </div>
             <div>
               <p className="text-sm font-medium text-foreground">Leadership context</p>
-              <p className="mt-1 text-sm leading-6 text-muted-foreground">{context.description}</p>
+              <p className="mt-1 text-sm leading-6 text-muted-foreground">Use this page to understand engineering direction, decision risk, and the few issues that need leadership attention before moving into delivery or people drill-downs.</p>
             </div>
             <div className="rounded-xl border border-border/70 bg-background/80 px-4 py-3 text-sm">
               <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Focus</p>
-              <p className="mt-1 font-medium text-foreground">{context.focus}</p>
+              <p className="mt-1 font-medium text-foreground">Engineering health, decision risk, and next actions</p>
               <p className="mt-3 text-sm leading-6 text-muted-foreground">{summaryNarrative.implication}</p>
             </div>
           </div>

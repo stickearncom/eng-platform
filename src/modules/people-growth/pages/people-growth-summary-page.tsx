@@ -5,19 +5,20 @@ import { Download, PlayCircle } from 'lucide-react'
 import { usePlatformStore } from '@/app/store/use-platform-store'
 import { DistributionChart, TrendChart } from '@/shared/components/chart-cards'
 import { FilterToolbar } from '@/shared/components/filter-toolbar'
+import { MetricDefinitionButton } from '@/shared/components/metric-definition-button'
 import { MetricDefinitionDrawer } from '@/shared/components/metric-definition-drawer'
 import { PagePurposeStrip } from '@/shared/components/page-purpose-strip'
 import { Badge } from '@/shared/ui/badge'
 import { Button } from '@/shared/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
-import { audienceContexts } from '@/shared/config/audience'
 import { findMetricDictionaryEntry, type MetricDictionaryEntry } from '@/shared/mocks/metric-dictionary'
 import { getPeopleGrowthData } from '@/shared/mocks/people-growth'
 
 export function PeopleGrowthSummaryPage() {
   const [selectedMetric, setSelectedMetric] = useState<MetricDictionaryEntry | null>(null)
   const audience = usePlatformStore((state) => state.audience)
-  const context = audienceContexts[audience]
+  const canSeePeopleDetail = audience === 'engineering-manager' || audience === 'hr'
+  const canSeeManagerNotes = audience === 'engineering-manager'
   const filters = usePlatformStore((state) => state.filters)
   const { analyticsTabs, commonGrowthAreas, employees, gapTrend, confidenceTrend, peopleGrowthStats, restrictedCards, teamSummaryRows, topStrengths } = getPeopleGrowthData(audience, filters)
   const audienceTags = ['HR', 'Eng Manager', 'Head of Eng']
@@ -159,25 +160,9 @@ export function PeopleGrowthSummaryPage() {
       </section>
 
       <PagePurposeStrip
-        audience={audience}
-        boundary={{
-          executive: 'Leadership access should stay at approved summary level only. Comparative, calibration, and manager-only detail must remain hidden.',
-          'engineering-manager': 'Use this page for coaching continuity, calibration input, and development follow-up. Do not merge delivery activity into review scoring.',
-          'scrum-master': 'This page is not part of Scrum Master workflow because confidential review data should stay outside delivery operations.',
-          hr: 'Primary governance workspace for calibration cadence, review completion, and confidentiality-aware people decisions.',
-        }}
-        primaryAudience={{
-          executive: 'Approved leadership viewers of aggregate people signals.',
-          'engineering-manager': 'Engineering Managers and Head of Engineering.',
-          'scrum-master': 'Not a primary audience for this module.',
-          hr: 'HR and selected people-review stakeholders.',
-        }}
-        purpose={{
-          executive: 'Provides an approved summary of people growth signals so leadership can understand trend direction without opening confidential employee detail.',
-          'engineering-manager': 'Provides growth tracking and review-cycle health to support calibration decisions, coaching plans, and follow-up actions.',
-          'scrum-master': 'Provides restricted people-growth context only when governance allows summary-level visibility.',
-          hr: 'Provides HR with growth tracking and review-cycle health to support calibration, policy governance, and development planning.',
-        }}
+        boundary="Use this page for growth tracking, review-cycle health, calibration preparation, and coaching follow-up. Confidential detail stays clearly marked and permission-controlled."
+        primaryAudience="HR, Engineering Managers, Head of Engineering, and approved viewers of aggregate people signals."
+        purpose="Provides a structured view of people growth, review-cycle health, and development follow-up without mixing delivery activity into performance interpretation."
       />
 
       <FilterToolbar keys={['reviewCycle', 'team', 'role', 'level']} />
@@ -190,8 +175,11 @@ export function PeopleGrowthSummaryPage() {
 
         <div className="grid gap-4 xl:grid-cols-5">
         {peopleGrowthStats.map((metric) => (
-          <Card className="border-dashed border-foreground/20" key={metric.title}>
-            <CardHeader className="pb-4">
+          <Card className="relative border-dashed border-foreground/20" key={metric.title}>
+            {findMetricDictionaryEntry(metric.title, 'People Growth') ? (
+              <MetricDefinitionButton metricTitle={metric.title} onClick={() => setSelectedMetric(findMetricDictionaryEntry(metric.title, 'People Growth') ?? null)} />
+            ) : null}
+            <CardHeader className="pb-4 pr-12">
               <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">{metric.title}</div>
               <div className="flex items-center gap-2">
                 <p className="text-3xl font-bold text-foreground">{metric.value}</p>
@@ -200,16 +188,6 @@ export function PeopleGrowthSummaryPage() {
             </CardHeader>
             <CardContent>
               <p className="text-xs italic leading-5 text-muted-foreground">{metric.note}</p>
-              {findMetricDictionaryEntry(metric.title, 'People Growth') ? (
-                <button aria-label={`Open definition for ${metric.title}`} className="mt-4 inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" title={`Definition: ${metric.title}`} type="button" onClick={() => setSelectedMetric(findMetricDictionaryEntry(metric.title, 'People Growth') ?? null)}>
-                  <span className="sr-only">Open definition</span>
-                  <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
-                    <path d="M12 10v6" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
-                    <circle cx="12" cy="7.25" fill="currentColor" r="1.1" />
-                  </svg>
-                </button>
-              ) : null}
             </CardContent>
           </Card>
         ))}
@@ -281,7 +259,7 @@ export function PeopleGrowthSummaryPage() {
         </CardHeader>
         <CardContent className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            This section contains sensitive performance data. Access remains restricted based on role permissions. {context.canSeeManagerNotes ? 'Current audience can view deeper restricted narratives.' : 'Current audience sees only placeholders and visibility rules.'}
+            This section contains sensitive performance data. Access remains restricted based on role permissions. {canSeeManagerNotes ? 'Current preview can view deeper restricted narratives.' : 'Current preview sees only placeholders and visibility rules.'}
           </p>
           <div className="grid gap-4 md:grid-cols-3">
             {restrictedCards.map((card) => (
@@ -382,7 +360,7 @@ export function PeopleGrowthSummaryPage() {
                       <Badge variant={employee.status === 'Complete' ? 'success' : 'outline'}>{employee.status}</Badge>
                     </td>
                     <td className="py-3">
-                      {context.canOpenPeopleDetail ? (
+                      {canSeePeopleDetail ? (
                         <Link className="underline" to={`/people-growth/employees/${employee.id}`}>View Detail</Link>
                       ) : (
                         <span className="text-muted-foreground">Restricted</span>

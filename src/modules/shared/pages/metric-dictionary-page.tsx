@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 
-import { usePlatformStore } from '@/app/store/use-platform-store'
 import { AudienceNotice } from '@/shared/components/audience-notice'
 import { PagePurposeStrip } from '@/shared/components/page-purpose-strip'
 import { Button } from '@/shared/ui/button'
@@ -10,7 +9,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/sha
 import { findMetricDictionaryEntry, getMetricDictionaryModules, metricDictionaryEntries, metricDictionarySpotlights } from '@/shared/mocks/metric-dictionary'
 
 export function MetricDictionaryPage() {
-  const audience = usePlatformStore((state) => state.audience)
   const modules = getMetricDictionaryModules()
   const [searchParams] = useSearchParams()
   const moduleParam = searchParams.get('module')
@@ -55,47 +53,16 @@ export function MetricDictionaryPage() {
       </section>
 
       <PagePurposeStrip
-        audience={audience}
-        boundary={{
-          executive: 'Shared trust layer for verifying metric meaning before leadership decisions. This page defines metrics; it does not replace summary judgment.',
-          'engineering-manager': 'Reference layer for checking definitions, sources, and guardrails before using metrics in delivery or people workflows.',
-          'scrum-master': 'Reference layer for validating delivery definitions and guardrails before using operational metrics in sprint review.',
-          hr: 'Reference layer for validating people and platform metrics before using them in calibration or policy discussions.',
-        }}
-        primaryAudience={{
-          executive: 'All audiences, with emphasis on leadership readers who need trusted definitions.',
-          'engineering-manager': 'All audiences, with emphasis on managers working across delivery and people workflows.',
-          'scrum-master': 'All audiences, with emphasis on delivery-focused users.',
-          hr: 'All audiences, with emphasis on HR and review-governance users.',
-        }}
-        purpose={{
-          executive: 'Provides a shared reference layer for how engineering metrics are defined, governed, sourced, and interpreted across the platform.',
-          'engineering-manager': 'Provides a shared reference layer for how engineering metrics are defined, governed, sourced, and interpreted across delivery and people workflows.',
-          'scrum-master': 'Provides a shared reference layer for how delivery metrics are defined, governed, sourced, and interpreted across the platform.',
-          hr: 'Provides a shared reference layer for how engineering and people metrics are defined, governed, sourced, and interpreted across the platform.',
-        }}
+        boundary="Use this page to verify meaning, source, formula, owner, and caveats before using any metric in a delivery, people, or leadership discussion."
+        primaryAudience="All audiences that consume the platform and need one trusted reference for metric definitions and guardrails."
+        purpose="Provides a shared reference layer for how engineering metrics are defined, governed, sourced, and interpreted across the platform."
       />
 
       <AudienceNotice
-        description={{
-          executive: 'Shared governance view for verifying metric meaning, source, and usage limits before leadership decisions are made.',
-          'engineering-manager': 'Shared governance view for checking metric meaning, source, and guardrails before using metrics in delivery or people workflows.',
-          'scrum-master': 'Shared governance view for validating delivery definitions and interpretation limits before sprint review and planning follow-up.',
-          hr: 'Shared governance view for verifying people and platform metrics before calibration, policy, or development discussions.',
-        }}
-        focus={{
-          executive: 'Decision safety and definition trust',
-          'engineering-manager': 'Operational trust and coaching guardrails',
-          'scrum-master': 'Delivery metric interpretation safety',
-          hr: 'Calibration trust and policy safety',
-        }}
+        description="Audience preview does not change this page into a different product surface. It only helps simulate how sensitive workflows behave elsewhere in the platform."
+        focus="Shared metric trust and governance"
         moduleLabel="Shared Core"
-        note={{
-          executive: 'Metric Dictionary tetap terbuka karena leadership butuh satu sumber definisi yang bisa dipercaya sebelum mengambil keputusan dari summary atau trend.',
-          'engineering-manager': 'Metric Dictionary tetap terbuka karena manager perlu memverifikasi definisi, source, dan caveat sebelum memakai metric untuk delivery atau people follow-up.',
-          'scrum-master': 'Metric Dictionary tetap terbuka karena delivery workflow tetap butuh guardrail yang jelas agar sprint metric tidak berubah jadi individual KPI.',
-          hr: 'Metric Dictionary tetap terbuka karena HR perlu memastikan definisi, source of truth, dan caveat konsisten sebelum dipakai dalam calibration atau review governance.',
-        }}
+        note="Metric Dictionary tetap terbuka lintas audience karena ini adalah sumber definisi bersama untuk metric, source of truth, dan interpretation guardrail."
       />
 
       <Card className="border-foreground/20 bg-muted/50">

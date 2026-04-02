@@ -1,7 +1,6 @@
-import { Button } from '@/shared/ui/button'
+import { MetricDefinitionButton } from '@/shared/components/metric-definition-button'
 import { MiniTrend } from '@/shared/components/mini-trend'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/shared/ui/card'
-import { Info } from 'lucide-react'
 
 interface BaseChartCardProps {
   title: string
@@ -44,15 +43,13 @@ export function TrendChart({
   onOpenDefinition,
 }: TrendChartProps) {
   return (
-    <Card className={className ?? 'border-dashed border-foreground/20'}>
-      <CardHeader className="pb-4">
+    <Card className={`relative ${className ?? 'border-dashed border-foreground/20'}`}>
+      {onOpenDefinition ? (
+        <MetricDefinitionButton metricTitle={title} onClick={onOpenDefinition} />
+      ) : null}
+      <CardHeader className="pb-4 pr-12">
         <div className="flex items-start justify-between gap-3">
           <CardTitle className="text-sm">{title}</CardTitle>
-          {onOpenDefinition ? (
-            <Button aria-label={`Open definition for ${title}`} className="h-8 w-8 rounded-full p-0" size="sm" title={`Definition: ${title}`} type="button" variant="ghost" onClick={onOpenDefinition}>
-              <Info className="h-4 w-4" />
-            </Button>
-          ) : null}
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -74,18 +71,16 @@ export function DistributionChart({
   onOpenDefinition,
 }: DistributionChartProps) {
   return (
-    <Card className={className ?? 'border-dashed border-foreground/20'}>
-      <CardHeader className="pb-4">
+    <Card className={`relative ${className ?? 'border-dashed border-foreground/20'}`}>
+      {onOpenDefinition ? (
+        <MetricDefinitionButton metricTitle={title} onClick={onOpenDefinition} />
+      ) : null}
+      <CardHeader className="pb-4 pr-12">
         <div className="flex items-start justify-between gap-3">
           <div>
             <CardTitle className="text-sm">{title}</CardTitle>
             <CardDescription>{benchmarkLabel}</CardDescription>
           </div>
-          {onOpenDefinition ? (
-            <Button aria-label={`Open definition for ${title}`} className="h-8 w-8 rounded-full p-0" size="sm" title={`Definition: ${title}`} type="button" variant="ghost" onClick={onOpenDefinition}>
-              <Info className="h-4 w-4" />
-            </Button>
-          ) : null}
         </div>
       </CardHeader>
       <CardContent className="space-y-3">
@@ -108,15 +103,13 @@ export function CapacityChart({
   onOpenDefinition,
 }: CapacityChartProps) {
   return (
-    <Card className="border-dashed border-foreground/20">
-      <CardHeader>
+    <Card className="relative border-dashed border-foreground/20">
+      {onOpenDefinition ? (
+        <MetricDefinitionButton metricTitle={title} onClick={onOpenDefinition} />
+      ) : null}
+      <CardHeader className="pr-12">
         <div className="flex items-start justify-between gap-3">
           <CardTitle className="text-sm">{title}</CardTitle>
-          {onOpenDefinition ? (
-            <Button aria-label={`Open definition for ${title}`} className="h-8 w-8 rounded-full p-0" size="sm" title={`Definition: ${title}`} type="button" variant="ghost" onClick={onOpenDefinition}>
-              <Info className="h-4 w-4" />
-            </Button>
-          ) : null}
         </div>
       </CardHeader>
       <CardContent className="space-y-4 p-4 pt-0">

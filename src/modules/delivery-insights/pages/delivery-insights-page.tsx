@@ -4,18 +4,16 @@ import { ChevronRight } from 'lucide-react'
 import { usePlatformStore } from '@/app/store/use-platform-store'
 import { CapacityChart, DistributionChart, TrendChart } from '@/shared/components/chart-cards'
 import { FilterToolbar } from '@/shared/components/filter-toolbar'
+import { MetricDefinitionButton } from '@/shared/components/metric-definition-button'
 import { MetricDefinitionDrawer } from '@/shared/components/metric-definition-drawer'
 import { PagePurposeStrip } from '@/shared/components/page-purpose-strip'
 import { Badge } from '@/shared/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/shared/ui/card'
-import { audienceContexts } from '@/shared/config/audience'
 import { findMetricDictionaryEntry, type MetricDictionaryEntry } from '@/shared/mocks/metric-dictionary'
 import { getDeliveryInsightsData } from '@/shared/mocks/delivery-insights'
 
 export function DeliveryInsightsPage() {
   const [selectedMetric, setSelectedMetric] = useState<MetricDictionaryEntry | null>(null)
-  const audience = usePlatformStore((state) => state.audience)
-  const context = audienceContexts[audience]
   const filters = usePlatformStore((state) => state.filters)
   const { analyticsTabs, capacityPlanning, crossTeamDependencies, deliveryMetricCards, deliveryPanels, firstWaveMetrics, healthBreakdownRows, sharedResourceAllocation, teamDrilldown } = getDeliveryInsightsData(filters)
   const audienceTags = ['Eng Manager', 'Scrum Master', 'Head of Eng']
@@ -152,25 +150,9 @@ export function DeliveryInsightsPage() {
       </section>
 
       <PagePurposeStrip
-        audience={audience}
-        boundary={{
-          executive: 'Executive visibility should stay at team or aggregate level. Individual engineer records are for investigation only, not performance scoring.',
-          'engineering-manager': 'Use this page for team execution diagnosis, blocker removal, and sprint follow-up. Do not use it as an employee evaluation surface.',
-          'scrum-master': 'Primary operational workspace for sprint health, planning discipline, blockers, and cross-team delivery risk.',
-          hr: 'HR should read this page only as limited delivery context. Performance interpretation belongs in People Growth, not delivery metrics.',
-        }}
-        primaryAudience={{
-          executive: 'Leadership viewers of aggregate delivery health.',
-          'engineering-manager': 'Engineering Managers and Head of Engineering.',
-          'scrum-master': 'Scrum Masters and delivery leads.',
-          hr: 'Limited HR viewers who need delivery context, not sprint operations ownership.',
-        }}
-        purpose={{
-          executive: 'Provides a controlled delivery view for understanding execution health, planning quality, and team-level delivery patterns.',
-          'engineering-manager': 'Helps managers analyze sprint execution, delivery flow, planning quality, and emerging execution risks.',
-          'scrum-master': 'Helps scrum masters analyze sprint execution, planning behavior, blockers, and team delivery patterns.',
-          hr: 'Provides limited delivery context so HR can understand execution patterns without mixing delivery data into employee scoring.',
-        }}
+        boundary="Use this page for team execution diagnosis, blocker removal, and sprint follow-up. Delivery metrics are operational signals and should not be used as employee performance scores."
+        primaryAudience="Engineering Managers, Scrum Masters, Head of Engineering, and any stakeholder reviewing delivery health at team level."
+        purpose="Helps teams analyze sprint execution, delivery flow, planning quality, and emerging execution risks through team-level metrics and drill-downs."
       />
 
       <FilterToolbar keys={['board', 'sprint', 'team', 'engineer', 'ticketType', 'issueType', 'addedAt']} />
@@ -180,7 +162,7 @@ export function DeliveryInsightsPage() {
           <div className="flex items-start gap-2 text-sm">
             <span className="font-medium text-foreground">Note:</span>
             <span className="text-muted-foreground">
-              Engineer-level data is shown only for investigation, blocker removal, and operational follow-up, not for performance scoring. Use People Growth for evaluation. {context.supportingNote}
+              Engineer-level data is shown only for investigation, blocker removal, and operational follow-up, not for performance scoring. Use People Growth for evaluation and review governance.
             </span>
           </div>
         </CardContent>
@@ -194,8 +176,11 @@ export function DeliveryInsightsPage() {
 
         <div className="grid gap-4 xl:grid-cols-5">
         {deliveryMetricCards.map((metric) => (
-          <Card className="border-dashed border-foreground/20" key={metric.title}>
-            <CardHeader className="pb-4">
+          <Card className="relative border-dashed border-foreground/20" key={metric.title}>
+            {findMetricDictionaryEntry(metric.title, 'Delivery Insights') ? (
+              <MetricDefinitionButton metricTitle={metric.title} onClick={() => setSelectedMetric(findMetricDictionaryEntry(metric.title, 'Delivery Insights') ?? null)} />
+            ) : null}
+            <CardHeader className="pb-4 pr-12">
               <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">{metric.title}</div>
               <div className="flex items-center gap-2">
                 <p className="text-3xl font-bold text-foreground">{metric.value}</p>
@@ -204,16 +189,6 @@ export function DeliveryInsightsPage() {
             </CardHeader>
             <CardContent>
               <p className="text-xs italic leading-5 text-muted-foreground">{metric.note}</p>
-              {findMetricDictionaryEntry(metric.title, 'Delivery Insights') ? (
-                <button aria-label={`Open definition for ${metric.title}`} className="mt-4 inline-flex h-8 w-8 items-center justify-center rounded-full text-muted-foreground transition-colors hover:bg-muted hover:text-foreground" title={`Definition: ${metric.title}`} type="button" onClick={() => setSelectedMetric(findMetricDictionaryEntry(metric.title, 'Delivery Insights') ?? null)}>
-                  <span className="sr-only">Open definition</span>
-                  <svg aria-hidden="true" className="h-4 w-4" fill="none" viewBox="0 0 24 24">
-                    <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.8" />
-                    <path d="M12 10v6" stroke="currentColor" strokeLinecap="round" strokeWidth="1.8" />
-                    <circle cx="12" cy="7.25" fill="currentColor" r="1.1" />
-                  </svg>
-                </button>
-              ) : null}
             </CardContent>
           </Card>
         ))}

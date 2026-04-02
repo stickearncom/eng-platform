@@ -1,10 +1,10 @@
 import { ChevronDown, LockKeyhole } from 'lucide-react'
 import { useEffect } from 'react'
-import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 
 import { prefetchRouteModule } from '@/app/route-prefetch'
 import { usePlatformStore } from '@/app/store/use-platform-store'
-import { audienceContexts, audienceOptions, canAccessPath, getVisibleNavigation } from '@/shared/config/audience'
+import { audienceContexts, audienceOptions, navigationItems } from '@/shared/config/audience'
 import { cn } from '@/shared/lib/utils'
 import { Badge } from '@/shared/ui/badge'
 
@@ -12,15 +12,8 @@ export function AppShell() {
   const audience = usePlatformStore((state) => state.audience)
   const setAudience = usePlatformStore((state) => state.setAudience)
   const context = audienceContexts[audience]
-  const navigation = getVisibleNavigation(audience)
+  const navigation = navigationItems
   const location = useLocation()
-  const navigate = useNavigate()
-
-  useEffect(() => {
-    if (!canAccessPath(audience, location.pathname)) {
-      navigate('/summary', { replace: true })
-    }
-  }, [audience, location.pathname, navigate])
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
@@ -89,11 +82,11 @@ export function AppShell() {
           <div className="ml-auto flex shrink-0 items-center gap-2">
             <Badge className="hidden items-center gap-1.5 rounded-full px-2.5 py-1 lg:inline-flex" variant="outline">
               <LockKeyhole className="h-3.5 w-3.5" />
-              Mock Access
+              Audience Preview
             </Badge>
             <div className="relative">
               <select
-                aria-label="Audience context"
+                aria-label="Audience preview mode"
                 className="h-10 max-w-[172px] appearance-none rounded-lg border border-border/70 bg-card pl-3 pr-9 text-sm text-foreground outline-none transition focus:border-primary"
                 value={audience}
                 onChange={(event) => setAudience(event.target.value as typeof audience)}
