@@ -5,8 +5,10 @@ import {
   LazyEmployeeReviewDetailPage,
   LazyEngineeringSummaryPage,
   LazyMetricDictionaryPage,
+  LazyNotFoundPage,
   LazyPeopleGrowthSummaryPage,
 } from '@/app/lazy-pages'
+import { RouteErrorPage } from '@/modules/shared/pages/route-error-page'
 import { LazyRoute } from '@/shared/components/route-loading'
 import { AppShell } from '@/shared/layout/app-shell'
 
@@ -14,6 +16,7 @@ export const router = createBrowserRouter([
   {
     path: '/',
     element: <AppShell />,
+    errorElement: <RouteErrorPage />,
     children: [
       {
         index: true,
@@ -56,6 +59,14 @@ export const router = createBrowserRouter([
         element: (
           <LazyRoute>
             <LazyMetricDictionaryPage />
+          </LazyRoute>
+        ),
+      },
+      {
+        path: '*',
+        element: (
+          <LazyRoute>
+            <LazyNotFoundPage />
           </LazyRoute>
         ),
       },

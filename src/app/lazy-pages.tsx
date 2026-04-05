@@ -25,8 +25,14 @@ const loadMetricDictionaryPage = () =>
     default: module.MetricDictionaryPage,
   }))
 
+const loadNotFoundPage = () =>
+  import('@/modules/shared/pages/not-found-page').then((module) => ({
+    default: module.NotFoundPage,
+  }))
+
 export const LazyEngineeringSummaryPage = lazy(loadEngineeringSummaryPage)
 export const LazyDeliveryInsightsPage = lazy(loadDeliveryInsightsPage)
 export const LazyPeopleGrowthSummaryPage = lazy(loadPeopleGrowthSummaryPage)
 export const LazyEmployeeReviewDetailPage = lazy(loadEmployeeReviewDetailPage)
 export const LazyMetricDictionaryPage = lazy(loadMetricDictionaryPage)
+export const LazyNotFoundPage = lazy(loadNotFoundPage)
