@@ -59,9 +59,9 @@ export function EmployeeReviewDetailPage() {
       <section className="grid gap-4 xl:grid-cols-4">
         <Card className="border-dashed border-foreground/20">
           <CardHeader className="pb-4">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Final Score</div>
+            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Cycle Summary</div>
             <p className="text-3xl font-bold text-foreground">{employee.finalScore}</p>
-            <CardDescription>Weighted result from self, peer, and manager evidence.</CardDescription>
+            <CardDescription>Private review synthesis from self, peer, and manager evidence. This is not exposed as a leadership KPI.</CardDescription>
           </CardHeader>
         </Card>
         <Card className="border-dashed border-foreground/20">
@@ -80,9 +80,9 @@ export function EmployeeReviewDetailPage() {
         </Card>
         <Card className="border-dashed border-foreground/20">
           <CardHeader className="pb-4">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Strongest Signal</div>
+            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">Strongest Category Signal</div>
             <p className="text-lg font-semibold text-foreground">{strongestCategory.category}</p>
-            <CardDescription>Weighted score {strongestCategory.weighted}</CardDescription>
+            <CardDescription>Review synthesis score {strongestCategory.weighted}</CardDescription>
           </CardHeader>
         </Card>
       </section>
@@ -141,9 +141,9 @@ export function EmployeeReviewDetailPage() {
       <section className="grid gap-6 xl:grid-cols-[1.4fr_1fr]">
         <Card className="border-dashed border-foreground/20">
           <CardHeader>
-          <CardTitle>Category score breakdown</CardTitle>
+          <CardTitle>Category review breakdown</CardTitle>
           <CardDescription>
-            Numeric outputs remain interpretable because component scores are shown beside the weighted result.
+            Detailed review inputs remain interpretable because self, peer, manager, and synthesis values are shown together.
           </CardDescription>
           </CardHeader>
           <CardContent className="overflow-x-auto">
@@ -154,7 +154,7 @@ export function EmployeeReviewDetailPage() {
                   <th className="pb-3 pr-4 font-medium">Self</th>
                   <th className="pb-3 pr-4 font-medium">Peer</th>
                   <th className="pb-3 pr-4 font-medium">Manager</th>
-                  <th className="pb-3 font-medium">Weighted</th>
+                  <th className="pb-3 font-medium">Review Synthesis</th>
                 </tr>
               </thead>
               <tbody>
@@ -174,7 +174,7 @@ export function EmployeeReviewDetailPage() {
 
         <Card className="border-dashed border-foreground/20">
           <CardHeader>
-            <CardTitle>Weighted category profile</CardTitle>
+            <CardTitle>Category profile</CardTitle>
             <CardDescription>
               Quick visual read of which capability areas are ahead and which ones need targeted development support.
             </CardDescription>
@@ -282,7 +282,7 @@ export function EmployeeReviewDetailPage() {
       </section>
 
       <section className="border-t border-border/70 pt-4 text-xs italic leading-6 text-muted-foreground">
-        Employee detail should support coaching continuity and calibration decisions, while keeping manager-only notes, calibration flags, and comparative context separated from summary-level reporting.
+        Employee detail should support coaching continuity and calibration decisions, while keeping private review synthesis, manager-only notes, and comparative context separated from summary-level reporting.
       </section>
     </div>
   )

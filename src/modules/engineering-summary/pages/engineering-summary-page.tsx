@@ -79,7 +79,7 @@ export function EngineeringSummaryPage() {
           <p className="mt-1 text-xs italic text-muted-foreground">Explicit engineering goals with current value, target, and stakeholder-ready status framing.</p>
         </div>
 
-        <div className="grid gap-4 xl:grid-cols-5">
+        <div className="grid gap-4 xl:grid-cols-3">
           {summaryCards.map((card) => (
             <StatCard
               key={card.title}
@@ -204,8 +204,8 @@ export function EngineeringSummaryPage() {
 
       <section className="space-y-4">
         <div>
-          <h2 className="text-lg font-semibold text-foreground">Team Drill-down</h2>
-          <p className="mt-1 text-xs italic text-muted-foreground">Click to expand team-level details.</p>
+          <h2 className="text-lg font-semibold text-foreground">Team Comparison</h2>
+          <p className="mt-1 text-xs italic text-muted-foreground">Team-level comparison across delivery, quality, and people signals.</p>
         </div>
 
         <Card className="border-dashed border-foreground/10">
@@ -216,7 +216,7 @@ export function EngineeringSummaryPage() {
                   <th className="pb-3 pr-4 font-medium">Team</th>
                   <th className="pb-3 pr-4 font-medium">Delivery Score</th>
                   <th className="pb-3 pr-4 font-medium">Quality Score</th>
-                  <th className="pb-3 font-medium">People Score</th>
+                  <th className="pb-3 font-medium">People Growth Summary</th>
                 </tr>
               </thead>
               <tbody>

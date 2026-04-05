@@ -16,19 +16,19 @@ export function DeliveryInsightsPage() {
   const [selectedMetric, setSelectedMetric] = useState<MetricDictionaryEntry | null>(null)
   const filters = usePlatformStore((state) => state.filters)
   const { analyticsTabs, capacityPlanning, crossTeamDependencies, deliveryMetricCards, deliveryPanels, firstWaveMetrics, healthBreakdownRows, sharedResourceAllocation, teamDrilldown } = getDeliveryInsightsData(filters)
-  const stakeholderTags = ['Eng Manager', 'Scrum Master', 'Head of Eng']
+  const stakeholderTags = ['Engineering Manager', 'Scrum Master', 'Head of Engineering / VP Engineering']
   const trendLabels = ['S-4', 'S-3', 'S-2', 'S-1', 'Now']
-  const [activeTab, setActiveTab] = useState(analyticsTabs[0] ?? 'Scope Analysis')
-  const selectedTab = analyticsTabs.includes(activeTab) ? activeTab : (analyticsTabs[0] ?? 'Scope Analysis')
+  const [activeTab, setActiveTab] = useState(analyticsTabs[0] ?? 'Planning Stability')
+  const selectedTab = analyticsTabs.includes(activeTab) ? activeTab : (analyticsTabs[0] ?? 'Planning Stability')
 
   const analyticsContentByTab = {
-    'Scope Analysis': (
+    'Planning Stability': (
       <div className="grid gap-6 md:grid-cols-2">
         <TrendChart
           labels={trendLabels}
           note={firstWaveMetrics[0]?.note ?? 'Scope movement over the sprint.'}
-          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry(firstWaveMetrics[0]?.title ?? 'Scope Change', 'Delivery Insights') ?? null)}
-          title={firstWaveMetrics[0]?.title ?? 'Scope Change Tracking'}
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry(firstWaveMetrics[0]?.title ?? 'Scope Change Ratio', 'Delivery Insights') ?? null)}
+          title={firstWaveMetrics[0]?.title ?? 'Scope Change Ratio'}
           tone="default"
           values={firstWaveMetrics[0]?.values ?? [28, 24, 21, 20, 19]}
           variant="area"
@@ -38,19 +38,19 @@ export function DeliveryInsightsPage() {
           labels={trendLabels}
           note={firstWaveMetrics[2]?.note ?? 'Root causes behind spillover and unfinished work.'}
           onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry(firstWaveMetrics[2]?.title ?? 'Carry-over Rate', 'Delivery Insights') ?? null)}
-          title={firstWaveMetrics[2]?.title ?? 'Carry-over Root Cause Analysis'}
+          title={firstWaveMetrics[2]?.title ?? 'Carry-over Rate'}
           tone="alert"
           values={firstWaveMetrics[2]?.values ?? [40, 36, 31, 26, 24]}
         />
       </div>
     ),
-    'Planning Trends': (
+    'Delivery Predictability': (
       <div className="grid gap-6 md:grid-cols-2">
         <TrendChart
           labels={trendLabels}
-          note={firstWaveMetrics[1]?.note ?? 'Historical comparison of estimated versus actual sprint completion.'}
-          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry(firstWaveMetrics[1]?.title ?? 'Planning Accuracy', 'Delivery Insights') ?? null)}
-          title={firstWaveMetrics[1]?.title ?? 'Planning Accuracy Trend'}
+          note={firstWaveMetrics[1]?.note ?? 'Historical comparison of committed scope versus completed initial scope.'}
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry(firstWaveMetrics[1]?.title ?? 'Sprint Predictability', 'Delivery Insights') ?? null)}
+          title={firstWaveMetrics[1]?.title ?? 'Sprint Predictability'}
           tone="success"
           values={firstWaveMetrics[1]?.values ?? [57, 63, 69, 77, 84]}
           variant="line"
@@ -61,27 +61,27 @@ export function DeliveryInsightsPage() {
           committedPercent={capacityPlanning.committedPercent}
           labels={trendLabels}
           note="Use this view to judge whether next sprint commitments are aligned with actual team capacity."
-          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Sprint Health Score', 'Delivery Insights') ?? null)}
-          title="Capacity vs Commitment"
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Capacity Load vs Available Capacity', 'Delivery Insights') ?? null)}
+          title="Capacity Load vs Available Capacity"
           totalCapacity={capacityPlanning.totalCapacity}
           values={firstWaveMetrics[1]?.values ?? [55, 60, 66, 72, 78]}
         />
       </div>
     ),
-    Blockers: (
+    'Carry-over Analysis': (
       <div className="grid gap-6 md:grid-cols-2">
         <DistributionChart
-          benchmarkLabel="Blocker type distribution"
+          benchmarkLabel="Carry-over documentation coverage"
           labels={trendLabels}
-          note={firstWaveMetrics[3]?.note ?? 'Distribution of blocker types across the sprint.'}
-          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Sprint Health Score', 'Delivery Insights') ?? null)}
-          title={firstWaveMetrics[3]?.title ?? 'Blocker Classification'}
-          tone="alert"
-          values={firstWaveMetrics[3]?.values ?? [22, 18, 19, 17, 14]}
+          note="Use this view to judge whether spillover is being documented clearly enough to support sprint follow-up."
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Carry-over With Documented Reason Rate', 'Delivery Insights') ?? null)}
+          title="Carry-over With Documented Reason Rate"
+          tone="success"
+          values={[61, 66, 69, 73, 76]}
         />
         <Card className="border-dashed border-foreground/20">
           <CardHeader>
-            <CardTitle className="text-sm">Blocker Context Panels</CardTitle>
+            <CardTitle className="text-sm">Carry-over Context Panels</CardTitle>
           </CardHeader>
           <CardContent className="grid gap-4">
             {deliveryPanels.map((panel) => (
@@ -101,25 +101,25 @@ export function DeliveryInsightsPage() {
         </Card>
       </div>
     ),
-    'Sprint Health': (
+    Blockers: (
       <div className="grid gap-6 md:grid-cols-2">
         <DistributionChart
-          benchmarkLabel="Health factor weighting"
-          labels={healthBreakdownRows.map((row) => row.factor.split(' ')[0])}
-          note="Composite view of which factors pull sprint health up or down."
-          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Sprint Health Score', 'Delivery Insights') ?? null)}
-          title="Sprint Health Composition"
-          tone="success"
-          values={healthBreakdownRows.map((row) => Number.parseInt(row.score, 10))}
+          benchmarkLabel="Blocker pressure over time"
+          labels={trendLabels}
+          note={firstWaveMetrics[3]?.note ?? 'Average blocked duration and blocker pressure over time.'}
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry(firstWaveMetrics[3]?.title ?? 'Average Blocked Duration', 'Delivery Insights') ?? null)}
+          title={firstWaveMetrics[3]?.title ?? 'Average Blocked Duration'}
+          tone="alert"
+          values={firstWaveMetrics[3]?.values ?? [22, 18, 19, 17, 14]}
         />
         <CapacityChart
           buffer={capacityPlanning.buffer}
           committed={capacityPlanning.committed}
           committedPercent={capacityPlanning.committedPercent}
           labels={trendLabels}
-          note="Health is strongest when scope stability and capacity discipline improve together."
-          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Sprint Health Score', 'Delivery Insights') ?? null)}
-          title="Capacity Planning"
+          note="Use capacity alongside blocker metrics to judge whether planned work still matches realistic execution conditions."
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Capacity Load vs Available Capacity', 'Delivery Insights') ?? null)}
+          title="Capacity Load vs Available Capacity"
           totalCapacity={capacityPlanning.totalCapacity}
           values={firstWaveMetrics[0]?.values ?? [55, 60, 66, 72, 78]}
         />
@@ -151,7 +151,7 @@ export function DeliveryInsightsPage() {
 
       <PagePurposeStrip
         boundary="Use this page for team execution diagnosis, blocker removal, and sprint follow-up. Delivery metrics are operational signals and should not be used as employee performance scores."
-        primaryAudience="Engineering Managers, Scrum Masters, Head of Engineering, and any stakeholder reviewing delivery health at team level."
+        primaryAudience="Engineering Managers, Scrum Masters, Head of Engineering / VP Engineering, and any stakeholder reviewing delivery health at team level."
         purpose="Helps teams analyze sprint execution, delivery flow, planning quality, and emerging execution risks through team-level metrics and drill-downs."
       />
 
@@ -184,7 +184,7 @@ export function DeliveryInsightsPage() {
               <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">{metric.title}</div>
               <div className="flex items-center gap-2">
                 <p className="text-3xl font-bold text-foreground">{metric.value}</p>
-                <Badge variant={metric.delta === 'Up' ? 'success' : 'outline'}>{metric.delta}</Badge>
+                <Badge variant={metric.trendTone === 'positive' ? 'success' : metric.trendTone === 'negative' ? 'alert' : 'outline'}>{metric.trend}</Badge>
               </div>
             </CardHeader>
             <CardContent>
@@ -284,9 +284,10 @@ export function DeliveryInsightsPage() {
               <tr className="text-muted-foreground">
                 <th className="pb-3 pr-4 font-medium">Team</th>
                 <th className="pb-3 pr-4 font-medium">Sprint</th>
-                <th className="pb-3 pr-4 font-medium">Velocity</th>
-                <th className="pb-3 pr-4 font-medium">Scope Change</th>
-                <th className="pb-3 pr-4 font-medium">Carry-over</th>
+                <th className="pb-3 pr-4 font-medium">Predictability</th>
+                <th className="pb-3 pr-4 font-medium">Scope Change Ratio</th>
+                <th className="pb-3 pr-4 font-medium">Carry-over Rate</th>
+                <th className="pb-3 pr-4 font-medium">Blocked Ticket Ratio</th>
                 <th className="pb-3 pr-4 font-medium">Health Score</th>
                 <th className="pb-3 font-medium">Actions</th>
               </tr>
@@ -296,9 +297,10 @@ export function DeliveryInsightsPage() {
                 <tr key={row.team}>
                   <td className="py-4 pr-4 font-medium text-foreground">{row.team}</td>
                   <td className="py-4 pr-4">{row.sprint}</td>
-                  <td className="py-4 pr-4">{row.velocity}</td>
+                  <td className="py-4 pr-4">{row.predictability}</td>
                   <td className="py-4 pr-4">{row.scopeChange}</td>
                   <td className="py-4 pr-4">{row.carryOver}</td>
+                  <td className="py-4 pr-4">{row.blockedRatio}</td>
                   <td className="py-4 pr-4">{row.healthScore}</td>
                   <td className="py-4 text-foreground">
                     <span className="inline-flex items-center gap-1 text-sm">

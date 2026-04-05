@@ -17,8 +17,8 @@ import { getPeopleGrowthData } from '@/shared/mocks/people-growth'
 export function PeopleGrowthSummaryPage() {
   const [selectedMetric, setSelectedMetric] = useState<MetricDictionaryEntry | null>(null)
   const filters = usePlatformStore((state) => state.filters)
-  const { analyticsTabs, commonGrowthAreas, employees, gapTrend, confidenceTrend, peopleGrowthStats, restrictedCards, teamSummaryRows, topStrengths } = getPeopleGrowthData(filters)
-  const stakeholderTags = ['HR', 'Eng Manager', 'Head of Eng']
+  const { analyticsTabs, calibrationCount, categoryTrend, collaborationTrend, commonGrowthAreas, employees, lowConfidenceCount, ownershipTrend, peopleGrowthStats, restrictedCards, reviewCompletion, reviewHealthTrend, selfReflection, teamSummaryRows, topStrengths } = getPeopleGrowthData(filters)
+  const stakeholderTags = ['HR', 'Engineering Manager', 'Head of Engineering / VP Engineering']
   const trendLabels = ['H2', 'Q1', 'Q2', 'Q3', 'Q4']
   const [activeTab, setActiveTab] = useState(analyticsTabs[0] ?? 'Category Trends')
   const selectedTab = analyticsTabs.includes(activeTab) ? activeTab : (analyticsTabs[0] ?? 'Category Trends')
@@ -28,81 +28,81 @@ export function PeopleGrowthSummaryPage() {
       <div className="grid gap-6 md:grid-cols-2">
         <TrendChart
           labels={trendLabels}
-          note="Track how category scores change over review cycles and identify improving or declining areas."
-          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Category Score Trends', 'People Growth') ?? null)}
-          title="Category Score Trends"
+          note="Shows how delivery and technical category signals move across review cycles." 
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Manager Delivery Reliability Score', 'People Growth') ?? null)}
+          title="Manager Delivery Reliability Score"
           tone="default"
-          values={gapTrend}
+          values={categoryTrend}
           variant="area"
         />
 
         <TrendChart
           labels={trendLabels}
-          note="Read overall improvement momentum and spot where category movement starts to flatten."
-          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Review Momentum', 'People Growth') ?? null)}
-          title="Review Momentum"
+          note="Tracks manager-scored technical quality to see whether quality expectations are rising consistently." 
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Manager Technical Quality Score', 'People Growth') ?? null)}
+          title="Manager Technical Quality Score"
           tone="success"
-          values={gapTrend.map((value, index) => Math.min(100, value + 8 + index * 3))}
+          values={categoryTrend.map((value, index) => Math.min(100, value + 6 + index * 2))}
           variant="line"
         />
       </div>
     ),
-    'Score Distribution': (
+    'Collaboration Signals': (
       <div className="grid gap-6 md:grid-cols-2">
         <DistributionChart
-          benchmarkLabel="Review spread by cycle"
+          benchmarkLabel="Peer collaboration trend"
           labels={trendLabels}
-          note="Distribution of final scores across the organization."
-          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Review Score Distribution', 'People Growth') ?? null)}
-          title="Review Score Distribution"
+          note="Shows whether peer-observed collaboration and communication quality is strengthening over time."
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Peer Communication and Collaboration Score', 'People Growth') ?? null)}
+          title="Peer Communication and Collaboration Score"
           tone="success"
-          values={gapTrend.map((value, index) => value + index * 4)}
+          values={collaborationTrend}
         />
 
         <DistributionChart
-          benchmarkLabel="Readiness concentration"
+          benchmarkLabel="Manager coordination trend"
           labels={trendLabels}
-          note="Shows how many employees are clustering in stronger readiness bands over time."
-          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Growth Readiness Distribution', 'People Growth') ?? null)}
-          title="Growth Readiness Distribution"
+          note="Tracks manager-observed coordination effectiveness across teams and review cycles."
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Manager Coordination Effectiveness Score', 'People Growth') ?? null)}
+          title="Manager Coordination Effectiveness Score"
           tone="default"
-          values={gapTrend.map((value, index) => Math.min(100, value + 12 + index * 5))}
+          values={collaborationTrend.map((value, index) => Math.max(20, value - 6 + index))}
         />
       </div>
     ),
-    'Gap Analysis': (
+    'Ownership & Growth': (
       <div className="grid gap-6 md:grid-cols-2">
         <TrendChart
           labels={trendLabels}
-          note="Compare self-assessment with peer and manager scores to highlight perception gaps."
-          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Self vs Peer vs Manager Gap', 'People Growth') ?? null)}
-          title="Self vs Peer vs Manager Gap"
-          tone="alert"
-          values={confidenceTrend}
+          note="Tracks ownership and initiative signal to see whether engineers are taking broader responsibility over time."
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Manager Ownership Score', 'People Growth') ?? null)}
+          title="Manager Ownership Score"
+          tone="success"
+          values={ownershipTrend}
           variant="line"
         />
 
         <TrendChart
           labels={trendLabels}
-          note="Low-confidence patterns often point to evidence gaps, not just scoring disagreement."
-          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Confidence Gap Trend', 'People Growth') ?? null)}
-          title="Confidence Gap Trend"
-          tone="alert"
-          values={confidenceTrend.map((value, index) => Math.max(6, value - index * 2 + 4))}
+          note={`Manager growth score and self-reflection should be read together. Current self reflection average is ${selfReflection}/5.`}
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Manager Growth Score', 'People Growth') ?? null)}
+          title="Manager Growth Score"
+          tone="default"
+          values={ownershipTrend.map((value, index) => Math.max(18, value - 8 + index * 2))}
           variant="area"
         />
       </div>
     ),
-    'Strengths & Areas': (
+    'Review Cycle Health': (
       <div className="grid gap-6 md:grid-cols-2">
-        <TrendChart
+        <DistributionChart
+          benchmarkLabel={`Review completion ${reviewCompletion}`}
           labels={trendLabels}
-          note="Top strengths and most common growth areas identified across reviews."
-          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Strengths & Areas', 'People Growth') ?? null)}
-          title="Strengths & Areas"
+          note={`Low-confidence flags are currently ${lowConfidenceCount} and calibration queue is ${calibrationCount}.`}
+          onOpenDefinition={() => setSelectedMetric(findMetricDictionaryEntry('Self Growth Reflection Score', 'People Growth') ?? null)}
+          title="Self Growth Reflection Score"
           tone="default"
-          values={confidenceTrend.map((value, index) => Math.max(20, value - index * 2))}
-          variant="line"
+          values={reviewHealthTrend.map((value) => Math.max(12, 100 - value))}
         />
 
         <Card className="border-dashed border-foreground/20">
@@ -158,7 +158,7 @@ export function PeopleGrowthSummaryPage() {
 
       <PagePurposeStrip
         boundary="Use this page for growth tracking, review-cycle health, calibration preparation, and coaching follow-up. Confidential detail stays clearly marked and permission-controlled."
-        primaryAudience="HR, Engineering Managers, Head of Engineering, and approved viewers of aggregate people signals."
+        primaryAudience="HR, Engineering Managers, Head of Engineering / VP Engineering, and approved viewers of aggregate people signals."
         purpose="Provides a structured view of people growth, review-cycle health, and development follow-up without mixing delivery activity into performance interpretation."
       />
 
@@ -167,10 +167,10 @@ export function PeopleGrowthSummaryPage() {
       <section className="space-y-4">
         <div>
           <h2 className="text-lg font-semibold text-foreground">Review Cycle Overview</h2>
-          <p className="mt-1 text-xs italic text-muted-foreground">Key metrics for current review cycle.</p>
+          <p className="mt-1 text-xs italic text-muted-foreground">Primary People Growth metrics exposed in the MVP dashboard.</p>
         </div>
 
-        <div className="grid gap-4 xl:grid-cols-5">
+        <div className="grid gap-4 xl:grid-cols-3">
         {peopleGrowthStats.map((metric) => (
           <Card className="relative border-dashed border-foreground/20" key={metric.title}>
             {findMetricDictionaryEntry(metric.title, 'People Growth') ? (
@@ -180,7 +180,7 @@ export function PeopleGrowthSummaryPage() {
               <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground">{metric.title}</div>
               <div className="flex items-center gap-2">
                 <p className="text-3xl font-bold text-foreground">{metric.value}</p>
-                <Badge variant={metric.delta === 'Up' ? 'success' : 'outline'}>{metric.delta}</Badge>
+                <Badge variant={metric.trendTone === 'positive' ? 'success' : metric.trendTone === 'negative' ? 'alert' : 'outline'}>{metric.trend}</Badge>
               </div>
             </CardHeader>
             <CardContent>
@@ -194,7 +194,7 @@ export function PeopleGrowthSummaryPage() {
       <section className="space-y-4">
         <div>
           <h2 className="text-lg font-semibold text-foreground">Growth Analytics</h2>
-          <p className="mt-1 text-xs italic text-muted-foreground">Visual analysis of review scores and growth trends.</p>
+          <p className="mt-1 text-xs italic text-muted-foreground">Visual analysis of category-aligned review metrics and review-cycle health.</p>
         </div>
 
         <div aria-label="Growth analytics tabs" className="flex flex-wrap items-center gap-1 border-b border-border/70" role="tablist">
@@ -289,7 +289,7 @@ export function PeopleGrowthSummaryPage() {
                 <tr className="text-muted-foreground">
                   <th className="pb-3 pr-4 font-medium">Team</th>
                   <th className="pb-3 pr-4 font-medium">Employees</th>
-                  <th className="pb-3 pr-4 font-medium">Avg Score</th>
+                  <th className="pb-3 pr-4 font-medium">Avg Growth Summary</th>
                   <th className="pb-3 pr-4 font-medium">Completed %</th>
                   <th className="pb-3 pr-4 font-medium">Low Confidence</th>
                   <th className="pb-3 font-medium">Calibration Needed</th>
@@ -340,7 +340,7 @@ export function PeopleGrowthSummaryPage() {
                   <th className="pb-3 pr-4 font-medium">Role</th>
                   <th className="pb-3 pr-4 font-medium">Level</th>
                   <th className="pb-3 pr-4 font-medium">Team</th>
-                  <th className="pb-3 pr-4 font-medium">Final Score</th>
+                  <th className="pb-3 pr-4 font-medium">Cycle Summary</th>
                   <th className="pb-3 pr-4 font-medium">Status</th>
                   <th className="pb-3 font-medium">Actions</th>
                 </tr>

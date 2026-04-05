@@ -1,15 +1,7 @@
 import type { FilterKey } from '@/app/store/use-platform-store'
+import type { SummaryCardReadModel } from '@/shared/lib/summary-card-contract'
 
 type Filters = Record<FilterKey, string>
-
-export interface SummaryCardData {
-  title: string
-  value: string
-  delta: string
-  note: string
-  target: string
-  status: 'On Track' | 'Watch' | 'At Risk'
-}
 
 interface SummaryNarrative {
   headline: string
@@ -49,96 +41,100 @@ interface TeamHealthRow {
   peopleScore: string
 }
 
-const summaryByTeam: Record<string, SummaryCardData[]> = {
+const summaryByTeam: Record<string, SummaryCardReadModel[]> = {
   all: [
-    { title: 'Delivery Confidence', value: '81%', delta: '+6 pts', note: 'Planning accuracy improved after scope-change review became mandatory.', target: '>= 80%', status: 'On Track' },
-    { title: 'Quality & Reliability', value: '9 escaped bugs', delta: '-18%', note: 'Production defects are down, but one platform incident remains open.', target: '<= 8 bugs', status: 'Watch' },
-    { title: 'Engineering Flow', value: '14h PR turnaround', delta: '-3h', note: 'Review latency is healthiest in Growth Squad and weakest in Core Platform.', target: '<= 16h', status: 'On Track' },
-    { title: 'People Growth', value: '3.22 / 4', delta: '+0.08', note: 'Ownership & Initiative is the strongest category this cycle.', target: '>= 3.2 / 4', status: 'On Track' },
-    { title: 'Org Risk', value: '2 hotspots', delta: 'Needs attention', note: 'Cross-team allocation and QA support load are the main pressure points.', target: '<= 1 hotspot', status: 'At Risk' },
+    { title: 'Delivery Confidence Index', currentValue: '81 / 100', changeDisplay: '+6 pts', previousValue: '75 / 100', comparisonPeriod: 'vs previous quarter', note: 'Sprint predictability improved after scope-change review became mandatory.', target: '>= 80 / 100', status: 'On Track' },
+    { title: 'Quality and Reliability Index', currentValue: '77 / 100', changeDisplay: '+5 pts', previousValue: '72 / 100', comparisonPeriod: 'vs previous quarter', note: 'Production quality improved, though one platform incident remains open.', target: '>= 80 / 100', status: 'Watch' },
+    { title: 'Engineering Flow Efficiency Index', currentValue: '74 / 100', changeDisplay: '+5 pts', previousValue: '69 / 100', comparisonPeriod: 'vs previous quarter', note: 'Flow improved as blocker duration and carry-over pressure came down.', target: '>= 75 / 100', status: 'Watch' },
+    { title: 'Collaboration Health Index', currentValue: '76 / 100', changeDisplay: '+4 pts', previousValue: '72 / 100', comparisonPeriod: 'vs previous review cycle', note: 'Peer collaboration and manager coordination signals both improved this cycle.', target: '>= 75 / 100', status: 'On Track' },
+    { title: 'People Growth Summary Index', currentValue: '78 / 100', changeDisplay: '+4 pts', previousValue: '74 / 100', comparisonPeriod: 'vs previous review cycle', note: 'Ownership and delivery reliability are the strongest exposed People Growth signals.', target: '>= 75 / 100', status: 'On Track' },
+    { title: 'Org Capacity and Risk Index', currentValue: '2 hotspots', signal: 'Needs attention', previousValue: '1 hotspot', comparisonPeriod: 'vs previous quarter', note: 'Cross-team allocation and QA support load remain the main organizational pressure points.', target: '<= 1 hotspot', status: 'At Risk' },
   ],
   growth: [
-    { title: 'Delivery Confidence', value: '86%', delta: '+4 pts', note: 'Growth Squad execution stabilized after stricter intake on mid-sprint work.', target: '>= 82%', status: 'On Track' },
-    { title: 'Quality & Reliability', value: '3 escaped bugs', delta: '-25%', note: 'Release quality is healthy, with only minor post-release fixes.', target: '<= 4 bugs', status: 'On Track' },
-    { title: 'Engineering Flow', value: '11h PR turnaround', delta: '-2h', note: 'Review loops are fast because ownership and reviewer rotation are clearer.', target: '<= 12h', status: 'On Track' },
-    { title: 'People Growth', value: '3.31 / 4', delta: '+0.11', note: 'Ownership and communication are both trending upward.', target: '>= 3.2 / 4', status: 'On Track' },
-    { title: 'Org Risk', value: '1 hotspot', delta: 'Contained', note: 'Risk mainly comes from shared QA support close to release cut-off.', target: '<= 1 hotspot', status: 'Watch' },
+    { title: 'Delivery Confidence Index', currentValue: '86 / 100', changeDisplay: '+4 pts', previousValue: '82 / 100', comparisonPeriod: 'vs previous quarter', note: 'Growth Squad execution stabilized after stricter intake on mid-sprint work.', target: '>= 82 / 100', status: 'On Track' },
+    { title: 'Quality and Reliability Index', currentValue: '84 / 100', changeDisplay: '+6 pts', previousValue: '78 / 100', comparisonPeriod: 'vs previous quarter', note: 'Release quality is healthy, with only minor post-release fixes.', target: '>= 80 / 100', status: 'On Track' },
+    { title: 'Engineering Flow Efficiency Index', currentValue: '82 / 100', changeDisplay: '+5 pts', previousValue: '77 / 100', comparisonPeriod: 'vs previous quarter', note: 'Ownership clarity and reviewer rotation reduce handoff friction.', target: '>= 78 / 100', status: 'On Track' },
+    { title: 'Collaboration Health Index', currentValue: '81 / 100', changeDisplay: '+6 pts', previousValue: '75 / 100', comparisonPeriod: 'vs previous review cycle', note: 'Communication and coordination both trend upward in Growth Squad.', target: '>= 75 / 100', status: 'On Track' },
+    { title: 'People Growth Summary Index', currentValue: '79 / 100', changeDisplay: '+5 pts', previousValue: '74 / 100', comparisonPeriod: 'vs previous review cycle', note: 'Ownership and communication remain the strongest People Growth signals here.', target: '>= 75 / 100', status: 'On Track' },
+    { title: 'Org Capacity and Risk Index', currentValue: '1 hotspot', signal: 'Contained', previousValue: '2 hotspots', comparisonPeriod: 'vs previous quarter', note: 'Risk mainly comes from shared QA support close to release cut-off.', target: '<= 1 hotspot', status: 'Watch' },
   ],
   platform: [
-    { title: 'Delivery Confidence', value: '72%', delta: '-2 pts', note: 'Dependency-heavy work is still reducing forecast reliability.', target: '>= 80%', status: 'At Risk' },
-    { title: 'Quality & Reliability', value: '1 open incident', delta: 'Critical follow-up', note: 'Defect count is stable, but unresolved platform work weighs more here.', target: '0 open incidents', status: 'At Risk' },
-    { title: 'Engineering Flow', value: '18h PR turnaround', delta: '+1h', note: 'Architecture reviews are healthy, but too many shared requests slow completion.', target: '<= 16h', status: 'Watch' },
-    { title: 'People Growth', value: '3.14 / 4', delta: '+0.04', note: 'Calibration confidence is weaker for cross-board contributors.', target: '>= 3.2 / 4', status: 'Watch' },
-    { title: 'Org Risk', value: '3 hotspots', delta: 'Escalate', note: 'Carry-over, dependency delay, and stretched senior bandwidth overlap.', target: '<= 1 hotspot', status: 'At Risk' },
+    { title: 'Delivery Confidence Index', currentValue: '72 / 100', changeDisplay: '-2 pts', previousValue: '74 / 100', comparisonPeriod: 'vs previous quarter', note: 'Dependency-heavy work is still reducing forecast reliability.', target: '>= 80 / 100', status: 'At Risk' },
+    { title: 'Quality and Reliability Index', currentValue: '66 / 100', signal: 'Critical follow-up', previousValue: '63 / 100', comparisonPeriod: 'vs previous quarter', note: 'Defect count is stable, but unresolved platform reliability work weighs more here.', target: '>= 75 / 100', status: 'At Risk' },
+    { title: 'Engineering Flow Efficiency Index', currentValue: '55 / 100', changeDisplay: '+3 pts', previousValue: '52 / 100', comparisonPeriod: 'vs previous quarter', note: 'Architecture reviews are healthy, but too many shared requests slow completion.', target: '>= 75 / 100', status: 'Watch' },
+    { title: 'Collaboration Health Index', currentValue: '64 / 100', changeDisplay: '+3 pts', previousValue: '61 / 100', comparisonPeriod: 'vs previous review cycle', note: 'Coordination improves when shared support load is lower, but evidence quality is still uneven.', target: '>= 75 / 100', status: 'Watch' },
+    { title: 'People Growth Summary Index', currentValue: '64 / 100', changeDisplay: '+2 pts', previousValue: '62 / 100', comparisonPeriod: 'vs previous review cycle', note: 'Calibration confidence is still weaker for cross-board contributors.', target: '>= 75 / 100', status: 'Watch' },
+    { title: 'Org Capacity and Risk Index', currentValue: '3 hotspots', signal: 'Escalate', previousValue: '2 hotspots', comparisonPeriod: 'vs previous quarter', note: 'Carry-over, dependency delay, and stretched senior bandwidth overlap.', target: '<= 1 hotspot', status: 'At Risk' },
   ],
   cx: [
-    { title: 'Delivery Confidence', value: '79%', delta: '+3 pts', note: 'Delivery confidence improved after release-readiness checks became more explicit.', target: '>= 80%', status: 'Watch' },
-    { title: 'Quality & Reliability', value: '5 escaped bugs', delta: '-12%', note: 'Bug volume is down, though retest load is still uneven.', target: '<= 4 bugs', status: 'Watch' },
-    { title: 'Engineering Flow', value: '13h PR turnaround', delta: '-1h', note: 'Work moves well when QA focus is protected before release windows.', target: '<= 14h', status: 'On Track' },
-    { title: 'People Growth', value: '3.27 / 4', delta: '+0.09', note: 'Collaboration is strong, with growth focus now shifting to automation depth.', target: '>= 3.2 / 4', status: 'On Track' },
-    { title: 'Org Risk', value: '2 hotspots', delta: 'Watch', note: 'Risk concentrates around QA bandwidth and last-minute release support.', target: '<= 1 hotspot', status: 'Watch' },
+    { title: 'Delivery Confidence Index', currentValue: '79 / 100', changeDisplay: '+3 pts', previousValue: '76 / 100', comparisonPeriod: 'vs previous quarter', note: 'Delivery confidence improved after release-readiness checks became more explicit.', target: '>= 80 / 100', status: 'Watch' },
+    { title: 'Quality and Reliability Index', currentValue: '73 / 100', changeDisplay: '+5 pts', previousValue: '68 / 100', comparisonPeriod: 'vs previous quarter', note: 'Bug volume is down, though retest load is still uneven.', target: '>= 75 / 100', status: 'Watch' },
+    { title: 'Engineering Flow Efficiency Index', currentValue: '70 / 100', changeDisplay: '+3 pts', previousValue: '67 / 100', comparisonPeriod: 'vs previous quarter', note: 'Work moves well when QA focus is protected before release windows.', target: '>= 72 / 100', status: 'On Track' },
+    { title: 'Collaboration Health Index', currentValue: '78 / 100', changeDisplay: '+4 pts', previousValue: '74 / 100', comparisonPeriod: 'vs previous review cycle', note: 'Collaboration is strong, with release-readiness communication materially better than prior cycle.', target: '>= 75 / 100', status: 'On Track' },
+    { title: 'People Growth Summary Index', currentValue: '72 / 100', changeDisplay: '+3 pts', previousValue: '69 / 100', comparisonPeriod: 'vs previous review cycle', note: 'Growth focus is shifting toward automation depth and sustainable release quality.', target: '>= 75 / 100', status: 'On Track' },
+    { title: 'Org Capacity and Risk Index', currentValue: '2 hotspots', signal: 'Watch', previousValue: '2 hotspots', comparisonPeriod: 'vs previous quarter', note: 'Risk concentrates around QA bandwidth and last-minute release support.', target: '<= 1 hotspot', status: 'Watch' },
   ],
 }
 
 const trendByTeam: Record<string, TrendSeries[]> = {
   all: [
-    { label: 'Delivery Confidence', values: [62, 68, 70, 75, 81] },
-    { label: 'Quality & Reliability', values: [54, 59, 65, 72, 77] },
-    { label: 'People Growth', values: [58, 61, 66, 70, 74] },
+    { label: 'Delivery Confidence Index', values: [62, 68, 70, 75, 81] },
+    { label: 'Quality and Reliability Index', values: [54, 59, 65, 72, 77] },
+    { label: 'People Growth Summary Index', values: [58, 61, 66, 70, 74] },
   ],
   growth: [
-    { label: 'Delivery Confidence', values: [70, 74, 78, 82, 86] },
-    { label: 'Quality & Reliability', values: [61, 67, 72, 78, 84] },
-    { label: 'People Growth', values: [60, 65, 71, 75, 79] },
+    { label: 'Delivery Confidence Index', values: [70, 74, 78, 82, 86] },
+    { label: 'Quality and Reliability Index', values: [61, 67, 72, 78, 84] },
+    { label: 'People Growth Summary Index', values: [60, 65, 71, 75, 79] },
   ],
   platform: [
-    { label: 'Delivery Confidence', values: [69, 71, 70, 74, 72] },
-    { label: 'Quality & Reliability', values: [58, 62, 64, 63, 66] },
-    { label: 'People Growth', values: [55, 57, 60, 62, 64] },
+    { label: 'Delivery Confidence Index', values: [69, 71, 70, 74, 72] },
+    { label: 'Quality and Reliability Index', values: [58, 62, 64, 63, 66] },
+    { label: 'People Growth Summary Index', values: [55, 57, 60, 62, 64] },
   ],
   cx: [
-    { label: 'Delivery Confidence', values: [60, 66, 71, 76, 79] },
-    { label: 'Quality & Reliability', values: [49, 56, 62, 68, 73] },
-    { label: 'People Growth', values: [57, 60, 64, 69, 72] },
+    { label: 'Delivery Confidence Index', values: [60, 66, 71, 76, 79] },
+    { label: 'Quality and Reliability Index', values: [49, 56, 62, 68, 73] },
+    { label: 'People Growth Summary Index', values: [57, 60, 64, 69, 72] },
   ],
 }
 
 const trendPanelsByTeam: Record<string, TrendPanel[]> = {
   all: [
-    { title: 'Delivery Confidence Trend', values: [62, 68, 70, 75, 81], note: 'Weekly trend showing sprint completion and predictability over time.' },
-    { title: 'Quality & Reliability Trend', values: [54, 59, 65, 72, 77], note: 'Bug rate and incident frequency across recent sprints.' },
-    { title: 'Engineering Flow Metrics', values: [48, 56, 60, 69, 74], note: 'PR cycle time and review turnaround by team.' },
-    { title: 'People Growth Distribution', values: [50, 55, 60, 68, 74], note: 'Review score distribution and confidence quality across the organization.' },
+    { title: 'Delivery Confidence Index', values: [62, 68, 70, 75, 81], note: 'Leadership trend showing predictability, scope stability, and blocker pressure over time.' },
+    { title: 'Quality and Reliability Index', values: [54, 59, 65, 72, 77], note: 'Bug rate, incident pressure, and recent quality trend across engineering.' },
+    { title: 'Engineering Flow Efficiency Index', values: [48, 56, 60, 69, 74], note: 'Blocked duration, carry-over pressure, and flow friction by period.' },
+    { title: 'Collaboration Health Index', values: [50, 55, 60, 68, 74], note: 'Peer collaboration and manager coordination trend across the organization.' },
   ],
   growth: [
-    { title: 'Delivery Confidence Trend', values: [70, 74, 78, 82, 86], note: 'Growth Squad execution remains the cleanest in the portfolio.' },
-    { title: 'Quality & Reliability Trend', values: [61, 67, 72, 78, 84], note: 'Release quality improves when QA focus is protected earlier.' },
-    { title: 'Engineering Flow Metrics', values: [57, 63, 71, 77, 82], note: 'Reviewer rotation and clear ownership reduce handoff friction.' },
-    { title: 'People Growth Distribution', values: [58, 64, 68, 75, 79], note: 'Ownership and communication remain the strongest categories here.' },
+    { title: 'Delivery Confidence Index', values: [70, 74, 78, 82, 86], note: 'Growth Squad execution remains the cleanest in the portfolio.' },
+    { title: 'Quality and Reliability Index', values: [61, 67, 72, 78, 84], note: 'Release quality improves when QA focus is protected earlier.' },
+    { title: 'Engineering Flow Efficiency Index', values: [57, 63, 71, 77, 82], note: 'Reviewer rotation and clear ownership reduce handoff friction.' },
+    { title: 'Collaboration Health Index', values: [58, 64, 68, 75, 79], note: 'Ownership and communication remain the strongest collaboration signals here.' },
   ],
   platform: [
-    { title: 'Delivery Confidence Trend', values: [69, 71, 70, 74, 72], note: 'Dependency-heavy work keeps forecast reliability unstable.' },
-    { title: 'Quality & Reliability Trend', values: [58, 62, 64, 63, 66], note: 'Stability is acceptable, but unresolved reliability work weighs more in this team.' },
-    { title: 'Engineering Flow Metrics', values: [44, 47, 53, 52, 55], note: 'Shared support and cross-board work still distort planned flow.' },
-    { title: 'People Growth Distribution', values: [49, 52, 55, 61, 64], note: 'Low-confidence calibration remains more common here than elsewhere.' },
+    { title: 'Delivery Confidence Index', values: [69, 71, 70, 74, 72], note: 'Dependency-heavy work keeps forecast reliability unstable.' },
+    { title: 'Quality and Reliability Index', values: [58, 62, 64, 63, 66], note: 'Stability is acceptable, but unresolved reliability work weighs more in this team.' },
+    { title: 'Engineering Flow Efficiency Index', values: [44, 47, 53, 52, 55], note: 'Shared support and cross-board work still distort planned flow.' },
+    { title: 'Collaboration Health Index', values: [49, 52, 55, 61, 64], note: 'Low-confidence calibration remains more common here than elsewhere.' },
   ],
   cx: [
-    { title: 'Delivery Confidence Trend', values: [60, 66, 71, 76, 79], note: 'Delivery improves when release-readiness checks happen earlier.' },
-    { title: 'Quality & Reliability Trend', values: [49, 56, 62, 68, 73], note: 'Bug trend is healthier, but retest loops still add noise.' },
-    { title: 'Engineering Flow Metrics', values: [51, 56, 61, 67, 70], note: 'Flow is improving, with remaining risk concentrated around QA capacity.' },
-    { title: 'People Growth Distribution', values: [57, 60, 64, 69, 72], note: 'Collaboration is strong, with growth shifting toward automation depth.' },
+    { title: 'Delivery Confidence Index', values: [60, 66, 71, 76, 79], note: 'Delivery improves when release-readiness checks happen earlier.' },
+    { title: 'Quality and Reliability Index', values: [49, 56, 62, 68, 73], note: 'Bug trend is healthier, but retest loops still add noise.' },
+    { title: 'Engineering Flow Efficiency Index', values: [51, 56, 61, 67, 70], note: 'Flow is improving, with remaining risk concentrated around QA capacity.' },
+    { title: 'Collaboration Health Index', values: [57, 60, 64, 69, 72], note: 'Collaboration is strong, with growth shifting toward automation depth.' },
   ],
 }
 
 const riskHighlightsByTeam: Record<string, string[]> = {
   all: ['Core Platform blockers are increasingly dependency-driven, not capacity-driven.', 'Low-confidence review cases cluster in cross-team engineers with thin peer coverage.', 'Growth Squad review turnaround is healthy, but QA coverage still creates end-of-sprint pressure.'],
   growth: ['Alya and the Growth Squad bench show strong ownership momentum this cycle.', 'Main operational risk is QA support concentration during release week.', 'People signals are healthy enough to support larger ownership bets next cycle.'],
-  platform: ['Cross-board support is distorting both delivery flow and people evidence quality.', 'Planning accuracy improves when dependency intake is challenged early in sprint planning.', 'Backend peer coverage is still thinner than needed for confident calibration.'],
+  platform: ['Cross-board support is distorting both delivery flow and people evidence quality.', 'Sprint predictability improves when dependency intake is challenged early in sprint planning.', 'Backend peer coverage is still thinner than needed for confident calibration.'],
   cx: ['QA focus protection remains the biggest lever for delivery and growth quality.', 'Release-readiness communication improved, but retest churn still hurts predictability.', 'Automation depth is trending up but still vulnerable to support interruptions.'],
 }
 
 const leadershipInsightsByTeam: Record<string, string[]> = {
-  all: ['Sprint velocity improved 12% this quarter.', '3 engineers are flagged for focused growth follow-up.', 'Cross-team dependency pressure dropped 25% compared with the prior quarter.'],
+  all: ['Sprint predictability improved across the last quarter.', 'Review confidence improved, but a few cross-team contributors still need stronger evidence coverage.', 'Cross-team dependency pressure dropped compared with the prior quarter.'],
   growth: ['Growth Squad landed 4 of the last 5 sprints close to plan.', 'Ownership signals improved across senior and middle contributors.', 'Main watch item remains shared QA coverage near release cut-off.'],
   platform: ['Platform carry-over remains above organizational average.', 'Low-confidence review evidence still clusters in cross-board contributors.', 'Dependency intake quality is the main near-term operational lever.'],
   cx: ['Release-readiness signaling improved this quarter.', 'Automation momentum is visible but still exposed to support interruptions.', 'Team health remains stable if QA bandwidth is protected.'],
@@ -155,7 +151,7 @@ const quickActionsByTeam: Record<string, QuickActionCard[]> = {
     },
     {
       title: 'People Growth Highlights',
-      items: ['85% reviews completed this cycle.', '12 employees are marked promotion-ready.', '3 calibration sessions are still pending closure.'],
+      items: ['Review completion is above target this cycle.', 'Manager ownership and delivery reliability scores both improved.', '3 calibration sessions are still pending closure.'],
       cta: 'View People Growth',
       href: '/people-growth',
       note: 'Quick summary from People Growth.',
@@ -177,7 +173,7 @@ const quickActionsByTeam: Record<string, QuickActionCard[]> = {
     },
     {
       title: 'People Growth Highlights',
-      items: ['Review confidence is highest in this team.', 'Ownership and communication both improved this cycle.', 'Promotion-readiness signals are clearer than last half.'],
+      items: ['Review confidence is highest in this team.', 'Ownership and communication both improved this cycle.', 'Growth follow-up is clearer than last half.'],
       cta: 'View People Growth',
       href: '/people-growth',
       note: 'People summary for Growth Squad.',
@@ -247,7 +243,7 @@ const teamHealthRowsByTeam: Record<string, TeamHealthRow[]> = {
   cx: [{ team: 'Customer Experience', deliveryScore: '79%', qualityScore: '91%', peopleScore: '3.27 / 4' }],
 }
 
-const stakeholderTags = ['Head of Engineering', 'Engineering Manager', 'HRBP']
+const stakeholderTags = ['Head of Engineering / VP Engineering', 'Engineering Manager', 'HR']
 
 const summaryNarrativesByTeam: Record<string, SummaryNarrative> = {
   all: {
@@ -276,7 +272,7 @@ const recommendedActionsByTeam: Record<string, RecommendedAction[]> = {
   all: [
     { title: 'Tighten reviewer coverage', owner: 'Engineering Manager', note: 'Low-confidence evidence still clusters in cross-team contributors.' },
     { title: 'Guard deep work time', owner: 'Team Leads', note: 'Support load is still weakening flow and coaching continuity in some teams.' },
-    { title: 'Review escalation candidates', owner: 'Head of Engineering', note: 'Platform risk should be explicitly reviewed in the next planning cycle.' },
+    { title: 'Review escalation candidates', owner: 'Head of Engineering / VP Engineering', note: 'Platform risk should be explicitly reviewed in the next planning cycle.' },
   ],
   growth: [
     { title: 'Expand ownership carefully', owner: 'Engineering Manager', note: 'Use current momentum to grow scope for stronger contributors.' },
@@ -292,10 +288,10 @@ const recommendedActionsByTeam: Record<string, RecommendedAction[]> = {
   ],
 }
 
-const cycleOverrides: Record<string, { peopleValue: string; peopleDelta: string }> = {
-  '2026-q2': { peopleValue: '3.22 / 4', peopleDelta: '+0.08' },
-  '2026-q1': { peopleValue: '3.15 / 4', peopleDelta: '+0.04' },
-  '2025-h2': { peopleValue: '3.03 / 4', peopleDelta: 'Baseline' },
+const cycleOverrides: Record<string, { peopleValue: string; peopleChangeDisplay?: string; peopleSignal?: string }> = {
+  '2026-q2': { peopleValue: '78 / 100', peopleChangeDisplay: '+4 pts' },
+  '2026-q1': { peopleValue: '74 / 100', peopleChangeDisplay: '+2 pts' },
+  '2025-h2': { peopleValue: '70 / 100', peopleSignal: 'Baseline' },
 }
 
 const rangeOffsets: Record<string, number> = {
@@ -308,20 +304,35 @@ function clamp(value: number) {
   return Math.max(24, Math.min(96, value))
 }
 
+function getPreviousReviewCycleLabel(reviewCycle: string) {
+  if (reviewCycle === '2026-q2') {
+    return 'vs 2026-Q1'
+  }
+
+  if (reviewCycle === '2026-q1') {
+    return 'vs 2025-H2'
+  }
+
+  return 'vs previous review cycle'
+}
+
 export function getEngineeringSummaryData(filters: Filters) {
   const teamKey = filters.team in summaryByTeam ? filters.team : 'all'
   const cycle = cycleOverrides[filters.reviewCycle] ?? cycleOverrides['2026-q2']
   const offset = rangeOffsets[filters.dateRange] ?? 0
 
   const summaryCards = summaryByTeam[teamKey].map((card) => {
-    if (card.title !== 'People Growth') {
+    if (card.title !== 'People Growth Summary Index') {
       return card
     }
 
     return {
       ...card,
-      value: cycle.peopleValue,
-      delta: cycle.peopleDelta,
+      currentValue: cycle.peopleValue,
+      changeDisplay: cycle.peopleChangeDisplay,
+      signal: cycle.peopleSignal,
+      previousValue: card.previousValue,
+      comparisonPeriod: getPreviousReviewCycleLabel(filters.reviewCycle),
     }
   })
 

@@ -21,7 +21,8 @@ interface EmployeeRecord {
 interface PeopleMetricCard {
   title: string
   value: string
-  delta: string
+  trend: string
+  trendTone: 'positive' | 'neutral' | 'negative'
   note: string
 }
 
@@ -53,9 +54,54 @@ const baseCategoryRows = [
 ]
 
 const cycleStats = {
-  '2026-q2': { finalScore: '3.22', lowConfidence: '4', calibration: '7', momentum: '+0.12', gapTrend: [15, 20, 18, 14, 10], confidenceTrend: [32, 26, 19, 11, 8] },
-  '2026-q1': { finalScore: '3.15', lowConfidence: '5', calibration: '9', momentum: '+0.07', gapTrend: [18, 22, 21, 18, 14], confidenceTrend: [35, 31, 27, 18, 12] },
-  '2025-h2': { finalScore: '3.03', lowConfidence: '7', calibration: '11', momentum: 'Baseline', gapTrend: [24, 26, 23, 20, 17], confidenceTrend: [41, 39, 33, 26, 21] },
+  '2026-q2': {
+    managerDelivery: '3.24',
+    managerTechnical: '3.22',
+    peerCollaboration: '3.41',
+    managerCoordination: '3.18',
+    managerOwnership: '3.35',
+    managerGrowth: '3.08',
+    selfReflection: '3.12',
+    reviewCompletion: '92%',
+    lowConfidence: '4',
+    calibration: '7',
+    categoryTrend: [61, 66, 71, 75, 79],
+    collaborationTrend: [68, 72, 76, 79, 82],
+    ownershipTrend: [57, 62, 67, 72, 76],
+    reviewHealthTrend: [38, 31, 25, 18, 14],
+  },
+  '2026-q1': {
+    managerDelivery: '3.16',
+    managerTechnical: '3.14',
+    peerCollaboration: '3.29',
+    managerCoordination: '3.11',
+    managerOwnership: '3.24',
+    managerGrowth: '3.01',
+    selfReflection: '3.05',
+    reviewCompletion: '87%',
+    lowConfidence: '5',
+    calibration: '9',
+    categoryTrend: [58, 63, 67, 71, 75],
+    collaborationTrend: [65, 69, 72, 76, 79],
+    ownershipTrend: [54, 59, 63, 68, 72],
+    reviewHealthTrend: [44, 36, 30, 23, 18],
+  },
+  '2025-h2': {
+    managerDelivery: '3.05',
+    managerTechnical: '3.02',
+    peerCollaboration: '3.17',
+    managerCoordination: '3.02',
+    managerOwnership: '3.12',
+    managerGrowth: '2.94',
+    selfReflection: '2.98',
+    reviewCompletion: '81%',
+    lowConfidence: '7',
+    calibration: '11',
+    categoryTrend: [52, 57, 61, 66, 70],
+    collaborationTrend: [59, 63, 67, 70, 74],
+    ownershipTrend: [48, 53, 58, 62, 67],
+    reviewHealthTrend: [51, 44, 38, 31, 24],
+  },
 } as const
 
 const teamHighlights = {
@@ -84,23 +130,23 @@ const employees: EmployeeRecord[] = [
 ]
 
 const topStrengths: StrengthRow[] = [
-  { label: 'Technical Excellence', value: '78% of reviews' },
-  { label: 'Collaboration', value: '65% of reviews' },
-  { label: 'Problem Solving', value: '58% of reviews' },
-  { label: 'Code Quality', value: '52% of reviews' },
+  { label: 'Ownership & Initiative', value: '71% of reviews' },
+  { label: 'Collaboration & Communication', value: '68% of reviews' },
+  { label: 'Technical Quality', value: '62% of reviews' },
+  { label: 'Delivery & Reliability', value: '57% of reviews' },
 ]
 
 const commonGrowthAreas: StrengthRow[] = [
-  { label: 'Communication', value: '45% of reviews' },
-  { label: 'Documentation', value: '38% of reviews' },
-  { label: 'Time Management', value: '32% of reviews' },
-  { label: 'Mentoring', value: '28% of reviews' },
+  { label: 'Learning & Growth', value: '46% of reviews' },
+  { label: 'Cross-team coordination', value: '39% of reviews' },
+  { label: 'Evidence quality in peer review', value: '31% of reviews' },
+  { label: 'Release-readiness communication', value: '27% of reviews' },
 ]
 
 const restrictedCards: RestrictedCard[] = [
-  { title: 'Compensation Recommendations', visibility: 'Visible to HR and Head of Eng only' },
-  { title: 'Exit Risk Analysis', visibility: 'Visible to HR only' },
-  { title: 'Calibration Notes', visibility: 'Visible to HR and Head of Eng only' },
+  { title: 'Manager Private Notes', visibility: 'Visible to Engineering Manager only' },
+  { title: 'Calibration Notes', visibility: 'Visible to HR and Head of Engineering / VP Engineering only' },
+  { title: 'HR Follow-up Actions', visibility: 'Visible to HR only' },
 ]
 
 const teamSummaryRows: TeamSummaryRow[] = [
@@ -197,24 +243,29 @@ export function getPeopleGrowthData(filters: Filters) {
   const filteredEmployees = filterEmployees(filters)
   const safeEmployees = filteredEmployees.length > 0 ? filteredEmployees : employees
   const highlights = teamHighlights[filters.team as keyof typeof teamHighlights] ?? teamHighlights.all
-  const completedPercent = Math.min(100, 70 + safeEmployees.length * 5)
-  const growthReadyCount = Math.max(1, safeEmployees.filter((employee) => Number(employee.finalScore) >= 3.25).length)
   const stats: PeopleMetricCard[] = [
-    { title: 'Final Score (Avg)', value: `${cycle.finalScore}/5`, delta: 'Up', note: 'Weighted average across all employees.' },
-    { title: 'Reviews Completed', value: `${completedPercent}%`, delta: 'Up', note: 'Self, peer, and manager reviews submitted.' },
-    { title: 'Low Confidence Flags', value: String(safeEmployees.filter((employee) => employee.confidence === 'Low confidence').length || Number(cycle.lowConfidence)), delta: 'Down', note: 'Reviews with insufficient peer or evidence data.' },
-    { title: 'Calibration Required', value: String(safeEmployees.filter((employee) => employee.needsCalibration).length || Number(cycle.calibration)), delta: 'Stable', note: 'Employees needing calibration review.' },
-    { title: 'Growth Ready', value: String(growthReadyCount), delta: 'Up', note: 'Employees with strong readiness signals for broader scope.' },
+    { title: 'Manager Delivery Reliability Score', value: `${cycle.managerDelivery}/5`, trend: 'Up', trendTone: 'positive', note: 'Manager-scored delivery consistency and follow-through for the active review cycle.' },
+    { title: 'Manager Technical Quality Score', value: `${cycle.managerTechnical}/5`, trend: 'Up', trendTone: 'positive', note: 'Manager-scored technical quality signal for reviewed engineers in scope.' },
+    { title: 'Peer Communication and Collaboration Score', value: `${cycle.peerCollaboration}/5`, trend: 'Up', trendTone: 'positive', note: 'Peer-based communication and collaboration signal across reviewed engineers.' },
+    { title: 'Manager Coordination Effectiveness Score', value: `${cycle.managerCoordination}/5`, trend: 'Stable', trendTone: 'neutral', note: 'Manager view of planning, coordination, and cross-functional operating effectiveness.' },
+    { title: 'Manager Ownership Score', value: `${cycle.managerOwnership}/5`, trend: 'Up', trendTone: 'positive', note: 'Manager-scored ownership and initiative signal for the active cycle.' },
+    { title: 'Manager Growth Score', value: `${cycle.managerGrowth}/5`, trend: 'Stable', trendTone: 'neutral', note: 'Manager-scored learning and growth signal used for coaching and development follow-up.' },
   ]
 
   return {
-    analyticsTabs: ['Category Trends', 'Score Distribution', 'Gap Analysis', 'Strengths & Areas'],
+    analyticsTabs: ['Category Trends', 'Collaboration Signals', 'Ownership & Growth', 'Review Cycle Health'],
     peopleGrowthStats: stats,
     categoryRows: getCategoryRows(filters),
     peopleHighlights: highlights,
     employees: safeEmployees,
-    gapTrend: cycle.gapTrend,
-    confidenceTrend: cycle.confidenceTrend,
+    categoryTrend: cycle.categoryTrend,
+    collaborationTrend: cycle.collaborationTrend,
+    ownershipTrend: cycle.ownershipTrend,
+    reviewHealthTrend: cycle.reviewHealthTrend,
+    reviewCompletion: cycle.reviewCompletion,
+    selfReflection: cycle.selfReflection,
+    lowConfidenceCount: String(safeEmployees.filter((employee) => employee.confidence === 'Low confidence').length || Number(cycle.lowConfidence)),
+    calibrationCount: String(safeEmployees.filter((employee) => employee.needsCalibration).length || Number(cycle.calibration)),
     topStrengths,
     commonGrowthAreas,
     restrictedCards,
