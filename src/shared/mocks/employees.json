@@ -6,7 +6,7 @@
       "email": "nanda.putra@test.ajah",
       "id": "273767",
       "id_employee": "0015",
-      "job": "Software Engineer Manager",
+      "role": "Software Engineer Manager",
       "organization": "IT",
       "first_name": "Nanda Haryono",
       "last_name": "Putra"
@@ -15,7 +15,7 @@
       "email": "hilmi@test.ajah",
       "id": "4063204",
       "id_employee": "M234",
-      "job": "Data",
+      "role": "Data",
       "organization": "IT",
       "first_name": "Hilmi",
       "last_name": "Taufiqurohman"
@@ -24,7 +24,7 @@
       "email": "azhra.azka@test.ajah",
       "id": "4014639",
       "id_employee": "0654",
-      "job": "Backend Engineer",
+      "role": "Backend Engineer",
       "organization": "IT",
       "first_name": "Azhra Yashna Azka",
       "last_name": ""
@@ -33,7 +33,7 @@
       "email": "steven.nathaniel@test.ajah",
       "id": "3385170",
       "id_employee": "0628",
-      "job": "Data",
+      "role": "Data",
       "organization": "IT",
       "first_name": "Steven Nathaniel",
       "last_name": "Santoso"
@@ -42,7 +42,7 @@
       "email": "sondhy.reno@test.ajah",
       "id": "3083520",
       "id_employee": "0621",
-      "job": "QA Engineer",
+      "role": "QA Engineer",
       "organization": "IT",
       "first_name": "Sondhy Reno",
       "last_name": "Boedisatrio"
@@ -51,7 +51,7 @@
       "email": "daniar.amin@test.ajah",
       "id": "2848675",
       "id_employee": "0598",
-      "job": "Backend Engineer",
+      "role": "Backend Engineer",
       "organization": "IT",
       "first_name": "Daniar Nur",
       "last_name": "Amin"
@@ -60,7 +60,7 @@
       "email": "jimmy@test.ajah",
       "id": "1681433",
       "id_employee": "0564",
-      "job": "Backend Engineer",
+      "role": "Backend Engineer",
       "organization": "IT",
       "first_name": "Jimmy Afandi",
       "last_name": ""
@@ -69,7 +69,7 @@
       "email": "tude.verdhangga@test.ajah",
       "id": "1559501",
       "id_employee": "0548",
-      "job": "Frontend Engineer",
+      "role": "Frontend Engineer",
       "organization": "IT",
       "first_name": "I Putu Gede Verdhangga Mahandya",
       "last_name": ""
@@ -78,7 +78,7 @@
       "email": "anwar.sanusi@test.ajah",
       "id": "1489247",
       "id_employee": "0538",
-      "job": "Tech Lead-QA",
+      "role": "Tech Lead-QA",
       "organization": "IT",
       "first_name": "Muhammad Anwar Sanusi",
       "last_name": ""
@@ -87,7 +87,7 @@
       "email": "donny.setiawan@test.ajah",
       "id": "1059530",
       "id_employee": "0489",
-      "job": "QA Engineer",
+      "role": "QA Engineer",
       "organization": "IT",
       "first_name": "Donny Setiawan",
       "last_name": ""
@@ -96,7 +96,7 @@
       "email": "miftach.hidayatullah@test.ajah",
       "id": "804784",
       "id_employee": "0454",
-      "job": "Tech Lead-Backend",
+      "role": "Tech Lead-Backend",
       "organization": "IT",
       "first_name": "Miftach Hidayatullah",
       "last_name": ""
@@ -105,7 +105,7 @@
       "email": "agung.pratama@test.ajah",
       "id": "726818",
       "id_employee": "0445",
-      "job": "QA Engineer",
+      "role": "QA Engineer",
       "organization": "IT",
       "first_name": "Agung Dewa Pratama",
       "last_name": ""
@@ -114,7 +114,7 @@
       "email": "nizar.assegaf@test.ajah",
       "id": "273870",
       "id_employee": "0210",
-      "job": "Android Engineer",
+      "role": "Android Engineer",
       "organization": "IT",
       "first_name": "Nizar Assegaf",
       "last_name": ""
@@ -123,7 +123,7 @@
       "email": "suantony@test.ajah",
       "id": "634662",
       "id_employee": "0424",
-      "job": "Android Engineer",
+      "role": "Android Engineer",
       "organization": "IT",
       "first_name": "Suantony",
       "last_name": ""
@@ -132,7 +132,7 @@
       "email": "riski.putra@test.ajah",
       "id": "513648",
       "id_employee": "0409",
-      "job": "Tech Lead-Frontend",
+      "role": "Tech Lead-Frontend",
       "organization": "IT",
       "first_name": "Riski Nugroho Putra",
       "last_name": ""
@@ -141,7 +141,7 @@
       "email": "franzvilosya.rizqi@test.ajah",
       "id": "440386",
       "id_employee": "0386",
-      "job": "Devops Engineer",
+      "role": "Devops Engineer",
       "organization": "IT",
       "first_name": "Franzvilosya Rizqi",
       "last_name": ""
@@ -150,7 +150,7 @@
       "email": "carolina.ratna@test.ajah",
       "id": "273926",
       "id_employee": "0270",
-      "job": "Frontend Engineer",
+      "role": "Frontend Engineer",
       "organization": "IT",
       "first_name": "Carolina Ratna Sari",
       "last_name": ""
@@ -159,7 +159,7 @@
       "email": "herdian.winarno@test.ajah",
       "id": "754884",
       "id_employee": "0443",
-      "job": "Backend Engineer",
+      "role": "Backend Engineer",
       "organization": "IT",
       "first_name": "Herdian Adi Winarno",
       "last_name": ""
@@ -168,7 +168,7 @@
       "email": "firgy.matannatikka@test.ajah",
       "id": "4313365",
       "id_employee": "0671",
-      "job": "Data",
+      "role": "Data",
       "organization": "Product/PMM",
       "first_name": "Firgy Matannatikka",
       "last_name": ""
@@ -177,7 +177,7 @@
       "email": "ari.septian@test.ajah",
       "id": "3864211",
       "id_employee": "0648",
-      "job": "Product Manager",
+      "role": "Product Manager",
       "organization": "Product/PMM",
       "first_name": "Ari Septian",
       "last_name": ""
@@ -186,7 +186,7 @@
       "email": "chaerul.sutami@test.ajah",
       "id": "273823",
       "id_employee": "0132",
-      "job": "UI/UX Designer",
+      "role": "UI/UX Designer",
       "organization": "Product/PMM",
       "first_name": "Chaerul Sutami",
       "last_name": ""
@@ -195,7 +195,7 @@
       "email": "rifqi@test.ajah",
       "id": "1770753",
       "id_employee": "0566",
-      "job": "Product Manager",
+      "role": "Product Manager",
       "organization": "Product/PMM",
       "first_name": "Rifqi Fadhlurrakhman",
       "last_name": ""
@@ -204,7 +204,7 @@
       "email": "intan.regina@test.ajah",
       "id": "1460002",
       "id_employee": "0539",
-      "job": "Scrum Master",
+      "role": "Scrum Master",
       "organization": "Product/PMM",
       "first_name": "Intan Regina Mustika",
       "last_name": ""
@@ -213,7 +213,7 @@
       "email": "dewinna.puspita@test.ajah",
       "id": "450182",
       "id_employee": "0390",
-      "job": "UI/UX Designer",
+      "role": "UI/UX Designer",
       "organization": "Product/PMM",
       "first_name": "Dewinna Farah Puspita",
       "last_name": ""
@@ -222,7 +222,7 @@
       "email": "mochammad.ifan@test.ajah",
       "id": "3995412",
       "id_employee": "0656",
-      "job": "UI/UX Designer",
+      "role": "UI/UX Designer",
       "organization": "Product/PMM",
       "first_name": "Mochammad Ifan Fadillah",
       "last_name": ""
@@ -231,7 +231,7 @@
       "email": "yosafat.yosafat@test.ajah",
       "id": "3097372",
       "id_employee": "0622",
-      "job": "Data",
+      "role": "Data",
       "organization": "Product/PMM",
       "first_name": "Yosafat",
       "last_name": ""
@@ -240,7 +240,7 @@
       "email": "thoni@test.ajah",
       "id": "2630166",
       "id_employee": "0591",
-      "job": "Product Manager",
+      "role": "Product Manager",
       "organization": "Business Intelligence",
       "first_name": "Ahmad Shohibus",
       "last_name": "Sulthoni"

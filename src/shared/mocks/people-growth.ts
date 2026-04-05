@@ -1,4 +1,8 @@
 import type { FilterKey } from '@/app/store/use-platform-store'
+import {
+  filterEngineeringDirectoryPeopleGrowthSeeds,
+  getEngineeringDirectoryPeopleGrowthSeedCoverage,
+} from '@/shared/mocks/employee-directory'
 
 type Filters = Record<FilterKey, string>
 
@@ -270,6 +274,12 @@ export function getPeopleGrowthData(filters: Filters) {
     commonGrowthAreas,
     restrictedCards,
     teamSummaryRows,
+    directorySeedCoverage: getEngineeringDirectoryPeopleGrowthSeedCoverage(),
+    directorySeeds: filterEngineeringDirectoryPeopleGrowthSeeds({
+      team: filters.team,
+      role: filters.role,
+      level: filters.level,
+    }),
   }
 }
 
