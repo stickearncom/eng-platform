@@ -1,0 +1,132 @@
+{
+  "message": "success",
+  "statusCode": 200,
+  "data": {
+    "id": "self",
+    "label": "Self Reflection",
+    "audience": "Setiap individu yang mengisi refleksi performa dirinya sendiri",
+    "purpose": "Menangkap penilaian diri, bukti pendukung, dan refleksi naratif untuk membantu manager review dan calibration.",
+    "boundary": "Prototype ini hanya menampilkan struktur form. Workflow produksi nantinya perlu mengikat jawaban dengan cycle, assignment, dan permission.",
+    "visibilityNote": "Self reflection ditujukan untuk employee dan manager workflow, bukan untuk ditampilkan sebagai scoreboard publik.",
+    "sections": [
+      {
+        "id": "self-scored-direct",
+        "title": "Pertanyaan Penilaian Utama",
+        "description": "Pertanyaan multiple choice utama yang digunakan sebagai basis penilaian diri.",
+        "questions": [
+          {
+            "id": "self-sprint-commitment",
+            "prompt": "Seberapa konsisten kamu memenuhi komitmen sprint dan menjaga akurasi estimasimu selama periode review ini?",
+            "goalCategory": "Delivery & Reliability",
+            "hint": "Lihat target sprint, spillover, missed commitment, dan realism estimasi. Jangan nilai hanya dari banyaknya task yang dikerjakan.",
+            "scoringAnchor": "1=sering miss commitment dan estimasi jauh meleset; 2=beberapa target tercapai tetapi masih inkonsisten; 3=umumnya memenuhi commitment dengan estimasi yang cukup realistis; 4=sangat konsisten dan membantu delivery tim lebih predictable",
+            "responseType": "score_1_4",
+            "scoringMode": "direct"
+          },
+          {
+            "id": "self-technical-quality",
+            "prompt": "Seberapa baik kualitas output teknismu memenuhi standar tim dengan kebutuhan rework yang rendah selama periode review ini?",
+            "goalCategory": "Technical Quality",
+            "hint": "Lihat kualitas solusi, bug atau defect yang muncul, kedalaman testing, feedback QA, dan kebutuhan rework. Jangan nilai dari kecepatan output saja.",
+            "scoringAnchor": "1=kualitas sering di bawah standar dan memicu bug atau rework signifikan; 2=ada output yang baik tetapi kualitas belum konsisten; 3=umumnya memenuhi standar kualitas tim dengan rework rendah; 4=secara konsisten menghasilkan output berkualitas tinggi dan membantu menaikkan standar teknis tim",
+            "responseType": "score_1_4",
+            "scoringMode": "direct"
+          },
+          {
+            "id": "self-communication",
+            "prompt": "Seberapa jelas, tepat waktu, dan efektif kamu memberikan update status serta berkolaborasi dengan tim selama periode review ini?",
+            "goalCategory": "Collaboration & Communication",
+            "hint": "Lihat kejelasan komunikasi, responsiveness, koordinasi lintas fungsi, dan cara menangani perbedaan pendapat atau kebutuhan unblock.",
+            "scoringAnchor": "1=komunikasi sering tidak jelas atau terlambat dan menghambat tim; 2=komunikasi dasar ada tetapi belum konsisten atau kurang proaktif; 3=komunikasi jelas, tepat waktu, dan efektif sesuai ekspektasi; 4=sangat efektif dalam membangun alignment dan memperlancar kerja tim",
+            "responseType": "score_1_4",
+            "scoringMode": "direct"
+          },
+          {
+            "id": "self-ownership",
+            "prompt": "Seberapa kuat ownership dan tanggung jawabmu dalam mengawal pekerjaan dari development sampai outcome-nya jelas selama periode review ini?",
+            "goalCategory": "Ownership & Initiative",
+            "hint": "Lihat follow-up, accountability, penanganan blocker, problem solving, dan kesediaan mengawal pekerjaan sampai selesai end-to-end.",
+            "scoringAnchor": "1=sering menunggu arahan dan kurang akuntabel terhadap hasil; 2=mulai mengambil tanggung jawab tetapi masih perlu didorong; 3=menunjukkan ownership yang baik dan akuntabel terhadap outcome; 4=sangat proaktif dan konsisten menyelesaikan masalah end-to-end",
+            "responseType": "score_1_4",
+            "scoringMode": "direct"
+          },
+          {
+            "id": "self-learning-growth",
+            "prompt": "Seberapa terlihat perkembangan capability-mu dan penerapan feedback ke cara kerja sehari-hari selama periode review ini?",
+            "goalCategory": "Learning & Growth",
+            "hint": "Lihat growth dibanding periode sebelumnya, penerapan feedback, peningkatan skill yang relevan, riset teknis, dan adaptasi terhadap tantangan baru.",
+            "scoringAnchor": "1=perkembangan minim dan feedback belum terlihat diterapkan; 2=ada upaya belajar tetapi dampaknya belum konsisten; 3=terlihat berkembang dan menerapkan feedback dalam pekerjaan; 4=bertumbuh cepat, aktif mencari pembelajaran, dan memberi efek positif ke tim",
+            "responseType": "score_1_4",
+            "scoringMode": "direct"
+          }
+        ]
+      },
+      {
+        "id": "self-supporting-score",
+        "title": "Pertanyaan Pendukung",
+        "description": "Pertanyaan multiple choice pendukung yang menambah konteks terhadap penilaian utama.",
+        "questions": [
+          {
+            "id": "self-priority-incident-response",
+            "prompt": "Bagaimana kamu menilai ketenangan dan efektivitasmu saat menghadapi perubahan prioritas atau insiden selama periode review ini?",
+            "goalCategory": "Ownership & Initiative",
+            "hint": "Gunakan untuk menilai ketahanan, respons saat ada perubahan, dan kemampuan tetap fokus mencari solusi. Untuk MVP, perlakukan sebagai sinyal pendukung kategori ownership.",
+            "scoringAnchor": "1=sering kehilangan arah saat situasi berubah; 2=mulai beradaptasi tetapi masih butuh banyak arahan; 3=dapat tetap tenang dan cukup efektif saat prioritas berubah; 4=sangat adaptif, tenang, dan membantu tim keluar dari situasi sulit",
+            "responseType": "score_1_4",
+            "scoringMode": "supporting-evidence"
+          },
+          {
+            "id": "self-technical-review-contribution",
+            "prompt": "Seberapa efektif kamu dalam memberikan review teknis kepada rekan kerja atau menerima masukan dari mereka selama periode review ini?",
+            "goalCategory": "Technical Quality & Collaboration",
+            "hint": "Menilai kontribusi terhadap standar kualitas tim melalui code review dan keterbukaan terhadap feedback. Untuk MVP, perlakukan sebagai supporting evidence agar tidak double-count lintas kategori.",
+            "scoringAnchor": "1=jarang memberi atau menerima feedback secara efektif; 2=mulai terlibat tetapi kualitas interaksi belum konsisten; 3=memberi dan menerima feedback teknis dengan cukup efektif; 4=secara aktif meningkatkan kualitas tim melalui review yang bernas dan terbuka terhadap masukan",
+            "responseType": "score_1_4",
+            "scoringMode": "supporting-evidence"
+          },
+          {
+            "id": "self-speed-vs-quality",
+            "prompt": "Seberapa baik kamu menjaga keseimbangan antara kecepatan delivery dan kualitas jangka panjang selama periode review ini?",
+            "goalCategory": "Ownership & Reliability",
+            "hint": "Menilai apakah kamu terlalu fokus cepat selesai, terlalu perfeksionis, atau cukup seimbang dan pragmatis. Untuk MVP, perlakukan sebagai supporting evidence.",
+            "scoringAnchor": "1=sering mengorbankan kualitas atau delivery tanpa pertimbangan yang baik; 2=mulai sadar trade-off tetapi belum konsisten; 3=umumnya mampu menyeimbangkan delivery dan kualitas secara pragmatis; 4=sangat baik dalam mengambil trade-off yang tepat untuk tim dan produk",
+            "responseType": "score_1_4",
+            "scoringMode": "supporting-evidence"
+          }
+        ]
+      },
+      {
+        "id": "self-narrative",
+        "title": "Pertanyaan Naratif",
+        "description": "Pertanyaan esai untuk menangkap pencapaian, hambatan, dan konteks tambahan.",
+        "questions": [
+          {
+            "id": "self-proud-achievement",
+            "prompt": "Sebutkan satu pencapaian teknis dalam periode ini yang paling membuatmu bangga.",
+            "goalCategory": "Narrative/Wins",
+            "hint": "Gunakan contoh yang konkret dan relevan dengan impact ke tim, produk, atau cara kerja.",
+            "responseType": "long_text",
+            "scoringMode": "excluded"
+          },
+          {
+            "id": "self-biggest-blocker",
+            "prompt": "Apa hambatan terbesar yang paling mengganggu produktivitasmu saat ini?",
+            "goalCategory": "Narrative/Blockers",
+            "hint": "Fokus pada hambatan yang paling nyata mempengaruhi delivery, quality, atau growth.",
+            "responseType": "long_text",
+            "scoringMode": "excluded"
+          },
+          {
+            "id": "self-general-note",
+            "prompt": "Adakah hal lain yang ingin kamu sampaikan terkait peran, performa, atau dukungan yang kamu butuhkan?",
+            "goalCategory": "Narrative/General",
+            "hint": "Gunakan untuk konteks tambahan yang belum tertangkap di pertanyaan lain.",
+            "responseType": "long_text",
+            "scoringMode": "excluded"
+          }
+        ]
+      }
+    ]
+  },
+  "meta": null
+}

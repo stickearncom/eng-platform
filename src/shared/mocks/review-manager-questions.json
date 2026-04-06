@@ -1,0 +1,140 @@
+{
+  "message": "success",
+  "statusCode": 200,
+  "data": {
+    "id": "manager",
+    "label": "Manager Review",
+    "audience": "Manager yang menyiapkan penilaian formal untuk direct report",
+    "purpose": "Menggabungkan penilaian skor, ringkasan coaching, dan catatan calibration internal dalam satu workflow.",
+    "boundary": "Prototype ini menunjukkan struktur form dan batas visibilitas, tetapi belum menerapkan access control atau approval flow produksi.",
+    "visibilityNote": "Sebagian field bersifat employee-visible, sementara catatan calibration tetap manager-only atau HR-only.",
+    "sections": [
+      {
+        "id": "manager-scored",
+        "title": "Scored Review",
+        "description": "Pertanyaan utama yang menjadi basis penilaian manager.",
+        "questions": [
+          {
+            "id": "manager-delivery-reliability",
+            "prompt": "Apakah engineer secara konsisten memenuhi target sprint dan komitmen kerja selama periode review ini?",
+            "goalCategory": "Delivery & Reliability",
+            "hint": "Lihat sprint goal, spillover, missed commitment, dan reliability delivery. Jangan nilai dari jumlah task atau jam kerja saja.",
+            "scoringAnchor": "1=sering miss commitment dan perlu follow-up ketat; 2=sebagian target tercapai tetapi masih inkonsisten; 3=konsisten memenuhi commitment sesuai ekspektasi; 4=sangat andal, menjaga predictability delivery, dan membantu tim tetap on track",
+            "responseType": "score_1_4",
+            "scoringMode": "direct",
+            "visibilityLevel": "standard"
+          },
+          {
+            "id": "manager-technical-quality",
+            "prompt": "Apakah output engineer memenuhi standar kualitas tim dengan tingkat rework yang rendah selama periode review ini?",
+            "goalCategory": "Technical Quality",
+            "hint": "Lihat defect leakage, bug rate, feedback QA, code review, testing depth, dan kebutuhan rework. Jangan nilai dari volume output saja.",
+            "scoringAnchor": "1=kualitas sering di bawah standar dan memicu rework signifikan; 2=beberapa output sudah baik tetapi kualitas belum konsisten; 3=umumnya memenuhi standar kualitas tim dengan rework rendah; 4=secara konsisten menghasilkan output berkualitas tinggi dan menaikkan standar tim",
+            "responseType": "score_1_4",
+            "scoringMode": "direct",
+            "visibilityLevel": "standard"
+          },
+          {
+            "id": "manager-collaboration-communication",
+            "prompt": "Apakah engineer berkomunikasi dan berkoordinasi secara jelas, tepat waktu, dan efektif dengan tim selama periode review ini?",
+            "goalCategory": "Collaboration & Communication",
+            "hint": "Lihat responsiveness, clarity, status updates, alignment lintas fungsi, dan cara menangani disagreement atau konflik kerja.",
+            "scoringAnchor": "1=komunikasi sering tidak jelas atau terlambat sehingga menghambat kerja tim; 2=komunikasi dasar ada tetapi masih kurang konsisten atau kurang proaktif; 3=komunikasi jelas, tepat waktu, dan efektif sesuai ekspektasi; 4=menjadi penghubung yang sangat efektif dan meningkatkan kolaborasi tim",
+            "responseType": "score_1_4",
+            "scoringMode": "direct",
+            "visibilityLevel": "standard"
+          },
+          {
+            "id": "manager-ownership-initiative",
+            "prompt": "Apakah engineer menunjukkan ownership yang kuat terhadap masalah, tindak lanjut, dan hasil akhir pekerjaannya selama periode review ini?",
+            "goalCategory": "Ownership & Initiative",
+            "hint": "Lihat follow-up, problem solving, accountability, inisiatif menyelesaikan blocker, dan kesediaan menuntaskan pekerjaan sampai outcome jelas.",
+            "scoringAnchor": "1=sering menunggu arahan dan kurang akuntabel terhadap hasil; 2=mulai mengambil tanggung jawab tetapi masih perlu didorong; 3=menunjukkan ownership yang baik dan akuntabel terhadap outcome; 4=sangat proaktif, menyelesaikan masalah end-to-end, dan memberi dampak positif ke tim",
+            "responseType": "score_1_4",
+            "scoringMode": "direct",
+            "visibilityLevel": "standard"
+          },
+          {
+            "id": "manager-learning-growth",
+            "prompt": "Apakah engineer menunjukkan perkembangan capability yang terlihat serta menerapkan feedback ke cara kerjanya selama periode review ini?",
+            "goalCategory": "Learning & Growth",
+            "hint": "Lihat growth dibanding periode sebelumnya, penerapan feedback, peningkatan skill yang terlihat, dan adaptasi terhadap tantangan baru.",
+            "scoringAnchor": "1=perkembangan minim dan feedback belum terlihat diterapkan; 2=ada upaya belajar tetapi dampaknya belum konsisten; 3=terlihat berkembang dan menerapkan feedback dalam pekerjaan sehari-hari; 4=bertumbuh cepat, aktif mencari pembelajaran, dan menjadi contoh growth mindset",
+            "responseType": "score_1_4",
+            "scoringMode": "direct",
+            "visibilityLevel": "standard"
+          }
+        ]
+      },
+      {
+        "id": "manager-summary",
+        "title": "Summary & Action",
+        "description": "Ringkasan kekuatan utama dan action pengembangan untuk periode berikutnya.",
+        "questions": [
+          {
+            "id": "manager-main-strength",
+            "prompt": "Apa kekuatan utama engineer dan dampak paling terlihat selama periode review ini?",
+            "goalCategory": "Summary",
+            "hint": "Gunakan untuk merangkum 2-3 kekuatan utama dengan contoh konkret yang bisa dipakai untuk coaching summary.",
+            "responseType": "long_text",
+            "scoringMode": "excluded",
+            "visibilityLevel": "summary_only"
+          },
+          {
+            "id": "manager-development-action",
+            "prompt": "Apa 1-2 development action paling penting untuk periode berikutnya?",
+            "goalCategory": "Action",
+            "hint": "Fokus pada tindakan yang spesifik, observable, dan realistis untuk satu review cycle berikutnya.",
+            "responseType": "long_text",
+            "scoringMode": "excluded",
+            "visibilityLevel": "standard"
+          }
+        ]
+      },
+      {
+        "id": "manager-private",
+        "title": "Calibration & Private Notes",
+        "description": "Catatan internal untuk calibration, override, evidence gap, dan kebutuhan dukungan HR.",
+        "questions": [
+          {
+            "id": "manager-calibration-gap",
+            "prompt": "Apa perbedaan skor, konflik evidence, atau confidence issue yang harus dibahas saat calibration?",
+            "goalCategory": "Calibration",
+            "hint": "Isi bila ada gap self vs manager >= 1 poin, peer conflict, evidence lemah, atau sinyal risiko lain yang perlu dibahas.",
+            "responseType": "private_note",
+            "scoringMode": "excluded",
+            "visibilityLevel": "manager_only"
+          },
+          {
+            "id": "manager-override-reason",
+            "prompt": "Jika manager ingin override hasil weighted score setelah calibration, apa alasannya?",
+            "goalCategory": "Calibration",
+            "hint": "Isi hanya jika ada override setelah calibration.",
+            "responseType": "private_note",
+            "scoringMode": "excluded",
+            "visibilityLevel": "manager_only"
+          },
+          {
+            "id": "manager-evidence-gap",
+            "prompt": "Kategori mana yang masih kekurangan evidence atau perlu validasi tambahan sebelum finalisasi?",
+            "goalCategory": "Calibration",
+            "hint": "Gunakan jika catatan yang tersedia belum cukup menjelaskan score atau masih ada data yang perlu diverifikasi.",
+            "responseType": "private_note",
+            "scoringMode": "excluded",
+            "visibilityLevel": "manager_only"
+          },
+          {
+            "id": "manager-hr-support",
+            "prompt": "Apakah ada dukungan HR atau organisasi yang diperlukan?",
+            "goalCategory": "HR / Organization Support",
+            "hint": "Gunakan hanya untuk isu yang membutuhkan intervensi HR, people policy, atau support organisasi di luar coaching teknis biasa.",
+            "responseType": "private_note",
+            "scoringMode": "excluded",
+            "visibilityLevel": "hr_only"
+          }
+        ]
+      }
+    ]
+  },
+  "meta": null
+}

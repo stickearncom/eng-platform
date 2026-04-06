@@ -1,0 +1,71 @@
+{
+  "message": "success",
+  "statusCode": 200,
+  "data": {
+    "section1": {
+      "participantPrompt": "Pilih nama kamu",
+      "reviewTypePrompt": "Jenis penilaian",
+      "peerRolePrompt": "Peran Anda saat berinteraksi dengan yang bersangkutan",
+      "revieweePrompt": "Nama yang dinilai"
+    },
+    "modes": [
+      {
+        "id": "peer",
+        "label": "Peer"
+      },
+      {
+        "id": "self",
+        "label": "Self Reflection"
+      },
+      {
+        "id": "manager",
+        "label": "Manager Review"
+      }
+    ],
+    "peerTemplates": [
+      {
+        "id": "pm-to-engineering",
+        "label": "PM / PO / Scrum Master to Engineer or QA",
+        "reviewerRole": "PM / PO / Scrum Master",
+        "targetRole": "Engineer or QA",
+        "focus": "Product delivery, collaboration, and ownership"
+      },
+      {
+        "id": "engineer-to-engineer",
+        "label": "Engineer to Engineer",
+        "reviewerRole": "Engineer",
+        "targetRole": "Engineer",
+        "focus": "Technical quality and peer collaboration"
+      },
+      {
+        "id": "engineer-to-qa",
+        "label": "Engineer to QA",
+        "reviewerRole": "Engineer",
+        "targetRole": "QA",
+        "focus": "Quality partnership and clarity of testing support"
+      },
+      {
+        "id": "general-peer",
+        "label": "General Peer Review",
+        "reviewerRole": "Any peer",
+        "targetRole": "Any peer",
+        "focus": "Collaboration patterns, strengths, and development areas"
+      },
+      {
+        "id": "stakeholder-to-data",
+        "label": "Stakeholder to Data Team",
+        "reviewerRole": "Stakeholder / Product / Business partner",
+        "targetRole": "Data team member",
+        "focus": "Data reliability, responsiveness, and business usefulness"
+      },
+      {
+        "id": "engineer-to-data",
+        "label": "Engineer to Data Team",
+        "reviewerRole": "Engineer",
+        "targetRole": "Data team member",
+        "focus": "Technical collaboration with shared systems and dependencies"
+      }
+    ]
+  },
+  "meta": null
+}

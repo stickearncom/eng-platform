@@ -1,0 +1,357 @@
+{
+  "message": "success",
+  "statusCode": 200,
+  "data": {
+    "id": "peer",
+    "label": "Peer Review",
+    "audience": "Rekan kerja, partner lintas fungsi, dan stakeholder yang berinteraksi langsung",
+    "purpose": "Mengumpulkan feedback peer berdasarkan peran interaksi dan tetap menambahkan pertanyaan umum yang berlaku untuk semua rekan kerja.",
+    "boundary": "Pilih template sesuai konteks interaksi. Untuk template selain General Peer, pertanyaan umum akan otomatis ditambahkan di bagian bawah.",
+    "visibilityNote": "Feedback peer seharusnya masuk ke workflow review formal dan tidak ditampilkan sebagai scoreboard publik.",
+    "templates": [
+      {
+        "id": "pm-to-engineering",
+        "label": "PM / PO / Scrum Master ke Engineer / QA",
+        "reviewerRole": "PM / PO / Scrum Master",
+        "targetRole": "Engineer / QA",
+        "focus": "Delivery, product understanding, agility, reliability, dan problem solving",
+        "sections": [
+          {
+            "id": "pm-core",
+            "title": "Pertanyaan Sesuai Peran",
+            "description": "Gunakan saat PM, PO, atau Scrum Master menilai engineer atau QA yang sering bekerja bersama.",
+            "questions": [
+              {
+                "id": "pm-delivery-communication",
+                "prompt": "Apakah dia memberikan update status tugas secara transparan dan proaktif tanpa perlu sering ditanya?",
+                "goalCategory": "Collaboration & Communication",
+                "hint": "Contoh: update progres, risiko, atau perubahan status disampaikan sebelum diminta.",
+                "scoringAnchor": "1 = sangat jarang terlihat; 2 = kadang terlihat namun belum konsisten; 3 = umumnya terlihat sesuai ekspektasi; 4 = sangat konsisten dan proaktif.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "pm-product-understanding",
+                "prompt": "Apakah dia memahami kebutuhan bisnis atau produk dan memberikan solusi yang relevan?",
+                "goalCategory": "Ownership & Initiative",
+                "hint": "Contoh: solusi selaras dengan tujuan produk, tidak over-engineering.",
+                "scoringAnchor": "1 = pemahaman bisnis/produk belum terlihat; 2 = kadang relevan tetapi belum konsisten; 3 = umumnya memahami dan memberi solusi relevan; 4 = sangat memahami konteks dan solusi sangat tepat.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "pm-agility",
+                "prompt": "Apakah dia responsif dan terbuka saat berdiskusi mengenai prioritas atau perubahan requirement?",
+                "goalCategory": "Collaboration & Communication",
+                "hint": "Contoh: cepat merespons, tidak defensif, mau menyesuaikan rencana.",
+                "scoringAnchor": "1 = sulit beradaptasi atau defensif; 2 = mulai adaptif namun belum konsisten; 3 = cukup responsif dan terbuka; 4 = sangat adaptif dan memudahkan perubahan plan.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "pm-sprint-commitment",
+                "prompt": "Apakah dia realistis dalam menyepakati komitmen sprint sesuai kapasitas dan dependencies, serta konsisten menyelesaikan tugas sesuai target sprint?",
+                "goalCategory": "Delivery & Reliability",
+                "hint": "Contoh: tidak over-commit, mempertimbangkan dependency tim lain, jarang carry-over tanpa alasan jelas, dan follow-up tepat waktu.",
+                "scoringAnchor": "1 = sering over-commit atau tidak konsisten; 2 = ada usaha tetapi masih banyak miss; 3 = umumnya realistis dan cukup konsisten; 4 = sangat realistis, andal, dan menjaga predictability sprint.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "pm-problem-solving",
+                "prompt": "Saat menghadapi masalah atau blocker apakah dia datang dengan usulan solusi bukan hanya melaporkan masalah?",
+                "goalCategory": "Ownership & Initiative",
+                "hint": "Contoh: \"Masalahnya di X, opsi solusinya A atau B\", bukan cuma \"Ini error nggak bisa jalan\".",
+                "scoringAnchor": "1 = cenderung hanya melaporkan masalah; 2 = sesekali memberi arah solusi; 3 = cukup sering datang dengan usulan solusi; 4 = sangat proaktif dan membantu mempercepat penyelesaian masalah.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "engineer-to-engineer",
+        "label": "Engineer ke Engineer",
+        "reviewerRole": "BE / FE / Android (Engineer)",
+        "targetRole": "Engineer (BE/FE)",
+        "focus": "Dokumentasi, code review, dan kolaborasi teknis",
+        "sections": [
+          {
+            "id": "eng-core",
+            "title": "Pertanyaan Sesuai Peran",
+            "description": "Gunakan saat engineer menilai engineer lain yang bekerja dekat secara teknis.",
+            "questions": [
+              {
+                "id": "eng-documentation",
+                "prompt": "Apakah dia melengkapi pekerjaannya dengan dokumentasi teknis yang cukup (jika diperlukan)?",
+                "goalCategory": "Technical Quality",
+                "hint": "Contoh: update README, API docs, atau comments di kode yang kompleks.",
+                "scoringAnchor": "1 = dokumentasi sering kurang; 2 = ada dokumentasi tetapi belum cukup konsisten; 3 = umumnya cukup sesuai kebutuhan; 4 = sangat baik dan membantu tim memahami konteks teknis.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "eng-code-review",
+                "prompt": "Apakah dia memberikan review PR yang teliti namun tetap konstruktif?",
+                "goalCategory": "Technical Quality",
+                "hint": "Contoh: menemukan potential bug logic, bukan cuma typo. Bahasa review sopan.",
+                "scoringAnchor": "1 = review kurang teliti atau kurang konstruktif; 2 = mulai memberi review berguna tapi belum konsisten; 3 = review cukup teliti dan konstruktif; 4 = review sangat bernas dan menaikkan standar tim.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "eng-collaboration",
+                "prompt": "Apakah dia terbuka menerima masukan terkait desain/flow dan enak diajak tektokan?",
+                "goalCategory": "Collaboration & Communication",
+                "hint": "Contoh: tidak defensif saat desain dikritik, kooperatif mencari jalan tengah.",
+                "scoringAnchor": "1 = cenderung defensif atau sulit diajak diskusi; 2 = mulai terbuka tetapi belum konsisten; 3 = cukup terbuka dan enak diajak berdiskusi; 4 = sangat kolaboratif dan memudahkan penyelarasan solusi.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "engineer-to-qa",
+        "label": "Engineer ke QA",
+        "reviewerRole": "BE / FE / Android (Engineer)",
+        "targetRole": "QA",
+        "focus": "Bug reporting, clarity, priority awareness, scope testing, product knowledge, dan technical curiosity",
+        "sections": [
+          {
+            "id": "qa-core",
+            "title": "Pertanyaan Sesuai Peran",
+            "description": "Gunakan saat engineer menilai QA yang sering bekerja bersama dalam proses delivery dan testing.",
+            "questions": [
+              {
+                "id": "qa-bug-reporting",
+                "prompt": "Apakah dia ikut membantu menemukan akar permasalahan bug (root cause) saat melaporkan issue?",
+                "goalCategory": "Technical Quality",
+                "hint": "Contoh: tidak cuma lapor \"Error\", tapi kasih log atau dugaan penyebabnya.",
+                "scoringAnchor": "1 = laporan bug minim konteks; 2 = mulai cukup membantu tapi belum konsisten; 3 = umumnya membantu mengarah ke root cause; 4 = sangat membantu mempercepat investigasi bug.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "qa-clarity",
+                "prompt": "Apakah laporan bug yang dibuat jelas, lengkap dengan langkah reproduksi (steps to reproduce)?",
+                "goalCategory": "Collaboration & Communication",
+                "hint": "Contoh: Engineer tidak perlu nanya balik berkali-kali cara bikin errornya muncul.",
+                "scoringAnchor": "1 = laporan sering membingungkan; 2 = cukup jelas di beberapa kasus; 3 = umumnya jelas dan cukup lengkap; 4 = sangat jelas, lengkap, dan langsung bisa ditindaklanjuti.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "qa-priority-awareness",
+                "prompt": "Apakah dia mengerti prioritas bug (membedakan mana critical, mana minor/kosmetik)?",
+                "goalCategory": "Technical Quality",
+                "hint": "Contoh: tidak memaksakan fix typo di jam kritis rilis, tapi push bug fatal.",
+                "scoringAnchor": "1 = prioritas bug sering tidak tepat; 2 = mulai memahami tapi masih kurang konsisten; 3 = cukup tepat membedakan prioritas; 4 = sangat baik dalam membaca urgensi dan dampak bug.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "qa-testing-scope",
+                "prompt": "Apakah dia mengetahui batasan scope testing (tidak melebar kemana-mana di luar requirement)?",
+                "goalCategory": "Delivery & Reliability",
+                "hint": "Contoh: testing fokus pada fitur yang sedang dikerjakan, kecuali regression test.",
+                "scoringAnchor": "1 = scope testing sering melebar atau tidak fokus; 2 = mulai cukup fokus tapi belum stabil; 3 = umumnya sesuai scope yang dibutuhkan; 4 = sangat tepat dalam menjaga fokus testing tanpa kehilangan risiko penting.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "qa-product-knowledge",
+                "prompt": "Apakah dia memiliki pemahaman mendalam tentang flow produk yang dites?",
+                "goalCategory": "Technical Quality",
+                "hint": "Contoh: tau flow survey app > master billboard > explore secara end-to-end.",
+                "scoringAnchor": "1 = pemahaman flow produk masih terbatas; 2 = cukup paham di area tertentu; 3 = umumnya memahami flow produk yang diuji; 4 = sangat memahami flow end-to-end dan dampaknya ke user.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "qa-technical-curiosity",
+                "prompt": "Apakah dia memiliki keinginan untuk mengetahui cara kerja teknis sistem (blackbox vs whitebox)?",
+                "goalCategory": "Learning & Growth",
+                "hint": "Contoh: mau belajar query DB dasar untuk cek data, atau paham konsep API.",
+                "scoringAnchor": "1 = rasa ingin tahu teknis belum terlihat; 2 = mulai bertanya tapi terbatas; 3 = cukup aktif memahami sisi teknis; 4 = sangat ingin tahu dan aktif memperdalam pemahaman sistem.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "general-peer",
+        "label": "General Peer Review",
+        "reviewerRole": "Peer (General)",
+        "targetRole": "Rekan Kerja (All)",
+        "focus": "Pertanyaan umum yang berlaku untuk semua role di mode peer",
+        "sections": [
+          {
+            "id": "general-scored",
+            "title": "Pertanyaan Umum",
+            "description": "Pertanyaan multiple choice yang berlaku untuk semua rekan kerja di mode peer.",
+            "questions": [
+              {
+                "id": "general-communication-clarity",
+                "prompt": "Apakah dia memberikan update status tugas secara transparan dan proaktif, serta mampu menyampaikan ide atau masalah teknis dengan jelas dan mudah dipahami?",
+                "goalCategory": "Collaboration & Communication",
+                "hint": "Contoh: memberitahu di grup jika sedang stuck atau akan terlambat menyelesaikan tugas, dan penjelasannya runut saat menjelaskan masalah teknis.",
+                "scoringAnchor": "1 = sangat jarang terlihat; 2 = kadang terlihat namun belum konsisten; 3 = umumnya terlihat sesuai ekspektasi; 4 = sangat konsisten dan kuat.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "general-problem-solving-attitude",
+                "prompt": "Apakah dia menunjukkan sikap positif dan fokus mencari solusi saat ada masalah (tidak menyalahkan orang lain)?",
+                "goalCategory": "Ownership & Initiative",
+                "hint": "Contoh: saat ada incident, fokus pada fixing bukan mencari siapa yang salah.",
+                "scoringAnchor": "1 = sikap problem solving lemah; 2 = kadang positif tapi belum konsisten; 3 = cukup positif dan fokus solusi; 4 = sangat konstruktif dan membantu tim tetap fokus pada penyelesaian.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "general-psychological-safety",
+                "prompt": "Apakah dia berkontribusi menciptakan lingkungan kerja yang aman suportif dan saling menghargai?",
+                "goalCategory": "Collaboration & Communication",
+                "hint": "Contoh: terbuka pada pendapat junior, tidak menyudutkan saat code review, menghargai perbedaan.",
+                "scoringAnchor": "1 = sering mengurangi rasa aman dalam tim; 2 = netral tetapi belum banyak berkontribusi; 3 = cukup mendukung lingkungan kerja yang sehat; 4 = sangat membantu menciptakan psychological safety.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "general-team-player",
+                "prompt": "Apakah dia bersedia membantu rekan lain yang sedang kesulitan (sharing knowledge/pairing)?",
+                "goalCategory": "Collaboration & Communication",
+                "hint": "Contoh: fast response saat diminta bantuan debugging, tidak pelit ilmu.",
+                "scoringAnchor": "1 = jarang membantu rekan; 2 = sesekali membantu tetapi belum konsisten; 3 = cukup kooperatif membantu tim; 4 = sangat suportif dan aktif membantu orang lain berkembang atau unblock.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              }
+            ]
+          },
+          {
+            "id": "general-essay",
+            "title": "Pertanyaan Umum - Esai",
+            "description": "Pertanyaan naratif yang berlaku untuk semua rekan kerja di mode peer.",
+            "questions": [
+              {
+                "id": "general-start",
+                "prompt": "START (Mulai Lakukan): Apa satu hal yang sebaiknya mulai dilakukan atau ditingkatkan oleh yang bersangkutan untuk membantu efektivitas tim?",
+                "goalCategory": "Growth Area (Improvement)",
+                "hint": "Contoh: Mulai lebih vokal dalam sesi planning, mulai merapikan dokumentasi API, mulai aktif bicara saat retro, mulai pelajari unit testing, atau mulai berani ambil tiket backend.",
+                "responseType": "long_text",
+                "scoringMode": "excluded"
+              },
+              {
+                "id": "general-stop",
+                "prompt": "STOP (Hentikan): Adakah perilaku atau cara kerja yang menghambat tim dan sebaiknya dihentikan/dikurangi?",
+                "goalCategory": "Efficiency / Blocker",
+                "hint": "Contoh: Berhenti melakukan merge tanpa info di Group atau kurangi telat isi daily notes lebih dari 2 hari.",
+                "responseType": "long_text",
+                "scoringMode": "excluded"
+              },
+              {
+                "id": "general-continue",
+                "prompt": "CONTINUE (Lanjutkan): Apa kekuatan atau perilaku positif yang paling Anda hargai dari yang bersangkutan dan harus tetap dipertahankan?",
+                "goalCategory": "Key Strengths (Retention)",
+                "hint": "Contoh: Kemampuan troubleshooting-nya sangat cepat atau sangat sabar menjelaskan technical debt kepada PM.",
+                "responseType": "long_text",
+                "scoringMode": "excluded"
+              },
+              {
+                "id": "general-private-manager-note",
+                "prompt": "Adakah hal lain yang ingin Anda sampaikan secara privat kepada Manager terkait performa yang bersangkutan?",
+                "goalCategory": "Confidential / Sensitivity",
+                "hint": "Catatan: jawaban ini tidak akan dilihat oleh rekan kerja yang dinilai. Gunakan untuk isu sensitif atau pujian khusus.",
+                "responseType": "private_note",
+                "scoringMode": "excluded"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "stakeholder-to-data",
+        "label": "PM / PO / Stakeholder ke Data",
+        "reviewerRole": "PM / PO / Stakeholder",
+        "targetRole": "Data",
+        "focus": "Impact, delivery, dan kualitas output data",
+        "sections": [
+          {
+            "id": "data-stakeholder-core",
+            "title": "Pertanyaan Sesuai Peran",
+            "description": "Gunakan saat stakeholder menilai kontribusi tim data terhadap keputusan dan delivery.",
+            "questions": [
+              {
+                "id": "data-business-context",
+                "prompt": "Apakah dia memahami business context di balik data yang diolah dan memberikan insight atau solusi data yang relevan?",
+                "goalCategory": "Ownership & Initiative",
+                "hint": "Contoh: Mengusulkan metrik yang lebih tepat, atau menemukan data anomaly sebelum dilaporkan.",
+                "scoringAnchor": "1 = konteks bisnis belum terlihat; 2 = mulai memahami tapi belum konsisten; 3 = umumnya relevan dengan konteks bisnis; 4 = sangat memahami dan memberi insight yang bernilai.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "data-progress-transparency",
+                "prompt": "Apakah dia memberikan update mengenai progres data pipeline atau analisis secara transparan, termasuk jika ada blocker terkait ketersediaan data?",
+                "goalCategory": "Collaboration & Communication",
+                "hint": "Contoh: Memberi tahu jika source data bermasalah sehingga dashboard terlambat update.",
+                "scoringAnchor": "1 = update sering terlambat atau kurang jelas; 2 = ada update tapi belum konsisten; 3 = cukup transparan dan tepat waktu; 4 = sangat transparan dan membantu pengambilan keputusan lebih cepat.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "data-output-reliability",
+                "prompt": "Apakah output data (dashboard/model/report) yang dihasilkan akurat dan reliable untuk pengambilan keputusan?",
+                "goalCategory": "Technical Quality",
+                "hint": "Contoh: Jarang terjadi perbedaan angka signifikan antara dashboard dan realita tanpa penjelasan teknis.",
+                "scoringAnchor": "1 = reliabilitas output rendah; 2 = beberapa output cukup baik tetapi belum konsisten; 3 = umumnya akurat dan cukup bisa diandalkan; 4 = sangat akurat dan dapat dipercaya untuk keputusan penting.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "engineer-to-data",
+        "label": "Engineer ke Data",
+        "reviewerRole": "BE / FE / Android / Engineer",
+        "targetRole": "Data",
+        "focus": "Integration, reliability, analytics requirement, dan efisiensi query",
+        "sections": [
+          {
+            "id": "data-engineering-core",
+            "title": "Pertanyaan Sesuai Peran",
+            "description": "Gunakan saat engineer menilai kolaborasi dan kualitas kerja tim data dari sisi integrasi teknis.",
+            "questions": [
+              {
+                "id": "data-tracking-requirement",
+                "prompt": "Apakah dia memberikan tracking requirements yg jelas kepada tim Engineer untuk kebutuhan analytics?",
+                "goalCategory": "Collaboration & Communication",
+                "hint": "Contoh: Memberikan dokumentasi event tracking yang jelas sebelum fitur di-deploy.",
+                "scoringAnchor": "1 = requirement tracking sering tidak jelas; 2 = cukup jelas di beberapa kasus; 3 = umumnya jelas dan usable; 4 = sangat jelas dan memudahkan implementasi engineer.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              },
+              {
+                "id": "data-query-efficiency",
+                "prompt": "Apakah dia memperhatikan performa sistem (query efficiency, resource usage) saat melakukan pengambilan data dari production database?",
+                "goalCategory": "Technical Quality",
+                "hint": "Contoh: Tidak membuat query berat yang mengganggu performa DB production di jam sibuk.",
+                "scoringAnchor": "1 = perhatian ke performa rendah; 2 = mulai ada perhatian tetapi belum konsisten; 3 = cukup baik menjaga efisiensi; 4 = sangat baik dalam menjaga performa dan risiko sistem.",
+                "responseType": "score_1_4",
+                "scoringMode": "direct"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "meta": null
+}

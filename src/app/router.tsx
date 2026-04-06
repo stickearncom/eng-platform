@@ -7,6 +7,7 @@ import {
   LazyMetricDictionaryPage,
   LazyNotFoundPage,
   LazyPeopleGrowthSummaryPage,
+  LazyReviewFormsPage,
 } from '@/app/lazy-pages'
 import { RouteErrorPage } from '@/modules/shared/pages/route-error-page'
 import { LazyRoute } from '@/shared/components/route-loading'
@@ -59,6 +60,22 @@ export const router = createBrowserRouter([
         element: (
           <LazyRoute>
             <LazyMetricDictionaryPage />
+          </LazyRoute>
+        ),
+      },
+      {
+        path: 'review-forms',
+        element: (
+          <LazyRoute>
+            <LazyReviewFormsPage />
+          </LazyRoute>
+        ),
+      },
+      {
+        path: 'review-forms/:reviewMode',
+        element: (
+          <LazyRoute>
+            <LazyReviewFormsPage />
           </LazyRoute>
         ),
       },

@@ -25,6 +25,11 @@ const loadMetricDictionaryPage = () =>
     default: module.MetricDictionaryPage,
   }))
 
+const loadReviewFormsPage = () =>
+  import('@/modules/review-forms/pages/review-forms-page').then((module) => ({
+    default: module.ReviewFormsPage,
+  }))
+
 const loadNotFoundPage = () =>
   import('@/modules/shared/pages/not-found-page').then((module) => ({
     default: module.NotFoundPage,
@@ -35,4 +40,5 @@ export const LazyDeliveryInsightsPage = lazy(loadDeliveryInsightsPage)
 export const LazyPeopleGrowthSummaryPage = lazy(loadPeopleGrowthSummaryPage)
 export const LazyEmployeeReviewDetailPage = lazy(loadEmployeeReviewDetailPage)
 export const LazyMetricDictionaryPage = lazy(loadMetricDictionaryPage)
+export const LazyReviewFormsPage = lazy(loadReviewFormsPage)
 export const LazyNotFoundPage = lazy(loadNotFoundPage)

@@ -33,7 +33,7 @@ export function NotFoundPage() {
         },
         {
           label: 'Available modules',
-          value: 'Engineering Summary, Delivery Insights, People Growth, and Metric Dictionary.',
+          value: 'Engineering Summary, Delivery Insights, People Growth, Review Forms, and Metric Dictionary.',
         },
       ]}
       icon={Compass}
